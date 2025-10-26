@@ -206,7 +206,7 @@ body{
   box-shadow:inset 0 1px 2px rgba(0,0,0,0.05);
 }
 
-/* CATEGORY GRID (setup screen) */
+/* CATEGORY GRID */
 .category-select-grid{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
@@ -242,6 +242,13 @@ body{
   color:var(--text-strong);
   line-height:1.3;
 }
+.category-points{
+  font-size:.8rem;
+  font-weight:600;
+  color:var(--accent-orange);
+  line-height:1.4;
+  text-align:left;
+}
 .category-desc{
   font-size:.8rem;
   color:var(--text-mid);
@@ -270,7 +277,7 @@ body{
   background:var(--accent-purple-dark);
 }
 
-/* BOARD AREA */
+/* BOARD */
 .board-area{
   background:var(--surface-main);
   border:1px solid var(--surface-border);
@@ -279,14 +286,11 @@ body{
   padding:24px;
   margin-bottom:16px;
 }
-
-/* ثابت ٣ أعمدة (٣ فوق / ٣ تحت = ٦ فئات) */
 .board-columns{
   display:grid;
-  grid-template-columns:repeat(3,1fr);
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
   gap:16px;
 }
-
 .board-col{
   background:var(--surface-alt);
   border:2px solid var(--surface-border);
@@ -333,16 +337,9 @@ body{
   background:var(--accent-orange);
   color:#000;
 }
+/* حذف "سؤال" بالكامل => ما نحتاج .point-question-label */
 
-/* سؤال مقفول */
-.point-btn.used{
-  background:#ddd !important;
-  color:#777 !important;
-  cursor:not-allowed !important;
-  box-shadow:none !important;
-}
-
-/* TEAM BAR (board + mini assists UI icons) */
+/* TEAM BAR */
 .team-bar{
   background:var(--surface-main);
   border:1px solid var(--surface-border);
@@ -390,69 +387,36 @@ body{
   min-width:60px;
   text-align:left;
 }
-
 .team-assist-row{
   display:flex;
   flex-wrap:wrap;
   gap:8px;
 }
-
-.assist-icon-btn{
+.assist-btn{
   background:var(--teal-main);
   border:1px solid rgba(0,0,0,0.2);
+  color:#fff;
   border-radius:var(--radius-md);
-  width:36px;
-  height:36px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  padding:8px 10px;
+  font-size:.8rem;
+  font-weight:600;
+  line-height:1.2;
   cursor:pointer;
+  white-space:nowrap;
   box-shadow:0 10px 24px rgba(0,0,0,0.15);
   transition:var(--transition-fast);
 }
-.assist-icon-btn[disabled]{
-  opacity:.4;
-  cursor:not-allowed;
-}
-.assist-icon-btn svg{
-  width:20px;
-  height:20px;
-  stroke:#fff;
-  stroke-width:2;
-  fill:none;
-}
-.assist-icon-btn:hover{
+.assist-btn:hover{
   background:var(--accent-orange);
-  border-color:rgba(0,0,0,0.2);
-}
-.assist-icon-btn:hover svg{
-  stroke:#000;
-}
-
-.correct-btn{
-  background:var(--accent-orange);
-  border:0;
-  border-radius:var(--radius-md);
-  padding:10px 12px;
-  font-size:.9rem;
-  font-weight:700;
-  line-height:1.2;
-  cursor:pointer;
-  text-align:center;
-  box-shadow:0 12px 28px rgba(0,0,0,0.18);
   color:#000;
-  transition:var(--transition-fast);
-}
-.correct-btn:hover{
-  filter:brightness(1.05);
+  border-color:rgba(0,0,0,0.2);
 }
 
 /* QUESTION SCREEN */
 .question-layout{
   display:grid;
-  grid-template-columns:2fr 1fr;
+  grid-template-columns:1fr 300px;
   gap:16px;
-  min-height:60vh;
 }
 
 .question-card{
@@ -460,16 +424,16 @@ body{
   border:1px solid var(--surface-border);
   border-radius:var(--radius-xl);
   box-shadow:var(--shadow-card);
-  padding:24px;
+  padding:16px 16px 20px;
   color:var(--text-strong);
-  min-height:50vh;
+  min-height:300px;
   display:flex;
   flex-direction:column;
-  gap:16px;
+  gap:12px;
   position:relative;
 }
 
-/* timer pill */
+/* mini timer overlay block */
 .timer-mini-wrapper{
   position:absolute;
   top:12px;
@@ -493,6 +457,8 @@ body{
   text-align:center;
   font-variant-numeric:tabular-nums;
 }
+
+/* small icon buttons for timer control */
 .timer-icon-btn{
   background:#fff0;
   border:0;
@@ -519,16 +485,16 @@ body{
   text-align:center;
   display:flex;
   flex-direction:column;
-  gap:12px;
-  margin-top:32px; /* لأن التايمر فوق */
+  gap:8px;
+  margin-top:32px; /* لأن المؤقت فوق الزاوية */
 }
 .current-question-text{
-  font-size:2rem;
+  font-size:1.6rem;
   font-weight:700;
   line-height:1.4;
   text-align:center;
   color:var(--text-strong);
-  min-height:3em;
+  min-height:2.5em;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -537,38 +503,22 @@ body{
   margin:0;
 }
 .current-question-points{
-  font-size:.9rem;
+  font-size:1rem;
   font-weight:600;
   color:var(--accent-orange);
   text-align:center;
   margin:0;
-  line-height:1.4;
-}
-
-/* سطر حالة المساعدات */
-.assist-status-line{
-  font-size:.9rem;
-  font-weight:600;
-  color:var(--text-mid);
-  text-align:center;
-  min-height:1.4em;
-}
-.assist-status-line .highlight{
-  color:var(--accent-purple);
-}
-.assist-status-line .danger{
-  color:var(--accent-orange);
 }
 
 .answer-box{
   background:var(--surface-alt);
   border:2px solid var(--surface-border);
   border-radius:var(--radius-md);
-  padding:16px;
-  font-size:1.4rem;
+  padding:10px;
+  font-size:1rem;
   font-weight:600;
   color:var(--text-strong);
-  min-height:3em;
+  min-height:2.5em;
   text-align:center;
   display:flex;
   align-items:center;
@@ -582,6 +532,7 @@ body{
   flex-wrap:wrap;
   justify-content:center;
   gap:10px;
+  margin-top:8px;
 }
 .q-btn{
   background:var(--accent-purple);
@@ -603,7 +554,7 @@ body{
   color:#fff;
 }
 
-/* SIDE TEAMS IN QUESTION SCREEN */
+/* SIDE TEAMS (with icons instead of text assists) */
 .question-side-teams{
   background:var(--surface-main);
   border:1px solid var(--surface-border);
@@ -642,10 +593,57 @@ body{
   color:var(--accent-orange);
   line-height:1;
 }
+
+/* icons row instead of text assists */
 .q-team-assists{
   display:flex;
   flex-wrap:wrap;
   gap:8px;
+}
+.assist-icon-btn{
+  background:var(--teal-main);
+  border:1px solid rgba(0,0,0,0.2);
+  border-radius:var(--radius-md);
+  width:36px;
+  height:36px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  box-shadow:0 10px 24px rgba(0,0,0,0.15);
+  transition:var(--transition-fast);
+}
+.assist-icon-btn svg{
+  width:20px;
+  height:20px;
+  stroke:#fff;
+  stroke-width:2;
+  fill:none;
+}
+.assist-icon-btn:hover{
+  background:var(--accent-orange);
+  border-color:rgba(0,0,0,0.2);
+}
+.assist-icon-btn:hover svg{
+  stroke:#000;
+}
+
+.correct-btn{
+  background:var(--accent-orange);
+  border:0;
+  border-radius:var(--radius-md);
+  padding:10px 12px;
+  font-size:.9rem;
+  font-weight:700;
+  line-height:1.2;
+  cursor:pointer;
+  text-align:center;
+  box-shadow:0 12px 28px rgba(0,0,0,0.18);
+  color:#000;
+  transition:var(--transition-fast);
+}
+.correct-btn:hover{
+  filter:brightness(1.05);
 }
 
 /* CONTROL PANEL MODAL */
@@ -847,13 +845,14 @@ body{
     </div>
     <div class="game-info">
       <div class="game-title">سين جيم - PTI</div>
-      <div class="game-sub">لعبة الأسئلة التقنية</div>
+      <div class="game-sub">PTI Competition</div>
     </div>
   </div>
 
   <div class="header-actions">
     <button class="top-btn" onclick="showStage('setup')">الإعداد</button>
     <button class="top-btn" onclick="showStage('board')">لوحة اللعبة</button>
+    <button class="top-btn" onclick="showStage('question')">وضع السؤال</button>
     <button class="top-btn" onclick="openAdmin()">لوحة التحكم</button>
   </div>
 
@@ -867,7 +866,7 @@ body{
   <div class="big-card">
     <div class="section-title">
       <span>إعداد اللعبة</span>
-      <span class="section-note">لازم تختارين بالضبط ٦ فئات</span>
+      <span class="section-note">اختيار حتى ٦ فئات تقنية</span>
     </div>
 
     <div class="team-setup-row">
@@ -894,47 +893,16 @@ body{
   </div>
 
   <div class="team-bar" id="teamBarBoard">
-
     <div class="team-card" data-team="0">
       <div class="team-header-line">
         <div class="team-name-display" id="boardTeamName0">فريق 1</div>
         <div class="team-score-display" id="boardTeamScore0">0</div>
       </div>
-
       <div class="team-assist-row">
-        <!-- دبل بوينت -->
-        <button class="assist-icon-btn" title="دبل بوينت" onclick="assistDouble(0)">
-          <svg viewBox="0 0 24 24">
-            <polygon points="12 3 15 10 22 10 16.5 14 18.5 21 12 17 5.5 21 7.5 14 2 10 9 10 12 3"/>
-          </svg>
-        </button>
-
-        <!-- ميوت -->
-        <button class="assist-icon-btn" title="ميوت" onclick="assistMute(0)">
-          <svg viewBox="0 0 24 24">
-            <polygon points="11 5 6 9 3 9 3 15 6 15 11 19 11 5"/>
-            <line x1="14" y1="10" x2="20" y2="16"/>
-            <line x1="20" y1="10" x2="14" y2="16"/>
-          </svg>
-        </button>
-
-        <!-- اتصال صديق -->
-        <button class="assist-icon-btn" title="اتصال صديق" onclick="assistCall(0)">
-          <svg viewBox="0 0 24 24">
-            <path d="M22 16.92v3a2 2 0 0 1-2.18 2
-                     19.86 19.86 0 0 1-8.63-3.07
-                     19.5 19.5 0 0 1-6-6
-                     19.86 19.86 0 0 1-3.07-8.67
-                     A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72
-                     c.12.81.37 1.6.72 2.34a2 2 0 0 1-.45 2.11L8.09 9.91
-                     a16 16 0 0 0 6 6l1.74-1.31
-                     a2 2 0 0 1 2.11-.45
-                     c.74.35 1.53.6 2.34.72A2 2 0 0 1 22 16.92z"/>
-          </svg>
-        </button>
+        <button class="assist-btn">دبل بوينت</button>
+        <button class="assist-btn">ميوت</button>
+        <button class="assist-btn">اتصال صديق</button>
       </div>
-
-      <button class="correct-btn" onclick="markCorrect(0)">هذا الفريق جاوب صح</button>
     </div>
 
     <div class="team-card" data-team="1">
@@ -942,43 +910,12 @@ body{
         <div class="team-name-display" id="boardTeamName1">فريق 2</div>
         <div class="team-score-display" id="boardTeamScore1">0</div>
       </div>
-
       <div class="team-assist-row">
-        <!-- دبل بوينت -->
-        <button class="assist-icon-btn" title="دبل بوينت" onclick="assistDouble(1)">
-          <svg viewBox="0 0 24 24">
-            <polygon points="12 3 15 10 22 10 16.5 14 18.5 21 12 17 5.5 21 7.5 14 2 10 9 10 12 3"/>
-          </svg>
-        </button>
-
-        <!-- ميوت -->
-        <button class="assist-icon-btn" title="ميوت" onclick="assistMute(1)">
-          <svg viewBox="0 0 24 24">
-            <polygon points="11 5 6 9 3 9 3 15 6 15 11 19 11 5"/>
-            <line x1="14" y1="10" x2="20" y2="16"/>
-            <line x1="20" y1="10" x2="14" y2="16"/>
-          </svg>
-        </button>
-
-        <!-- اتصال صديق -->
-        <button class="assist-icon-btn" title="اتصال صديق" onclick="assistCall(1)">
-          <svg viewBox="0 0 24 24">
-            <path d="M22 16.92v3a2 2 0 0 1-2.18 2
-                     19.86 19.86 0 0 1-8.63-3.07
-                     19.5 19.5 0 0 1-6-6
-                     19.86 19.86 0 0 1-3.07-8.67
-                     A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72
-                     c.12.81.37 1.6.72 2.34a2 2 0 0 1-.45 2.11L8.09 9.91
-                     a16 16 0 0 0 6 6l1.74-1.31
-                     a2 2 0 0 1 2.11-.45
-                     c.74.35 1.53.6 2.34.72A2 2 0 0 1 22 16.92z"/>
-          </svg>
-        </button>
+        <button class="assist-btn">دبل بوينت</button>
+        <button class="assist-btn">ميوت</button>
+        <button class="assist-btn">اتصال صديق</button>
       </div>
-
-      <button class="correct-btn" onclick="markCorrect(1)">هذا الفريق جاوب صح</button>
     </div>
-
   </div>
 </section>
 
@@ -988,23 +925,20 @@ body{
 
     <div class="question-card">
 
-      <!-- Timer -->
-      <div class="timer-mini-wrapper" id="timerWrapper">
+      <!-- Mini Timer in corner -->
+      <div class="timer-mini-wrapper">
         <div class="timer-number" id="timerDisplay">30</div>
         <button class="timer-icon-btn" title="تشغيل / استئناف" onclick="startTimer()">
+          <!-- play icon -->
           <svg viewBox="0 0 24 24"><polygon points="8,5 19,12 8,19 8,5"></polygon></svg>
         </button>
         <button class="timer-icon-btn" title="إيقاف" onclick="stopTimer()">
-          <svg viewBox="0 0 24 24">
-            <line x1="9" y1="5" x2="9" y2="19"></line>
-            <line x1="15" y1="5" x2="15" y2="19"></line>
-          </svg>
+          <!-- pause icon -->
+          <svg viewBox="0 0 24 24"><line x1="9" y1="5" x2="9" y2="19"></line><line x1="15" y1="5" x2="15" y2="19"></line></svg>
         </button>
         <button class="timer-icon-btn" title="إعادة" onclick="resetTimer()">
-          <svg viewBox="0 0 24 24">
-            <polyline points="3 3 3 10 10 10"></polyline>
-            <path d="M3 3a9 9 0 1 1-2 5"></path>
-          </svg>
+          <!-- reset icon -->
+          <svg viewBox="0 0 24 24"><polyline points="3 3 3 10 10 10"></polyline><path d="M3 3a9 9 0 1 1-2 5"></path></svg>
         </button>
       </div>
 
@@ -1014,10 +948,8 @@ body{
         </div>
 
         <div class="current-question-points" id="currentQuestionPoints">
-          -
+          قيمة السؤال: -
         </div>
-
-        <div class="assist-status-line" id="assistStatusLine"></div>
 
         <div class="answer-box" id="answerBox"></div>
       </div>
@@ -1029,27 +961,29 @@ body{
     </div>
 
     <div class="question-side-teams">
-
-      <div class="q-team-card" data-team="0">
+      <div class="q-team-card">
         <div class="q-team-headline">
           <span id="qTeamName0">فريق 1</span>
           <span class="q-team-score" id="qTeamScore0">0</span>
         </div>
 
         <div class="q-team-assists">
-          <button class="assist-icon-btn" title="دبل بوينت" onclick="assistDouble(0)">
+          <!-- دبل بوينت (نجمة) -->
+          <button class="assist-icon-btn" title="دبل بوينت">
             <svg viewBox="0 0 24 24">
               <polygon points="12 3 15 10 22 10 16.5 14 18.5 21 12 17 5.5 21 7.5 14 2 10 9 10 12 3"/>
             </svg>
           </button>
-          <button class="assist-icon-btn" title="ميوت" onclick="assistMute(0)">
+          <!-- ميوت (سبيكر مقفول) -->
+          <button class="assist-icon-btn" title="ميوت">
             <svg viewBox="0 0 24 24">
               <polygon points="11 5 6 9 3 9 3 15 6 15 11 19 11 5"/>
               <line x1="14" y1="10" x2="20" y2="16"/>
               <line x1="20" y1="10" x2="14" y2="16"/>
             </svg>
           </button>
-          <button class="assist-icon-btn" title="اتصال صديق" onclick="assistCall(0)">
+          <!-- اتصال صديق (سماعة هاتف) -->
+          <button class="assist-icon-btn" title="اتصال صديق">
             <svg viewBox="0 0 24 24">
               <path d="M22 16.92v3a2 2 0 0 1-2.18 2
                        19.86 19.86 0 0 1-8.63-3.07
@@ -1067,26 +1001,26 @@ body{
         <button class="correct-btn" onclick="markCorrect(0)">هذا الفريق جاوب صح</button>
       </div>
 
-      <div class="q-team-card" data-team="1">
+      <div class="q-team-card">
         <div class="q-team-headline">
           <span id="qTeamName1">فريق 2</span>
           <span class="q-team-score" id="qTeamScore1">0</span>
         </div>
 
         <div class="q-team-assists">
-          <button class="assist-icon-btn" title="دبل بوينت" onclick="assistDouble(1)">
+          <button class="assist-icon-btn" title="دبل بوينت">
             <svg viewBox="0 0 24 24">
               <polygon points="12 3 15 10 22 10 16.5 14 18.5 21 12 17 5.5 21 7.5 14 2 10 9 10 12 3"/>
             </svg>
           </button>
-          <button class="assist-icon-btn" title="ميوت" onclick="assistMute(1)">
+          <button class="assist-icon-btn" title="ميوت">
             <svg viewBox="0 0 24 24">
               <polygon points="11 5 6 9 3 9 3 15 6 15 11 19 11 5"/>
               <line x1="14" y1="10" x2="20" y2="16"/>
               <line x1="20" y1="10" x2="14" y2="16"/>
             </svg>
           </button>
-          <button class="assist-icon-btn" title="اتصال صديق" onclick="assistCall(1)">
+          <button class="assist-icon-btn" title="اتصال صديق">
             <svg viewBox="0 0 24 24">
               <path d="M22 16.92v3a2 2 0 0 1-2.18 2
                        19.86 19.86 0 0 1-8.63-3.07
@@ -1103,7 +1037,6 @@ body{
 
         <button class="correct-btn" onclick="markCorrect(1)">هذا الفريق جاوب صح</button>
       </div>
-
     </div>
 
   </div>
@@ -1251,32 +1184,12 @@ const ADMIN_PASSWORD = "PTI on top";
 
 let defaultTimerSeconds = 30;
 
-// حالة الفرق
 let teams = [
-  {
-    name: "فريق 1",
-    score: 0,
-    doubleActive: false,
-    doubleUsed: false,
-    muteUsed: false,
-    callUsed: false,
-    mutingOther: false
-  },
-  {
-    name: "فريق 2",
-    score: 0,
-    doubleActive: false,
-    doubleUsed: false,
-    muteUsed: false,
-    callUsed: false,
-    mutingOther: false
-  },
+  { name: "فريق 1", score: 0 },
+  { name: "فريق 2", score: 0 },
 ];
 
-// تتبع الأسئلة اللي استُخدمت
-let usedQuestions = {};
-
-// بنك الفئات
+// الأسئلة + الإجابة
 let categories = [
   {
     id: "prog",
@@ -1340,10 +1253,8 @@ let categories = [
   },
 ];
 
-// الفئات المختارة للعبة
 let activeCategoryIds = [];
 
-// السؤال الحالي
 let currentQuestion = {
   catId: null,
   text: "",
@@ -1351,11 +1262,10 @@ let currentQuestion = {
   answer: ""
 };
 
-// المؤقت
 let timerInterval = null;
 let timerValue = defaultTimerSeconds;
 
-/* ======= تنقّل بين الشاشات ======= */
+/* NAV */
 function showStage(which){
   document.querySelectorAll(".stage").forEach(st => st.classList.remove("active"));
   document.getElementById(`stage-${which}`).classList.add("active");
@@ -1363,7 +1273,7 @@ function showStage(which){
   document.body.scrollLeft = 0;
 }
 
-/* ======= شاشة الإعداد: عرض الفئات واختيارها ======= */
+/* SETUP CATEGORIES */
 function renderSetupCategories(){
   const grid = document.getElementById("setupCategoryGrid");
   grid.innerHTML = "";
@@ -1372,10 +1282,10 @@ function renderSetupCategories(){
     const card = document.createElement("div");
     card.className = "category-card" + (isActive ? " active":"");
     card.onclick = ()=>toggleCategorySelect(cat.id);
-    // بدون عرض النقاط داخل شاشة الإعداد
     card.innerHTML = `
       <div class="category-topline">
         <div class="category-name">${cat.title}</div>
+        <div class="category-points">${cat.questions.map(q=>q.points).join(" / ")}</div>
       </div>
       <div class="category-desc">${cat.desc}</div>
     `;
@@ -1383,24 +1293,22 @@ function renderSetupCategories(){
   });
 }
 
-/* اختيار الفئة (لازم ٦ بالضبط) */
+/* toggle category selection */
 function toggleCategorySelect(catId){
   const idx = activeCategoryIds.indexOf(catId);
-
   if(idx !== -1){
     activeCategoryIds.splice(idx,1);
   } else {
     if(activeCategoryIds.length >= 6){
-      alert("تقدرين تختارين ٦ فئات فقط.");
+      alert("الحد الأقصى ٦ فئات.");
       return;
     }
     activeCategoryIds.push(catId);
   }
-
   renderSetupCategories();
 }
 
-/* ======= عرض اللوحة الرئيسية ======= */
+/* BOARD RENDER */
 function renderBoard(){
   const board = document.getElementById("boardColumns");
   board.innerHTML = "";
@@ -1408,7 +1316,6 @@ function renderBoard(){
   activeCategoryIds.forEach(catId=>{
     const cat = categories.find(c=>c.id===catId);
     if(!cat) return;
-
     const col = document.createElement("div");
     col.className = "board-col";
 
@@ -1418,49 +1325,33 @@ function renderBoard(){
     col.appendChild(header);
 
     cat.questions.forEach(q=>{
-      const qKey = cat.id + "-" + q.points;
       const btn = document.createElement("button");
       btn.className = "point-btn";
+      // بدون كلمة "سؤال"
       btn.textContent = q.points;
-
-      if(usedQuestions[qKey]){
-        btn.classList.add("used");
-        btn.disabled = true;
-      } else {
-        btn.onclick = ()=>{
-          openQuestion(cat.id,q.text,q.points,q.answer);
-          usedQuestions[qKey] = true;
-          renderBoard(); // يعيد الرسم ويقفل السؤال
-        };
-      }
-
+      btn.onclick = ()=>openQuestion(cat.id,q.text,q.points,q.answer);
       col.appendChild(btn);
     });
 
     board.appendChild(col);
   });
-
-  syncTeamsUI();
-  updateAssistUI();
 }
 
-/* ======= تزامن بيانات الفرق في كل الشاشات ======= */
+/* TEAMS SYNC */
 function syncTeamsUI(){
   for(let i=0;i<teams.length;i++){
-    // في اللوحة
-    const nameElBoard = document.getElementById(`boardTeamName${i}`);
-    const scoreElBoard = document.getElementById(`boardTeamScore${i}`);
-    if(nameElBoard) nameElBoard.textContent = teams[i].name;
-    if(scoreElBoard) scoreElBoard.textContent = teams[i].score;
-
-    // في شاشة السؤال
-    const nameElQ = document.getElementById(`qTeamName${i}`);
-    const scoreElQ = document.getElementById(`qTeamScore${i}`);
-    if(nameElQ) nameElQ.textContent = teams[i].name;
-    if(scoreElQ) scoreElQ.textContent = teams[i].score;
+    const nameEl = document.getElementById(`boardTeamName${i}`);
+    const scoreEl = document.getElementById(`boardTeamScore${i}`);
+    if(nameEl) nameEl.textContent = teams[i].name;
+    if(scoreEl) scoreEl.textContent = teams[i].score;
+  }
+  for(let i=0;i<teams.length;i++){
+    const nameEl = document.getElementById(`qTeamName${i}`);
+    const scoreEl = document.getElementById(`qTeamScore${i}`);
+    if(nameEl) nameEl.textContent = teams[i].name;
+    if(scoreEl) scoreEl.textContent = teams[i].score;
   }
 
-  // لوحة الأدمن
   const t0n = document.getElementById("adminTeamName0");
   const t1n = document.getElementById("adminTeamName1");
   const t0s = document.getElementById("adminTeamScore0");
@@ -1471,40 +1362,25 @@ function syncTeamsUI(){
   if(t1s){t1s.value = teams[1].score;}
 }
 
-/* ======= فتح السؤال ======= */
+/* QUESTION FLOW */
 function openQuestion(catId,text,points,answer){
   currentQuestion.catId = catId;
   currentQuestion.text = text;
   currentQuestion.points = points;
   currentQuestion.answer = answer || "";
 
-  const catObj = categories.find(c=>c.id===catId);
-  const catName = catObj ? catObj.title : "";
-
   document.getElementById("currentQuestionText").textContent = text;
-
-  // نعرض: اسم الفئة • النقاط
   document.getElementById("currentQuestionPoints").textContent =
-    (catName ? catName + " • " : "") + points + " نقطة";
+    "قيمة السؤال: " + points + " نقطة";
 
-  // نخلي الصندوق فاضي لين نكشف الإجابة
+  // نخلي صندوق الإجابة فاضي لين نضغط "إظهار الإجابة"
   document.getElementById("answerBox").textContent = "";
 
-  // بداية سؤال جديد → الميوت القديم ينتهي
-  teams.forEach(t=>{
-    t.mutingOther = false;
-  });
-
   resetTimer();
-  startTimer(); // يبدأ تلقائي
-
-  syncTeamsUI();
-  updateAssistUI();
-  updateAssistStatusLine();
   showStage("question");
 }
 
-/* كشف الإجابة */
+/* reveal answer */
 function revealAnswer(){
   const ans = currentQuestion.answer && currentQuestion.answer.trim()
     ? currentQuestion.answer
@@ -1512,113 +1388,28 @@ function revealAnswer(){
   document.getElementById("answerBox").textContent = ans;
 }
 
-/* ======= المساعدات ======= */
-function assistDouble(teamIndex){
-  const t = teams[teamIndex];
-  if (t.doubleUsed) return;
-  t.doubleActive = true; // مفعلة للسؤال الحالي
-  t.doubleUsed = true;   // ما يقدر يعيدها
-  updateAssistUI();
-  updateAssistStatusLine();
-}
-function assistMute(teamIndex){
-  const t = teams[teamIndex];
-  if (t.muteUsed) return;
-  t.muteUsed = true;
-  const other = teamIndex === 0 ? 1 : 0;
-  t.mutingOther = true;
-  teams[other].mutingOther = false;
-  updateAssistUI();
-  updateAssistStatusLine();
-}
-function assistCall(teamIndex){
-  const t = teams[teamIndex];
-  if (t.callUsed) return;
-  t.callUsed = true;
-  updateAssistUI();
-  updateAssistStatusLine();
-}
-
-/* قفل الأزرار (في اللوحة وفي شاشة السؤال) */
-function updateAssistUI(){
-  // كل كروت الفرق سواء على اللوحة أو على شاشة السؤال
-  const allTeamCards = document.querySelectorAll(".team-card, .q-team-card");
-  allTeamCards.forEach(card=>{
-    // نحاول نحدد أي فريق هذا
-    let teamIndex = parseInt(card.getAttribute("data-team"),10);
-    if(isNaN(teamIndex)){
-      // fallback: نحدد حسب ترتيب العنصر داخل الأب
-      const siblings = Array.from(card.parentNode.children);
-      teamIndex = siblings.indexOf(card);
-    }
-    const t = teams[teamIndex];
-    if(!t) return;
-
-    const iconBtns = card.querySelectorAll(".assist-icon-btn");
-    if(iconBtns[0]){ iconBtns[0].disabled = t.doubleUsed; }
-    if(iconBtns[1]){ iconBtns[1].disabled = t.muteUsed; }
-    if(iconBtns[2]){ iconBtns[2].disabled = t.callUsed; }
-  });
-}
-
-/* السطر اللي يوضح حالة المساعدات */
-function updateAssistStatusLine(){
-  const line = document.getElementById("assistStatusLine");
-  if(!line) return;
-
-  let msgs = [];
-
-  // دبل بوينت
-  teams.forEach((t)=>{
-    if(t.doubleActive){
-      msgs.push(`<span class="highlight">دبل بوينت مفعّلة لـ ${t.name}</span>`);
-    }
-  });
-
-  // ميوت
-  teams.forEach((t,idx)=>{
-    if(t.mutingOther){
-      const otherName = idx===0 ? teams[1].name : teams[0].name;
-      msgs.push(`<span class="danger">${otherName} تحت ميوت</span>`);
-    }
-  });
-
-  // اتصال صديق
-  teams.forEach((t)=>{
-    if(t.callUsed){
-      msgs.push(`اتصال صديق مستهلك لـ ${t.name}`);
-    }
-  });
-
-  line.innerHTML = msgs.join(" • ");
-}
-
-/* ======= لما أحد يجاوب صح ======= */
+/* mark correct */
 function markCorrect(teamIndex){
   if(currentQuestion.points>0){
-    let gained = currentQuestion.points;
-    if(teams[teamIndex].doubleActive){
-      gained = gained * 2;
-    }
-    teams[teamIndex].score += gained;
-    if(teams[teamIndex].score<0) teams[teamIndex].score=0;
+    teams[teamIndex].score += currentQuestion.points;
   }
-
-  // بعد ما خلص السؤال:
-  teams.forEach(t=>{
-    t.doubleActive = false;
-    t.mutingOther = false;
-  });
-
+  if(teams[teamIndex].score<0) teams[teamIndex].score=0;
   syncTeamsUI();
-  updateAssistUI();
-  updateAssistStatusLine();
-
-  renderBoard();
-  showStage('board');
 }
 
-/* ======= المؤقت ======= */
+/* start game */
+function startGame(){
+  const t1 = document.getElementById("setupTeam1Name").value.trim() || "فريق 1";
+  const t2 = document.getElementById("setupTeam2Name").value.trim() || "فريق 2";
+  teams[0].name = t1;
+  teams[1].name = t2;
+
+  syncTeamsUI();
+  renderBoard();
+  showStage("board");
+}
+
+/* TIMER */
 function updateTimerDisplay(){
   document.getElementById("timerDisplay").textContent = timerValue;
 }
@@ -1629,9 +1420,6 @@ function startTimer(){
     if(timerValue<=0){
       timerValue=0;
       stopTimer();
-      const wrap = document.getElementById("timerWrapper");
-      wrap.style.background = "var(--accent-orange)";
-      wrap.style.color = "#000";
     }
     updateTimerDisplay();
   },1000);
@@ -1644,95 +1432,26 @@ function resetTimer(){
   stopTimer();
   timerValue = defaultTimerSeconds;
   updateTimerDisplay();
-
-  const wrap = document.getElementById("timerWrapper");
-  wrap.style.background = "var(--accent-purple)";
-  wrap.style.color = "#fff";
 }
 
-/* ======= بدء اللعبة ======= */
-function startGame(){
-  const t1 = document.getElementById("setupTeam1Name").value.trim() || "فريق 1";
-  const t2 = document.getElementById("setupTeam2Name").value.trim() || "فريق 2";
-
-  if(activeCategoryIds.length !== 6){
-    alert("لازم تختارين بالضبط ٦ فئات قبل بدء اللعبة.");
-    return;
-  }
-
-  usedQuestions = {};
-
-  teams = [
-    {
-      name: t1,
-      score: 0,
-      doubleActive:false,
-      doubleUsed:false,
-      muteUsed:false,
-      callUsed:false,
-      mutingOther:false
-    },
-    {
-      name: t2,
-      score: 0,
-      doubleActive:false,
-      doubleUsed:false,
-      muteUsed:false,
-      callUsed:false,
-      mutingOther:false
-    },
-  ];
-
-  syncTeamsUI();
-  updateAssistUI();
-  updateAssistStatusLine();
-  renderBoard();
-  showStage("board");
-}
-
-/* ======= إعادة ضبط شاملة ======= */
+/* RESET */
 function resetGame(){
-  usedQuestions = {};
-
-  teams = [
-    {
-      name: "فريق 1",
-      score: 0,
-      doubleActive:false,
-      doubleUsed:false,
-      muteUsed:false,
-      callUsed:false,
-      mutingOther:false
-    },
-    {
-      name: "فريق 2",
-      score: 0,
-      doubleActive:false,
-      doubleUsed:false,
-      muteUsed:false,
-      callUsed:false,
-      mutingOther:false
-    },
-  ];
-
+  teams[0].score = 0;
+  teams[1].score = 0;
   syncTeamsUI();
-  updateAssistUI();
-  updateAssistStatusLine();
-
   resetTimer();
   currentQuestion = {catId:null,text:"",points:0,answer:""};
   document.getElementById("currentQuestionText").textContent =
     "اختر سؤال من لوحة اللعبة ليظهر هنا";
-  document.getElementById("currentQuestionPoints").textContent = "-";
+  document.getElementById("currentQuestionPoints").textContent = "قيمة السؤال: -";
   document.getElementById("answerBox").textContent = "";
-
   activeCategoryIds = [];
   renderSetupCategories();
   renderBoard();
   showStage("setup");
 }
 
-/* ======= لوحة التحكم (أدمن) ======= */
+/* ADMIN */
 function openAdmin(){
   document.getElementById("adminModalOverlay").style.display="flex";
   document.getElementById("adminLoginBlock").style.display="block";
@@ -1763,7 +1482,7 @@ function tryAdminLogin(){
   }
 }
 
-/* حفظ الفريق من الأدمن */
+/* save team edits */
 function saveTeamEdits(i){
   const nameEl = document.getElementById(`adminTeamName${i}`);
   const scoreEl = document.getElementById(`adminTeamScore${i}`);
@@ -1777,7 +1496,7 @@ function saveTeamEdits(i){
   syncTeamsUI();
 }
 
-/* CATEGORIES ADMIN */
+/* categories admin */
 function renderAdminCategories(){
   const list = document.getElementById("adminCategoryList");
   list.innerHTML = "";
@@ -1852,7 +1571,7 @@ function addNewCategory(){
   renderQuestionEditor();
 }
 
-/* QUESTIONS ADMIN */
+/* questions admin */
 function renderQuestionCategorySelect(){
   const sel = document.getElementById("questionCategorySelect");
   if(!sel) return;
@@ -1988,8 +1707,6 @@ function init(){
   renderSetupCategories();
   syncTeamsUI();
   resetTimer();
-  updateAssistUI();
-  updateAssistStatusLine();
 
   const logoBox = document.getElementById("gameLogo");
   const img = document.getElementById("logoImg");
