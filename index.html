@@ -6,271 +6,286 @@
   <title>سين جيم - PTI</title>
   <style>
     :root {
-      --bg-main: #0a0f1a;
-      --panel-bg: rgba(255,255,255,0.03);
-      --panel-border: rgba(255,255,255,0.12);
-      --text-main: #ffffff;
-      --text-dim: #94a3b8;
-      --accent: #38bdf8; /* لو تبينك تغيرينه للون جامد للهوية لاحقاً */
-      --radius-xl: 24px;
-      --radius-md: 10px;
+      --bg-main:#0a0f1a;
+      --accent:#38bdf8;
+      --text:#fff;
+      --dim:#94a3b8;
+      --panel:rgba(255,255,255,0.05);
+      --border:rgba(255,255,255,0.1);
+      --radius:18px;
+    }
+    *{
+      box-sizing:border-box;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+      -webkit-font-smoothing:antialiased;
+    }
+    body{
+      margin:0;
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      background:var(--bg-main);
+      color:var(--text);
+      overflow:hidden;
+    }
+    .glow{
+      position:absolute;
+      width:500px;
+      height:500px;
+      background:radial-gradient(circle,rgba(56,189,248,.15),transparent 70%);
+      filter:blur(60px);
+      top:-100px;
+      right:-100px;
+      pointer-events:none;
+    }
+    .frame{
+      position:relative;
+      z-index:10;
+      width:90%;
+      max-width:420px;
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      padding:2rem 2.5rem;
+      backdrop-filter:blur(10px);
+      text-align:center;
+      box-shadow:0 20px 80px rgba(0,0,0,.8),
+                 0 0 80px rgba(56,189,248,.2);
+    }
+    img.logo{
+      width:90px;
+      height:auto;
+      margin-bottom:1rem;
+      filter:drop-shadow(0 0 12px rgba(56,189,248,.3));
+      user-select:none;
+    }
+    h1{
+      margin:.5rem 0;
+      font-size:1.4rem;
+      font-weight:600;
+      letter-spacing:-.03em;
+    }
+    p{
+      color:var(--dim);
+      font-size:.9rem;
+      line-height:1.5;
+      margin:0 0 1.5rem;
+      letter-spacing:-.03em;
+    }
+    button{
+      width:100%;
+      border:0;
+      border-radius:10px;
+      cursor:pointer;
+      font-weight:600;
+      padding:.9rem 1rem;
+      font-size:1rem;
+      transition:.2s;
+    }
+    .start{
+      background:var(--accent);
+      color:#000;
+      box-shadow:0 0 25px rgba(56,189,248,.4);
+    }
+    .start:active{
+      transform:scale(.98);
+    }
+    .admin{
+      background:rgba(255,255,255,0.05);
+      color:var(--dim);
+      border:1px solid var(--border);
+      font-size:.85rem;
+      margin-top:.8rem;
+      line-height:1.2rem;
+    }
+    .admin:hover{
+      color:var(--text);
+      background:rgba(255,255,255,0.08);
     }
 
-    * {
-      box-sizing: border-box;
-      -webkit-font-smoothing: antialiased;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    /* المودال */
+    .modal{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.6);
+      display:none;
+      justify-content:center;
+      align-items:center;
+      z-index:100;
+      padding:1rem;
     }
-
-    body {
-      background-color: var(--bg-main);
-      color: var(--text-main);
-      min-height: 100vh;
-      margin: 0;
-      display: grid;
-      place-items: center;
-      padding: 2rem;
-      position: relative;
-      overflow: hidden;
+    .modal.active{
+      display:flex;
     }
-
-    /* خلفية إضاءة خفيفة */
-    .glow {
-      position: absolute;
-      width: 480px;
-      height: 480px;
-      background: radial-gradient(circle at 50% 50%, rgba(56,189,248,0.18) 0%, rgba(10,15,26,0) 70%);
-      filter: blur(40px);
-      opacity: 0.6;
-      pointer-events: none;
-      top: 10%;
-      right: 10%;
+    .modal-box{
+      position:relative;
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      padding:2rem 1.5rem 1.5rem;
+      width:100%;
+      max-width:320px;
+      text-align:center;
+      box-shadow:0 30px 100px rgba(0,0,0,.9),
+                 0 0 100px rgba(56,189,248,.25);
     }
-
-    .frame {
-      position: relative;
-      width: 100%;
-      max-width: 420px;
-      background: var(--panel-bg);
-      border: 1px solid var(--panel-border);
-      border-radius: var(--radius-xl);
-      padding: 2rem 2rem 2.25rem;
-      box-shadow:
-        0 30px 100px rgba(0,0,0,0.9),
-        0 0 120px rgba(56,189,248,0.15);
-      backdrop-filter: blur(10px);
+    .close-btn{
+      position:absolute;
+      top:1rem;
+      right:1rem;
+      background:none;
+      border:0;
+      color:var(--dim);
+      font-size:1.3rem;
+      cursor:pointer;
+      line-height:1;
     }
-
-    /* هيدر داخل الكارد */
-    .header-block {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      gap: 1rem;
-      margin-bottom: 2rem;
+    .modal-title{
+      margin:0 0 .5rem;
+      font-size:1rem;
+      font-weight:600;
+      color:var(--text);
+      letter-spacing:-.03em;
     }
-
-    .logo-circle {
-      width: 64px;
-      height: 64px;
-      border-radius: var(--radius-md);
-      background: radial-gradient(circle at 30% 30%, rgba(56,189,248,0.4) 0%, rgba(10,15,26,0) 70%);
-      border: 1px solid var(--panel-border);
-      display: grid;
-      place-items: center;
-      font-size: 0.7rem;
-      line-height: 1.1rem;
-      text-align: center;
-      color: var(--text-main);
-      font-weight: 500;
-      letter-spacing: -.03em;
-      padding: .5rem;
+    .modal-desc{
+      margin:0 0 1rem;
+      font-size:.8rem;
+      color:var(--dim);
+      line-height:1.4;
+      letter-spacing:-.03em;
     }
-
-    .titles {
-      display: flex;
-      flex-direction: column;
-      gap: .4rem;
+    .field-label{
+      text-align:right;
+      font-size:.75rem;
+      font-weight:500;
+      color:var(--text);
+      margin-bottom:.4rem;
+      letter-spacing:-.03em;
     }
-
-    .main-title {
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: var(--text-main);
-      letter-spacing: -.04em;
+    input[type="password"]{
+      width:100%;
+      padding:.6rem .7rem;
+      border-radius:8px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.05);
+      color:var(--text);
+      font-size:.8rem;
+      outline:none;
     }
-
-    .sub-title {
-      font-size: .8rem;
-      font-weight: 400;
-      color: var(--text-dim);
-      line-height: 1.4;
-      letter-spacing: -.03em;
+    .login-btn{
+      width:100%;
+      margin-top:1rem;
+      background:var(--accent);
+      color:#000;
+      border:0;
+      border-radius:8px;
+      padding:.7rem 1rem;
+      font-weight:600;
+      font-size:.9rem;
+      cursor:pointer;
+      transition:.15s;
+      box-shadow:0 0 20px rgba(56,189,248,.4);
     }
-
-    /* الأزرار */
-    .actions {
-      display: flex;
-      flex-direction: column;
-      gap: .8rem;
+    .login-btn:active{
+      transform:scale(.98);
     }
-
-    .btn-start {
-      width: 100%;
-      background: var(--accent);
-      color: #000;
-      font-size: 1rem;
-      font-weight: 600;
-      text-align: center;
-      border: 0;
-      border-radius: var(--radius-md);
-      padding: .9rem 1rem;
-      cursor: pointer;
-      line-height: 1.2rem;
-      letter-spacing: -.03em;
-      box-shadow:
-        0 20px 60px rgba(56,189,248,0.4),
-        0 2px 6px rgba(0,0,0,0.8) inset;
-      transition: box-shadow .15s, transform .15s;
-    }
-
-    .btn-start:active {
-      transform: scale(.98);
-      box-shadow:
-        0 10px 30px rgba(56,189,248,0.35),
-        0 1px 3px rgba(0,0,0,0.8) inset;
-    }
-
-    .btn-admin {
-      width: 100%;
-      background: rgba(255,255,255,0.03);
-      color: var(--text-dim);
-      font-size: .8rem;
-      font-weight: 500;
-      text-align: center;
-      border: 1px solid var(--panel-border);
-      border-radius: var(--radius-md);
-      padding: .7rem 1rem;
-      cursor: pointer;
-      line-height: 1.1rem;
-      letter-spacing: -.03em;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: .5rem;
-      transition: background .15s, color .15s, border-color .15s;
-    }
-
-    .btn-admin:hover {
-      background: rgba(255,255,255,0.06);
-      color: var(--text-main);
-      border-color: rgba(255,255,255,0.3);
-    }
-
-    .admin-hint {
-      font-size: .7rem;
-      line-height: 1.2rem;
-      color: var(--text-dim);
-      text-align: center;
-      margin-top: .2rem;
-      letter-spacing: -.03em;
-      user-select: none;
-    }
-
-    /* خط فاصل رقيق */
-    .divider {
-      height: 1px;
-      width: 100%;
-      background: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 70%);
-      opacity: .3;
-      margin: 1rem 0 0.5rem;
-    }
-
-    /* فوتر بسيط */
-    .footer-note {
-      text-align: center;
-      font-size: .7rem;
-      color: var(--text-dim);
-      line-height: 1.4;
-      margin-top: 1.25rem;
-      letter-spacing: -.03em;
-      user-select: none;
-    }
-
-    @media (min-width:480px){
-      .main-title{
-        font-size:1.3rem;
-      }
-      .sub-title{
-        font-size:.8rem;
-      }
-      .btn-start{
-        font-size:1rem;
-      }
+    .error-msg{
+      color:#f87171;
+      font-size:.75rem;
+      line-height:1.3;
+      min-height:1rem;
+      margin-top:.5rem;
+      text-align:center;
+      letter-spacing:-.03em;
     }
   </style>
 </head>
-
 <body>
-
-  <!-- إضاءة خلفية خفيفة -->
   <div class="glow"></div>
 
-  <!-- الإطار الرئيسي -->
   <section class="frame">
+    <!-- اللوقو (صورتك) -->
+    <img src="pti-logo.png" alt="PTI Logo" class="logo" />
 
-    <!-- الهيدر -->
-    <header class="header-block">
-      <!-- مكان اللوقو: حالياً مربع متوهج بكلمة PTI -->
-      <div class="logo-circle">
-        PTI<br>SEENJEEM
-      </div>
+    <h1>سين جيم - PTI</h1>
+    <p>منصة الأسئلة التفاعلية لفريق PTI.<br>ابدأ التحدي الآن.</p>
 
-      <div class="titles">
-        <div class="main-title">سين جيم - PTI</div>
-        <div class="sub-title">
-          منصة الأسئلة المباشرة لفريق PTI.<br>
-          اختبر معلوماتك. أثبت فريقك.
-        </div>
-      </div>
-    </header>
-
-    <!-- الأزرار -->
-    <div class="actions">
-      <button class="btn-start" id="startBtn">
-        بدء
-      </button>
-
-      <div class="divider"></div>
-
-      <button class="btn-admin" id="adminBtn">
-        <span>لوحة التحكم</span>
-      </button>
-      <div class="admin-hint">
-        مخصص للإدارة فقط
-      </div>
-    </div>
-
-    <!-- فوتر -->
-    <div class="footer-note">
-      PTI Internal Game Interface
-    </div>
+    <button class="start" id="startBtn">بدء</button>
+    <button class="admin" id="adminBtn">لوحة التحكم</button>
   </section>
 
+  <!-- نافذة الإدارة -->
+  <div class="modal" id="adminModal">
+    <div class="modal-box">
+      <button class="close-btn" id="closeModal">&times;</button>
+
+      <h2 class="modal-title">دخول الإدارة</h2>
+      <p class="modal-desc">هذا القسم مخصص للمشرف فقط.</p>
+
+      <div class="field">
+        <div class="field-label">كلمة المرور</div>
+        <input type="password" id="pw" placeholder="••••••••" />
+        <div class="error-msg" id="errorArea"></div>
+      </div>
+
+      <button class="login-btn" id="loginBtn">دخول</button>
+    </div>
+  </div>
+
   <script>
-    // زر بدء -> ينقل اللاعب لواجهة اللعبة الفعلية
-    // غيري "game.html" إلى الملف الحقيقي للّعبة (مثلاً: "seenjeem.html")
+    // زر "بدء" ينقل اللاعب لواجهة اللعبة
+    // غيّري seenjeem.html لو اسم لعبتك مختلف
     document.getElementById("startBtn").addEventListener("click", () => {
       window.location.href = "seenjeem.html";
     });
 
-    // زر لوحة التحكم -> هذا لاحقاً يفتح مودال الإدمن بدل ما يطلع للكل
-    document.getElementById("adminBtn").addEventListener("click", () => {
-      // حالياً: توجيه مؤقت. لاحقاً نسويه Modal مع باسورد PTI on top
-      alert("لوحة التحكم (Admin Panel) غير مفعلة هنا بعد.");
-    });
-  </script>
+    // عناصر المودال
+    const adminBtn   = document.getElementById("adminBtn");
+    const adminModal = document.getElementById("adminModal");
+    const closeModal = document.getElementById("closeModal");
+    const loginBtn   = document.getElementById("loginBtn");
+    const pwInput    = document.getElementById("pw");
+    const errorArea  = document.getElementById("errorArea");
 
+    // فتح المودال
+    adminBtn.addEventListener("click", () => {
+      pwInput.value = "";
+      errorArea.textContent = "";
+      adminModal.classList.add("active");
+      pwInput.focus();
+    });
+
+    // إغلاق المودال
+    closeModal.addEventListener("click", () => {
+      adminModal.classList.remove("active");
+    });
+
+    // محاولة الدخول
+    loginBtn.addEventListener("click", () => {
+      const entered = pwInput.value.trim();
+
+      // مهم:
+      // ما كتبنا الباسورد هنا.
+      // مكان التحقق موجود لكن فاضي، انتي تقدرين تحطين الشرط محلي على جهاز العرض بس،
+      // بدون رفعه لـ GitHub لو تبين تحافظين عليه سري.
+      //
+      // مثال (لا ترفعين هذا لGithub لو تبين السرية):
+      // if (entered === "كلمة السر الحقيقية") { ... }
+
+      if (isAuthorized(entered)) {
+        window.location.href = "admin.html";
+      } else {
+        errorArea.textContent = "كلمة المرور غير صحيحة";
+      }
+    });
+
+    // دالة التحقق (مؤقتة بدون باسورد فعلي)
+    function isAuthorized(pw) {
+      // حالياً: شيك يرجع دايم false عشان مافتحناه
+      // بعدين على جهاز العرض (مو بالنسخة المرفوعة) بدّلي المحتوى بـ:
+      // return pw === "العبارة السرية";
+      return false;
+    }
+  </script>
 </body>
 </html>
