@@ -331,17 +331,14 @@ body{
   align-items:center;
   text-align:center;
 }
-.point-btn.disabled{
-  background:#ddd;
-  color:#777;
-  cursor:not-allowed;
-}
-.point-btn.hidden-question{
-  visibility:hidden;
-}
-.point-btn:hover:not(.disabled){
+.point-btn:hover:not(.answered){
   background:var(--accent-orange);
   color:#000;
+}
+.point-btn.answered{
+  background:var(--accent-orange);
+  color:#000;
+  cursor:not-allowed;
 }
 
 /* TEAM BAR */
@@ -411,13 +408,12 @@ body{
   box-shadow:0 10px 24px rgba(0,0,0,0.15);
   transition:var(--transition-fast);
 }
-.assist-btn.used,
-.assist-icon-btn.used{
+.assist-btn.used{
   background:#555 !important;
   cursor:not-allowed !important;
   opacity:0.5;
 }
-.assist-btn:hover{
+.assist-btn:hover:not(.used){
   background:var(--accent-orange);
   color:#000;
   border-color:rgba(0,0,0,0.2);
@@ -657,6 +653,24 @@ body{
 }
 .correct-btn:hover{
   filter:brightness(1.05);
+}
+
+/* assist notification area */
+#assistNoticeWrapper{
+  grid-column:1 / -1;
+  font-size:.8rem;
+  font-weight:600;
+  color:#000;
+}
+.assist-notice-bubble{
+  background:var(--accent-orange);
+  border:2px solid rgba(0,0,0,0.15);
+  border-radius:var(--radius-md);
+  box-shadow:0 16px 36px rgba(0,0,0,0.2);
+  padding:10px 12px;
+  color:#000;
+  margin-top:4px;
+  display:inline-block;
 }
 
 /* CONTROL PANEL MODAL */
@@ -1097,6 +1111,9 @@ body{
       </div>
     </div>
 
+    <!-- assist notification area -->
+    <div id="assistNoticeWrapper"></div>
+
   </div>
 </section>
 
@@ -1264,7 +1281,7 @@ let teams = [
   { name: "فريق 2", score: 0, used: {double:false, mute:false, call:false} },
 ];
 
-// الأسئلة، الآن كل سؤال له خاصية answered عشان ما يتكرر
+// الأسئلة (answered = تم أخذ السؤال)
 let categories = [
   {
     id: "prog",
@@ -1334,10 +1351,10 @@ let categories = [
   },
 ];
 
-// الفئات اللي تم اختيارها في الإعداد
+// الفئات المختارة
 let activeCategoryIds = [];
 
-// السؤال الحالي المعروض
+// السؤال الحالي
 let currentQuestion = {
   catIndex: null,
   qIndex: null,
@@ -1347,7 +1364,8 @@ let currentQuestion = {
   answer: ""
 };
 
-/* --------- مراحل العرض --------- */
+/* ---------------- مراحل العرض ---------------- */
+
 function showStage(which){
   document.querySelectorAll(".stage").forEach(st => st.classList.remove("active"));
   document.getElementById(`stage-${which}`).classList.add("active");
@@ -1355,9 +1373,10 @@ function showStage(which){
   document.body.scrollLeft = 0;
 }
 
-/* --------- شاشة الفائز --------- */
+/* ---------------- شاشة الفائز ---------------- */
+
 function checkWinnerIfDone(){
-  // نشيك هل كل الأسئلة اللي في الفئات المختارة تم الإجابة عليها
+  // تأكدنا أن كل الأسئلة في الفئات النشطة تمت الإجابة عليها
   for (let cid of activeCategoryIds){
     const catObj = categories.find(c=>c.id===cid);
     if(!catObj) continue;
@@ -1368,30 +1387,25 @@ function checkWinnerIfDone(){
     }
   }
 
-  // هنا يعني خلصت كل الأسئلة
-  // نحدد أعلى سكور
+  // ما بقى ولا سؤال
   let winnerIdx = 0;
   if (teams[1].score > teams[0].score) {
     winnerIdx = 1;
   }
 
-  const wName = teams[winnerIdx].name;
-  const wScore = teams[winnerIdx].score;
-
-  document.getElementById("winnerName").textContent = wName;
-  document.getElementById("winnerScore").textContent = wScore + " نقطة";
+  document.getElementById("winnerName").textContent = teams[winnerIdx].name;
+  document.getElementById("winnerScore").textContent = teams[winnerIdx].score + " نقطة";
   document.getElementById("winnerOverlay").style.display = "flex";
 }
 
 function closeWinner(){
-  // نرجع للإعداد (بداية جديدة)
+  // نرجع للإعداد كبداية جديدة
   document.getElementById("winnerOverlay").style.display = "none";
   showStage('setup');
 }
 
-/* --------- الإعداد --------- */
+/* ---------------- الإعداد ---------------- */
 
-// عرض الفئات في صفحة الإعداد
 function renderSetupCategories(){
   const grid = document.getElementById("setupCategoryGrid");
   grid.innerHTML = "";
@@ -1414,7 +1428,6 @@ function renderSetupCategories(){
   });
 }
 
-// اختيار/إلغاء اختيار فئة
 function toggleCategorySelect(catId){
   const idx = activeCategoryIds.indexOf(catId);
   if(idx !== -1){
@@ -1429,9 +1442,8 @@ function toggleCategorySelect(catId){
   renderSetupCategories();
 }
 
-// بدء اللعبة
 function startGame(){
-  // أسماء الفرق
+  // أسماء الفرق من الإعداد
   const t1 = document.getElementById("setupTeam1Name").value.trim() || "فريق 1";
   const t2 = document.getElementById("setupTeam2Name").value.trim() || "فريق 2";
   teams[0].name = t1;
@@ -1442,7 +1454,7 @@ function startGame(){
   showStage("board");
 }
 
-/* --------- لوحة اللعبة (BOARD) --------- */
+/* ---------------- لوحة اللعبة ---------------- */
 
 function renderBoard(){
   const board = document.getElementById("boardColumns");
@@ -1451,7 +1463,6 @@ function renderBoard(){
   activeCategoryIds.forEach(catId=>{
     const cat = categories.find(c=>c.id===catId);
     if(!cat) return;
-
     const catIndex = categories.indexOf(cat);
 
     const col = document.createElement("div");
@@ -1465,23 +1476,25 @@ function renderBoard(){
     cat.questions.forEach((q, qIndex)=>{
       const btn = document.createElement("button");
       btn.className = "point-btn";
-      btn.textContent = q.answered ? "" : q.points;
+      btn.textContent = q.points; // الرقم دايم ظاهر
+
       if(q.answered){
-        btn.classList.add("disabled","hidden-question");
+        btn.classList.add("answered");
+        btn.disabled = true;
       } else {
         btn.onclick = ()=>openQuestion(catIndex,qIndex);
       }
+
       col.appendChild(btn);
     });
 
     board.appendChild(col);
   });
 
-  // بعد ما نعيد رسم اللوحة نحدّث النقاط واسماء الفرق
-  syncTeamsUI();
+  syncTeamsUI(); // تحديث الأسماء والنقاط
 }
 
-/* --------- مزامنة المعلومات على الواجهات --------- */
+/* ---------------- مزامنة الفرق ---------------- */
 
 function syncTeamsUI(){
   // لوحة اللعبة
@@ -1498,7 +1511,7 @@ function syncTeamsUI(){
     if(nameEl) nameEl.textContent = teams[i].name;
     if(scoreEl) scoreEl.textContent = teams[i].score;
   }
-  // لوحة التحكم الحية
+  // لوحة التحكم
   const t0n = document.getElementById("adminTeamName0");
   const t1n = document.getElementById("adminTeamName1");
   const t0s = document.getElementById("adminTeamScore0");
@@ -1508,16 +1521,16 @@ function syncTeamsUI(){
   if(t0s){t0s.value = teams[0].score;}
   if(t1s){t1s.value = teams[1].score;}
 
-  // تحديث حالة أزرار المساعدة (board stage)
+  // حالة الأزرار للمساعدات
   updateAssistButtons();
 }
 
-/* --------- عرض السؤال (QUESTION FLOW) --------- */
+/* ---------------- عرض السؤال ---------------- */
 
 function openQuestion(catIndex,qIndex){
   const qData = categories[catIndex].questions[qIndex];
   if(qData.answered){
-    return; // سؤال مستخدم قبل
+    return; // خلاص تم أخذه
   }
 
   currentQuestion.catIndex = catIndex;
@@ -1527,7 +1540,7 @@ function openQuestion(catIndex,qIndex){
   currentQuestion.effectivePoints = qData.points;
   currentQuestion.answer = qData.answer || "";
 
-  // نعرضه على الشاشة
+  // عرض السؤال
   document.getElementById("currentQuestionText").textContent = qData.text;
   document.getElementById("currentQuestionPoints").textContent =
     "قيمة السؤال: " + currentQuestion.effectivePoints + " نقطة";
@@ -1537,11 +1550,13 @@ function openQuestion(catIndex,qIndex){
   resetTimer();
   startTimer();
 
+  // نصفي أي إشعار قديم للمساعدة
+  clearAssistNotice();
+
   // نعرض شاشة السؤال
   showStage("question");
 }
 
-// إظهار الإجابة
 function revealAnswer(){
   const ans = currentQuestion.answer && currentQuestion.answer.trim()
     ? currentQuestion.answer
@@ -1549,34 +1564,32 @@ function revealAnswer(){
   document.getElementById("answerBox").textContent = ans;
 }
 
-// فريق جاوب صح
 function markCorrect(teamIndex){
-  // عط النقاط للفريق
+  // اضف النقاط للفريق
   if(currentQuestion.effectivePoints>0){
     teams[teamIndex].score += currentQuestion.effectivePoints;
   }
   if(teams[teamIndex].score<0) teams[teamIndex].score=0;
 
-  // علم السؤال إنه خلاص انتهى
+  // علّم السؤال أنه استُخدم
   if(currentQuestion.catIndex !== null && currentQuestion.qIndex !== null){
     categories[currentQuestion.catIndex].questions[currentQuestion.qIndex].answered = true;
   }
 
-  // رجع القيم الافتراضية للسؤال الحالي
+  // صافي
   clearCurrentQuestion();
 
-  // نحدّث الواجهات
+  // حدث الواجهات
   syncTeamsUI();
   renderBoard();
 
-  // رجع للوحة اللعبة
+  // رجوع للوحة السؤال
   showStage("board");
 
-  // اذا ما بقي ولا سؤال، طلع شاشة الفائز
+  // لو خلصت كل الأسئلة -> شاشة الفائز
   checkWinnerIfDone();
 }
 
-// نصفر بيانات السؤال الحالي
 function clearCurrentQuestion(){
   currentQuestion = {
     catIndex: null,
@@ -1588,7 +1601,7 @@ function clearCurrentQuestion(){
   };
 }
 
-/* --------- المؤقت (TIMER) --------- */
+/* ---------------- المؤقت ---------------- */
 
 function updateTimerDisplay(){
   document.getElementById("timerDisplay").textContent = timerValue;
@@ -1614,25 +1627,29 @@ function resetTimer(){
   updateTimerDisplay();
 }
 
-/* --------- المساعدات ---------
-  لكل فريق:
-  double = دبل بوينت للسؤال الحالي (مرة وحده)
-  mute   = ميوت (يوقف المؤقت) (مرة وحده)
-  call   = اتصال صديق (يعرض تلميح) (مرة وحده)
----------------------------------*/
+/* ---------------- المساعدات ----------------
+
+- double: دبل بوينت (يضاعف النقاط الحالية للسؤال) مرة وحدة لكل فريق
+- mute: ميوت (تسجّل وتتعطل، ما توقف التايمر)
+- call: اتصال صديق (تسجّل وتتعطل، ما تعطي تلميح)
+
+كل وحدة:
+- تعطّل زرها للفريق
+- تظهر إشعار تحت شاشة السؤال
+------------------------------------------------ */
 
 function useAssist(type, teamIndex){
   const team = teams[teamIndex];
   if(!team) return;
 
-  // لو مستخدم من قبل
+  // لو مستخدمة قبل خلاص ما نعيد
   if(team.used[type]) return;
 
   // فعل المساعدة
   team.used[type] = true;
 
+  // منطق خاص لكل مساعدة
   if(type === "double"){
-    // ضاعف النقاط الحالية لو فيه سؤال مفتوح
     if(currentQuestion && currentQuestion.basePoints>0){
       currentQuestion.effectivePoints = currentQuestion.basePoints * 2;
       document.getElementById("currentQuestionPoints").textContent =
@@ -1640,27 +1657,25 @@ function useAssist(type, teamIndex){
     }
   }
 
-  if(type === "mute"){
-    // وقف المؤقت الآن
-    stopTimer();
-  }
+  // mute و call: بس نعلّم إنها استخدمت وخلاص
+  // (ما نوقف التايمر, ما نطلع تلميح)
 
-  if(type === "call"){
-    // اتصال صديق = تلميح
-    // نحط جزء من الاجابة داخل مربع الاجابة إذا فيه سؤال مفتوح
-    if(currentQuestion.answer){
-      const hint = currentQuestion.answer.substring(0,3) + "...";
-      document.getElementById("answerBox").textContent = "تلميح: " + hint;
-    } else {
-      document.getElementById("answerBox").textContent = "لا يوجد تلميح مسجل.";
-    }
-  }
-
-  // تحديث الواجهات: نخفي/نقفل الزر
+  // نحدّث الأزرار في الواجهة (تعطيلها وتغيير شكلها)
   updateAssistButtons();
+
+  // نعرض الإشعار أسفل شاشة السؤال
+  showAssistNotice(teams[teamIndex].name, assistReadableName(type));
 }
 
-// تحدث شكل الأزرار عشان نبين المساعدات اللي خلصت
+// ترجمة اسم المساعدة لعرضه في التنبيه
+function assistReadableName(type){
+  if(type === "double") return "دبل بوينت";
+  if(type === "mute") return "ميوت";
+  if(type === "call") return "اتصال صديق";
+  return "";
+}
+
+// تعطيل الأزرار بعد الاستخدام (لوحة اللعبة + شاشة السؤال)
 function updateAssistButtons(){
   for(let i=0;i<teams.length;i++){
     const t = teams[i];
@@ -1700,36 +1715,60 @@ function updateAssistButtons(){
   }
 }
 
-/* --------- إعادة ضبط اللعبة كاملة --------- */
+/* ---------------- إشعار المساعدة ---------------- */
+
+let assistTimeout = null;
+
+function showAssistNotice(teamName, assistName){
+  clearAssistNotice();
+
+  const wrap = document.getElementById("assistNoticeWrapper");
+  const div = document.createElement("div");
+  div.className = "assist-notice-bubble";
+  div.textContent = 'الفريق "' + teamName + '" استخدم مساعدة "' + assistName + '"';
+
+  wrap.appendChild(div);
+
+  assistTimeout = setTimeout(()=>{
+    clearAssistNotice();
+  },3000);
+}
+
+function clearAssistNotice(){
+  const wrap = document.getElementById("assistNoticeWrapper");
+  wrap.innerHTML = "";
+  if(assistTimeout){
+    clearTimeout(assistTimeout);
+    assistTimeout = null;
+  }
+}
+
+/* ---------------- إعادة ضبط اللعبة كاملة ---------------- */
 
 function resetGame(){
-  // صفر النقاط
+  // نصفر كل شيء
   teams = [
     { name: teams[0].name || "فريق 1", score: 0, used: {double:false, mute:false, call:false} },
     { name: teams[1].name || "فريق 2", score: 0, used: {double:false, mute:false, call:false} },
   ];
 
-  // رجع المؤقت
-  resetTimer();
-
-  // رجع الأسئلة كلها لغير مجابة
   categories.forEach(cat=>{
     cat.questions.forEach(q=>{ q.answered=false; });
   });
 
-  // فضي السؤال الحالي
-  clearCurrentQuestion();
-
-  // فضي اختيار الفئات
   activeCategoryIds = [];
+  clearCurrentQuestion();
+  resetTimer();
+  clearAssistNotice();
 
   renderSetupCategories();
   renderBoard();
   syncTeamsUI();
+
   showStage("setup");
 }
 
-/* --------- لوحة التحكم (ADMIN) --------- */
+/* ---------------- لوحة التحكم ---------------- */
 
 function openAdmin(){
   document.getElementById("adminModalOverlay").style.display="flex";
@@ -1762,7 +1801,6 @@ function tryAdminLogin(){
   }
 }
 
-// حفظ تعديل فريق
 function saveTeamEdits(i){
   const nameEl = document.getElementById(`adminTeamName${i}`);
   const scoreEl = document.getElementById(`adminTeamScore${i}`);
@@ -1776,7 +1814,7 @@ function saveTeamEdits(i){
   syncTeamsUI();
 }
 
-/* --------- إدارة الفئات داخل لوحة التحكم --------- */
+/* ---------------- إدارة الفئات في لوحة التحكم ---------------- */
 
 function renderAdminCategories(){
   const list = document.getElementById("adminCategoryList");
@@ -1874,7 +1912,7 @@ function addNewCategory(){
   renderQuestionEditor();
 }
 
-/* --------- إدارة الأسئلة داخل لوحة التحكم --------- */
+/* ---------------- إدارة الأسئلة في لوحة التحكم ---------------- */
 
 function renderQuestionCategorySelect(){
   const sel = document.getElementById("questionCategorySelect");
@@ -1945,7 +1983,6 @@ function saveQuestion(catId,qIdx){
     const v = parseInt(pEl.value,10);
     if(!isNaN(v)&&v>0){
       catObj.questions[qIdx].points=v;
-      // اذا حدّثنا النقاط الأصلية، نرجعها لو السؤال الحالي نفس هذا
       if(currentQuestion.catIndex !== null &&
          currentQuestion.qIndex !== null &&
          categories[currentQuestion.catIndex] === catObj &&
@@ -2017,7 +2054,7 @@ function addNewQuestion(){
   renderQuestionEditor();
 }
 
-/* --------- حفظ الوقت الافتراضي للمؤقت --------- */
+/* ---------------- الوقت الافتراضي ---------------- */
 
 function saveDefaultTimer(){
   const inp = document.getElementById("defaultTimerInput");
@@ -2029,7 +2066,8 @@ function saveDefaultTimer(){
   }
 }
 
-/* --------- INIT --------- */
+/* ---------------- init ---------------- */
+
 function init(){
   renderSetupCategories();
   syncTeamsUI();
