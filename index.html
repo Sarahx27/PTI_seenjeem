@@ -1,307 +1,2056 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-  <title>سين جيم - PTI</title>
-  <style>
-    :root {
-      --bg-main:#0a0f1a;
-      --accent:#38bdf8;
-      --text:#fff;
-      --dim:#94a3b8;
-      --panel:rgba(255,255,255,0.05);
-      --border:rgba(255,255,255,0.1);
-      --radius:18px;
-      --danger:#f87171;
-      --surface-btn:rgba(255,255,255,0.05);
-    }
-    *{
-      box-sizing:border-box;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-      -webkit-font-smoothing:antialiased;
-    }
-    body{
-      margin:0;
-      min-height:100vh;
-      display:grid;
-      place-items:center;
-      background:var(--bg-main);
-      color:var(--text);
-      overflow:hidden;
-    }
-    .glow{
-      position:absolute;
-      width:500px;
-      height:500px;
-      background:radial-gradient(circle,rgba(56,189,248,.15),transparent 70%);
-      filter:blur(60px);
-      top:-100px;
-      right:-100px;
-      pointer-events:none;
-    }
-    .frame{
-      position:relative;
-      z-index:10;
-      width:90%;
-      max-width:420px;
-      background:var(--panel);
-      border:1px solid var(--border);
-      border-radius:var(--radius);
-      padding:2rem 2.5rem;
-      backdrop-filter:blur(10px);
-      text-align:center;
-      box-shadow:0 20px 80px rgba(0,0,0,.8),
-                 0 0 80px rgba(56,189,248,.2);
-    }
-    img.logo{
-      width:90px;
-      height:auto;
-      margin-bottom:1rem;
-      filter:drop-shadow(0 0 12px rgba(56,189,248,.3));
-      user-select:none;
-    }
-    h1{
-      margin:.5rem 0;
-      font-size:1.4rem;
-      font-weight:600;
-      letter-spacing:-.03em;
-    }
-    p{
-      color:var(--dim);
-      font-size:.9rem;
-      line-height:1.5;
-      margin:0 0 1.5rem;
-      letter-spacing:-.03em;
-    }
-    button{
-      width:100%;
-      border:0;
-      border-radius:10px;
-      cursor:pointer;
-      font-weight:600;
-      padding:.9rem 1rem;
-      font-size:1rem;
-      transition:.2s;
-    }
-    .start{
-      background:var(--accent);
-      color:#000;
-      box-shadow:0 0 25px rgba(56,189,248,.4);
-    }
-    .start:active{ transform:scale(.98); }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>سين جيم - PTI</title>
+<style>
+:root {
+  --bg-deep: #eaf3ff;
+  --bg-deeper: #ffffff;
 
-    .admin{
-      background:var(--surface-btn);
-      color:var(--dim);
-      border:1px solid var(--border);
-      font-size:.85rem;
-      margin-top:.8rem;
-      line-height:1.2rem;
-    }
-    .admin:hover{
-      color:var(--text);
-      background:rgba(255,255,255,0.08);
-    }
+  --surface-main: #ffffff;
+  --surface-alt: #f6f8fc;
+  --surface-border: rgba(0,0,0,0.08);
+  --surface-border-strong: rgba(0,0,0,0.12);
 
-    /* المودال */
-    .modal{
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,.6);
-      display:none;
-      justify-content:center;
-      align-items:center;
-      z-index:100;
-      padding:1rem;
-    }
-    .modal.active{
-      display:flex;
-    }
-    .modal-box{
-      position:relative;
-      background:var(--panel);
-      border:1px solid var(--border);
-      border-radius:var(--radius);
-      padding:2rem 1.5rem 1.5rem;
-      width:100%;
-      max-width:320px;
-      text-align:center;
-      box-shadow:0 30px 100px rgba(0,0,0,.9),
-                 0 0 100px rgba(56,189,248,.25);
-    }
-    .close-x{
-      position:absolute;
-      top:1rem;
-      right:1rem;
-      background:none;
-      border:0;
-      color:var(--dim);
-      font-size:1.3rem;
-      cursor:pointer;
-      line-height:1;
-    }
-    .modal-title{
-      margin:0 0 .5rem;
-      font-size:1rem;
-      font-weight:600;
-      color:var(--text);
-      letter-spacing:-.03em;
-    }
-    .modal-desc{
-      margin:0 0 1rem;
-      font-size:.8rem;
-      color:var(--dim);
-      line-height:1.4;
-      letter-spacing:-.03em;
-    }
-    .field-label{
-      text-align:right;
-      font-size:.75rem;
-      font-weight:500;
-      color:var(--text);
-      margin-bottom:.4rem;
-      letter-spacing:-.03em;
-    }
-    input[type="password"]{
-      width:100%;
-      padding:.6rem .7rem;
-      border-radius:8px;
-      border:1px solid var(--border);
-      background:rgba(255,255,255,.05);
-      color:var(--text);
-      font-size:.8rem;
-      outline:none;
-    }
-    .error-msg{
-      color:var(--danger);
-      font-size:.75rem;
-      line-height:1.3;
-      min-height:1rem;
-      margin-top:.5rem;
-      text-align:center;
-      letter-spacing:-.03em;
-    }
+  --accent-purple: #5a4fa3;
+  --accent-purple-dark: #463d86;
+  --accent-orange: #ffb24d;
+  --teal-main: #3fa89b;
 
-    .modal-actions{
-      display:flex;
-      flex-direction:column;
-      gap:.6rem;
-      margin-top:1rem;
-    }
-    .login-btn{
-      background:var(--accent);
-      color:#000;
-      border:0;
-      border-radius:8px;
-      padding:.7rem 1rem;
-      font-weight:600;
-      font-size:.9rem;
-      cursor:pointer;
-      box-shadow:0 0 20px rgba(56,189,248,.4);
-      transition:.15s;
-    }
-    .login-btn:active{ transform:scale(.98); }
+  --text-strong: #1a1a1a;
+  --text-mid: #444;
+  --text-dim: #666;
+  --text-invert: #fff;
 
-    .cancel-btn{
-      background:var(--surface-btn);
-      color:var(--dim);
-      border:1px solid var(--border);
-      border-radius:8px;
-      padding:.7rem 1rem;
-      font-weight:600;
-      font-size:.9rem;
-      cursor:pointer;
-      transition:.15s;
-    }
-    .cancel-btn:hover{
-      background:rgba(255,255,255,0.08);
-      color:var(--text);
-    }
+  --radius-xl: 20px;
+  --radius-lg: 14px;
+  --radius-md: 8px;
+  --radius-sm: 4px;
 
-  </style>
+  --shadow-card: 0 20px 40px rgba(0,0,0,0.08);
+  --shadow-pop: 0 30px 70px rgba(0,0,0,0.18);
+
+  --header-h: 72px;
+  --max-stage-w: 1200px;
+
+  --transition-fast: .15s ease;
+
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+}
+
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  min-height:100vh;
+  background: radial-gradient(circle at 30% 20%, var(--bg-deep) 0%, var(--bg-deeper) 60%);
+  color: var(--text-strong);
+  display:flex;
+  flex-direction:column;
+  overflow-x:hidden;
+}
+
+/* HEADER */
+.header-bar{
+  height:var(--header-h);
+  min-height:var(--header-h);
+  background:linear-gradient(90deg, var(--accent-purple) 0%, #6c62c4 50%, #8e93ff 100%);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  gap:16px;
+  padding:0 20px;
+  box-shadow:0 12px 30px rgba(0,0,0,0.15);
+  position:sticky;
+  top:0;
+  z-index:1000;
+  border-bottom:1px solid rgba(255,255,255,.25);
+}
+
+.header-left{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  min-width:0;
+}
+.game-logo{
+  width:60px;
+  height:60px;
+  flex-shrink:0;
+  border-radius:var(--radius-md);
+  background:#fff;
+  color:var(--accent-purple);
+  font-weight:600;
+  font-size:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  box-shadow:0 10px 24px rgba(0,0,0,0.2);
+}
+.game-logo img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+  border-radius:var(--radius-md);
+}
+.game-info{
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+}
+.game-title{
+  font-size:1.1rem;
+  font-weight:700;
+  line-height:1.2;
+  color:#fff;
+  white-space:nowrap;
+}
+.game-sub{
+  font-size:.8rem;
+  color:rgba(255,255,255,0.8);
+  line-height:1.2;
+}
+
+.header-actions{
+  margin-right:auto;
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+.top-btn{
+  background:rgba(255,255,255,0.12);
+  border:1px solid rgba(255,255,255,0.4);
+  color:#fff;
+  border-radius:var(--radius-md);
+  padding:9px 12px;
+  font-size:.9rem;
+  font-weight:600;
+  cursor:pointer;
+  line-height:1.2;
+  box-shadow:0 10px 24px rgba(0,0,0,0.25);
+  transition:var(--transition-fast);
+}
+.top-btn:hover{
+  background:rgba(255,255,255,0.22);
+}
+
+/* STAGE WRAPPER */
+.stage{
+  width:100%;
+  max-width:var(--max-stage-w);
+  margin:24px auto 60px auto;
+  padding:0 20px;
+  display:none;
+}
+.stage.active{
+  display:block;
+}
+
+/* GENERIC CARD */
+.big-card{
+  background:var(--surface-main);
+  border:1px solid var(--surface-border);
+  border-radius:var(--radius-xl);
+  box-shadow:var(--shadow-card);
+  padding:24px 24px 28px;
+  color:var(--text-strong);
+}
+
+/* TITLES */
+.section-title{
+  font-size:1rem;
+  font-weight:600;
+  color:var(--text-strong);
+  margin-bottom:16px;
+  display:flex;
+  justify-content:space-between;
+  flex-wrap:wrap;
+}
+.section-note{
+  font-size:.8rem;
+  font-weight:500;
+  color:var(--accent-purple);
+}
+
+/* TEAM INPUTS (setup) */
+.team-setup-row{
+  background:var(--surface-alt);
+  border:1px solid var(--surface-border);
+  border-radius:var(--radius-lg);
+  box-shadow:var(--shadow-card);
+  padding:16px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  margin-bottom:24px;
+}
+.team-block-input label{
+  font-size:.9rem;
+  font-weight:600;
+  color:var(--text-strong);
+  margin-bottom:6px;
+  display:block;
+}
+.team-block-input input{
+  width:100%;
+  background:#fff;
+  color:var(--text-strong);
+  border-radius:var(--radius-md);
+  border:1px solid var(--surface-border-strong);
+  font-size:1rem;
+  padding:10px 12px;
+  font-weight:600;
+  box-shadow:inset 0 1px 2px rgba(0,0,0,0.05);
+}
+
+/* CATEGORY GRID */
+.category-select-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:16px;
+  margin-bottom:24px;
+}
+.category-card{
+  background:#fff;
+  border:2px solid var(--surface-border);
+  border-radius:var(--radius-lg);
+  box-shadow:var(--shadow-card);
+  min-height:180px;
+  padding:16px;
+  cursor:pointer;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+  align-items:center;
+  text-align:center;
+  transition:var(--transition-fast);
+}
+.category-card.active{
+  border:2px solid var(--accent-orange);
+  box-shadow:0 16px 40px rgba(255,178,77,0.4);
+}
+.category-image{
+  width:80px;
+  height:80px;
+  border-radius:12px;
+  object-fit:cover;
+  box-shadow:0 12px 24px rgba(0,0,0,0.15);
+  margin-bottom:8px;
+  border:1px solid var(--surface-border-strong);
+}
+.category-name{
+  font-size:1.05rem;
+  font-weight:700;
+  color:var(--text-strong);
+  line-height:1.3;
+}
+.category-desc{
+  font-size:.8rem;
+  color:var(--text-mid);
+  line-height:1.5;
+  flex-grow:1;
+  margin-top:8px;
+}
+
+/* START GAME BUTTON */
+.start-game-btn{
+  background:var(--accent-purple);
+  color:#fff;
+  border:0;
+  border-radius:var(--radius-lg);
+  font-size:1rem;
+  font-weight:700;
+  width:100%;
+  padding:16px;
+  cursor:pointer;
+  line-height:1.2;
+  text-align:center;
+  box-shadow:0 20px 50px rgba(0,0,0,0.2);
+  transition:var(--transition-fast);
+}
+.start-game-btn:hover{
+  background:var(--accent-purple-dark);
+}
+
+/* BOARD */
+.board-area{
+  background:var(--surface-main);
+  border:1px solid var(--surface-border);
+  border-radius:var(--radius-xl);
+  box-shadow:var(--shadow-card);
+  padding:24px;
+  margin-bottom:16px;
+}
+.board-columns{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:16px;
+}
+.board-col{
+  background:var(--surface-alt);
+  border:2px solid var(--surface-border);
+  border-radius:var(--radius-lg);
+  box-shadow:var(--shadow-card);
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  min-height:240px;
+}
+.board-col-header{
+  background:var(--accent-purple);
+  color:#fff;
+  text-align:center;
+  padding:16px;
+  font-size:1rem;
+  font-weight:700;
+  line-height:1.4;
+  border-bottom:1px solid rgba(0,0,0,0.15);
+  min-height:70px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+.point-btn{
+  flex:1;
+  background:#fff;
+  border:0;
+  border-bottom:1px solid var(--surface-border);
+  color:var(--text-strong);
+  font-size:1.3rem;
+  font-weight:700;
+  line-height:1;
+  padding:20px 10px;
+  cursor:pointer;
+  transition:var(--transition-fast);
+  position:relative;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+}
+.point-btn.disabled{
+  background:#ddd;
+  color:#777;
+  cursor:not-allowed;
+}
+.point-btn.hidden-question{
+  visibility:hidden;
+}
+.point-btn:hover:not(.disabled){
+  background:var(--accent-orange);
+  color:#000;
+}
+
+/* TEAM BAR */
+.team-bar{
+  background:var(--surface-main);
+  border:1px solid var(--surface-border);
+  border-radius:var(--radius-xl);
+  box-shadow:var(--shadow-card);
+  padding:16px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:16px;
+  justify-content:space-between;
+  align-items:stretch;
+}
+.team-card{
+  flex:1 1 260px;
+  min-width:240px;
+  background:var(--surface-alt);
+  border:2px solid var(--surface-border);
+  border-radius:var(--radius-lg);
+  box-shadow:var(--shadow-card);
+  padding:16px;
+  color:var(--text-strong);
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  gap:12px;
+}
+.team-header-line{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  flex-wrap:wrap;
+  gap:8px;
+}
+.team-name-display{
+  font-size:1rem;
+  font-weight:700;
+  color:var(--text-strong);
+  line-height:1.2;
+}
+.team-score-display{
+  font-size:1.5rem;
+  font-weight:800;
+  line-height:1;
+  color:var(--accent-orange);
+  min-width:60px;
+  text-align:left;
+}
+.team-assist-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+.assist-btn{
+  background:var(--teal-main);
+  border:1px solid rgba(0,0,0,0.2);
+  color:#fff;
+  border-radius:var(--radius-md);
+  padding:8px 10px;
+  font-size:.8rem;
+  font-weight:600;
+  line-height:1.2;
+  cursor:pointer;
+  white-space:nowrap;
+  box-shadow:0 10px 24px rgba(0,0,0,0.15);
+  transition:var(--transition-fast);
+}
+.assist-btn.used,
+.assist-icon-btn.used{
+  background:#555 !important;
+  cursor:not-allowed !important;
+  opacity:0.5;
+}
+.assist-btn:hover{
+  background:var(--accent-orange);
+  color:#000;
+  border-color:rgba(0,0,0,0.2);
+}
+
+/* QUESTION SCREEN */
+.question-layout{
+  display:grid;
+  grid-template-columns:1fr 300px;
+  gap:16px;
+}
+
+.question-card{
+  background:var(--surface-main);
+  border:1px solid var(--surface-border);
+  border-radius:var(--radius-xl);
+  box-shadow:var(--shadow-card);
+  padding:16px 16px 20px;
+  color:var(--text-strong);
+  min-height:300px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  position:relative;
+}
+
+/* mini timer overlay block */
+.timer-mini-wrapper{
+  position:absolute;
+  top:12px;
+  left:12px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  background:var(--accent-purple);
+  color:#fff;
+  border-radius:var(--radius-md);
+  border:2px solid rgba(0,0,0,0.15);
+  box-shadow:0 12px 28px rgba(0,0,0,0.18);
+  padding:6px 8px;
+  min-width:100px;
+  justify-content:center;
+  font-size:1rem;
+  font-weight:700;
+}
+.timer-number{
+  min-width:32px;
+  text-align:center;
+  font-variant-numeric:tabular-nums;
+}
+
+.timer-icon-btn{
+  background:#fff0;
+  border:0;
+  padding:4px;
+  cursor:pointer;
+  line-height:0;
+  border-radius:var(--radius-sm);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.timer-icon-btn svg{
+  width:18px;
+  height:18px;
+  stroke:#fff;
+  stroke-width:2;
+  fill:none;
+}
+.timer-icon-btn:hover{
+  background:rgba(255,255,255,0.15);
+}
+
+.current-question-wrap{
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  margin-top:32px;
+}
+.current-question-text{
+  font-size:1.6rem;
+  font-weight:700;
+  line-height:1.4;
+  text-align:center;
+  color:var(--text-strong);
+  min-height:2.5em;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-wrap:balance;
+  white-space:pre-wrap;
+  margin:0;
+}
+.current-question-points{
+  font-size:1rem;
+  font-weight:600;
+  color:var(--accent-orange);
+  text-align:center;
+  margin:0;
+}
+
+.answer-box{
+  background:var(--surface-alt);
+  border:2px solid var(--surface-border);
+  border-radius:var(--radius-md);
+  padding:10px;
+  font-size:1rem;
+  font-weight:600;
+  color:var(--text-strong);
+  min-height:2.5em;
+  text-align:center;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  white-space:pre-wrap;
+}
+
+.q-control-row{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:10px;
+  margin-top:8px;
+}
+.q-btn{
+  background:var(--accent-purple);
+  border:0;
+  border-radius:var(--radius-md);
+  padding:10px 14px;
+  font-size:.9rem;
+  font-weight:600;
+  line-height:1.2;
+  cursor:pointer;
+  color:#fff;
+  min-width:120px;
+  text-align:center;
+  box-shadow:0 12px 28px rgba(0,0,0,0.18);
+  transition:var(--transition-fast);
+}
+.q-btn:hover{
+  background:var(--accent-purple-dark);
+  color:#fff;
+}
+
+/* SIDE TEAMS in question */
+.question-side-teams{
+  background:var(--surface-main);
+  border:1px solid var(--surface-border);
+  border-radius:var(--radius-xl);
+  box-shadow:var(--shadow-card);
+  padding:16px;
+  color:var(--text-strong);
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+  min-height:300px;
+}
+.q-team-card{
+  background:var(--surface-alt);
+  border:2px solid var(--surface-border);
+  border-radius:var(--radius-lg);
+  box-shadow:var(--shadow-card);
+  padding:16px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.q-team-headline{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  flex-wrap:wrap;
+  gap:8px;
+  font-size:1rem;
+  font-weight:700;
+  color:var(--text-strong);
+}
+.q-team-score{
+  font-size:1.3rem;
+  font-weight:800;
+  color:var(--accent-orange);
+  line-height:1;
+}
+
+.q-team-assists{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+.assist-icon-btn{
+  background:var(--teal-main);
+  border:1px solid rgba(0,0,0,0.2);
+  border-radius:var(--radius-md);
+  width:36px;
+  height:36px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  box-shadow:0 10px 24px rgba(0,0,0,0.15);
+  transition:var(--transition-fast);
+}
+.assist-icon-btn.used{
+  background:#555 !important;
+  cursor:not-allowed !important;
+  opacity:0.5;
+}
+.assist-icon-btn svg{
+  width:20px;
+  height:20px;
+  stroke:#fff;
+  stroke-width:2;
+  fill:none;
+}
+.assist-icon-btn:hover:not(.used){
+  background:var(--accent-orange);
+  border-color:rgba(0,0,0,0.2);
+}
+.assist-icon-btn:hover:not(.used) svg{
+  stroke:#000;
+}
+
+.correct-btn{
+  background:var(--accent-orange);
+  border:0;
+  border-radius:var(--radius-md);
+  padding:10px 12px;
+  font-size:.9rem;
+  font-weight:700;
+  line-height:1.2;
+  cursor:pointer;
+  text-align:center;
+  box-shadow:0 12px 28px rgba(0,0,0,0.18);
+  color:#000;
+  transition:var(--transition-fast);
+}
+.correct-btn:hover{
+  filter:brightness(1.05);
+}
+
+/* CONTROL PANEL MODAL */
+#adminModalOverlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.4);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:2000;
+}
+#adminModal{
+  width:90%;
+  max-width:1000px;
+  max-height:90vh;
+  overflow-y:auto;
+  background:#ffffff;
+  color:var(--text-strong);
+  border-radius:var(--radius-xl);
+  box-shadow:var(--shadow-pop);
+  border:2px solid var(--surface-border-strong);
+  padding:24px;
+  position:relative;
+  font-size:.9rem;
+  line-height:1.5;
+}
+#adminCloseBtn{
+  position:absolute;
+  top:16px;
+  left:16px;
+  background:#ddd;
+  border:0;
+  color:#000;
+  border-radius:var(--radius-md);
+  padding:6px 10px;
+  cursor:pointer;
+  font-size:.8rem;
+  font-weight:600;
+}
+#adminCloseBtn:hover{
+  background:#ccc;
+}
+
+.admin-section-title{
+  font-size:1rem;
+  font-weight:700;
+  color:var(--text-strong);
+  margin-top:24px;
+  margin-bottom:8px;
+  display:flex;
+  justify-content:space-between;
+  flex-wrap:wrap;
+}
+.admin-block{
+  background:var(--surface-alt);
+  border:1px solid var(--surface-border-strong);
+  border-radius:var(--radius-lg);
+  box-shadow:var(--shadow-card);
+  padding:16px;
+  margin-bottom:16px;
+}
+
+/* login block */
+#adminLoginBlock{
+  text-align:center;
+}
+#adminLoginBlock h2{
+  font-size:1.05rem;
+  font-weight:700;
+  margin:0 0 12px 0;
+  color:var(--text-strong);
+}
+.admin-pass-input{
+  width:100%;
+  max-width:260px;
+  margin:0 auto 12px auto;
+  display:block;
+  border-radius:var(--radius-md);
+  border:1px solid var(--surface-border-strong);
+  background:#fff;
+  color:#000;
+  font-size:1rem;
+  font-weight:600;
+  padding:10px 12px;
+  text-align:center;
+  box-shadow:inset 0 1px 2px rgba(0,0,0,0.08);
+}
+.admin-pass-btn{
+  background:var(--accent-purple);
+  border:0;
+  border-radius:var(--radius-md);
+  padding:10px 14px;
+  font-size:1rem;
+  font-weight:700;
+  color:#fff;
+  cursor:pointer;
+  min-width:120px;
+  box-shadow:0 16px 36px rgba(0,0,0,0.2);
+}
+.admin-pass-btn:hover{
+  background:var(--accent-purple-dark);
+}
+.admin-error{
+  font-size:.8rem;
+  color:#d00000;
+  font-weight:600;
+  min-height:1.2em;
+  margin-top:8px;
+  text-align:center;
+}
+
+/* admin forms */
+.admin-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  margin-bottom:12px;
+}
+.admin-col{
+  flex:1 1 200px;
+  min-width:200px;
+  display:flex;
+  flex-direction:column;
+}
+.admin-col label{
+  color:var(--text-strong);
+  font-size:.8rem;
+  font-weight:600;
+  margin-bottom:4px;
+}
+.admin-col input,
+.admin-col textarea,
+.admin-col select{
+  background:#fff;
+  color:#000;
+  border-radius:var(--radius-md);
+  border:1px solid var(--surface-border-strong);
+  font-size:.9rem;
+  font-weight:500;
+  padding:8px 10px;
+  box-shadow:inset 0 1px 2px rgba(0,0,0,0.07);
+}
+
+.small-btn{
+  background:var(--accent-purple);
+  border:0;
+  border-radius:var(--radius-md);
+  color:#fff;
+  padding:8px 10px;
+  cursor:pointer;
+  font-size:.8rem;
+  font-weight:600;
+  line-height:1.2;
+  box-shadow:0 12px 30px rgba(0,0,0,0.15);
+  transition:var(--transition-fast);
+  white-space:nowrap;
+}
+.small-btn:hover{
+  background:var(--accent-purple-dark);
+  color:#fff;
+}
+
+.nav-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:12px;
+}
+.nav-btn{
+  background:#ddd;
+  border:0;
+  border-radius:var(--radius-md);
+  color:#000;
+  padding:8px 10px;
+  cursor:pointer;
+  font-size:.8rem;
+  font-weight:600;
+  line-height:1.2;
+}
+.nav-btn:hover{
+  background:#ccc;
+}
+
+/* WINNER SCREEN */
+#winnerOverlay{
+  position:fixed;
+  inset:0;
+  z-index:3000;
+  background:linear-gradient(160deg, var(--accent-purple) 0%, #6c62c4 50%, #8e93ff 100%);
+  color:#fff;
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:24px;
+}
+.winner-box{
+  background:rgba(255,255,255,0.1);
+  border:2px solid rgba(255,255,255,0.4);
+  border-radius:var(--radius-xl);
+  box-shadow:0 30px 70px rgba(0,0,0,0.4);
+  padding:24px 32px;
+  max-width:90%;
+  width:400px;
+}
+#winnerTitle{
+  font-size:1.2rem;
+  font-weight:600;
+  margin-bottom:8px;
+  color:#fff;
+}
+#winnerName{
+  font-size:1.6rem;
+  font-weight:800;
+  margin-bottom:4px;
+  color:#fff;
+}
+#winnerScore{
+  font-size:1rem;
+  font-weight:600;
+  color:rgba(255,255,255,.8);
+  margin-bottom:16px;
+}
+#winnerCloseBtn{
+  background:#fff;
+  color:#000;
+  border:0;
+  border-radius:var(--radius-md);
+  padding:10px 16px;
+  font-weight:600;
+  font-size:.9rem;
+  cursor:pointer;
+  box-shadow:0 16px 36px rgba(0,0,0,0.4);
+}
+#winnerCloseBtn:hover{
+  background:#f0f0f0;
+}
+
+/* responsive */
+@media(max-width:768px){
+  .team-setup-row{grid-template-columns:1fr;}
+  .question-layout{grid-template-columns:1fr;}
+}
+</style>
 </head>
 <body>
-  <div class="glow"></div>
 
-  <section class="frame">
-    <!-- اللوقو -->
-    <img src="pti-logo.png" alt="PTI Logo" class="logo" />
-
-    <h1>سين جيم - PTI</h1>
-    <p>منصة الأسئلة التفاعلية لفريق PTI.<br>ابدأ التحدي الآن.</p>
-
-    <button class="start" id="startBtn">بدء</button>
-    <button class="admin" id="adminBtn">لوحة التحكم</button>
-  </section>
-
-  <!-- نافذة كلمة المرور -->
-  <div class="modal" id="adminModal">
-    <div class="modal-box">
-      <button class="close-x" id="closeX">&times;</button>
-
-      <h2 class="modal-title">دخول الإدارة</h2>
-      <p class="modal-desc">هذا القسم خاص بالمشرف. أدخل كلمة المرور للمتابعة.</p>
-
-      <div class="field">
-        <div class="field-label">كلمة المرور</div>
-        <input type="password" id="pw" placeholder="••••••••" />
-        <div class="error-msg" id="errorArea"></div>
-      </div>
-
-      <div class="modal-actions">
-        <button class="login-btn" id="loginBtn">دخول</button>
-        <button class="cancel-btn" id="cancelBtn">إلغاء</button>
-      </div>
+<header class="header-bar">
+  <div class="header-left">
+    <div class="game-logo" id="gameLogo">
+      <img id="logoImg" src="pti-logo.png" alt="PTI Logo"/>
+    </div>
+    <div class="game-info">
+      <div class="game-title">سين جيم - PTI</div>
+      <div class="game-sub">PTI Competition</div>
     </div>
   </div>
 
-  <script>
-    // الانتقال لواجهة اللعبة
-    // عدلي الاسم لو صفحتك مو seenjeem.html
-    const startBtn   = document.getElementById("startBtn");
-    startBtn.addEventListener("click", () => {
-      window.location.href = "seenjeem.html";
-    });
+  <div class="header-actions">
+    <button class="top-btn" onclick="showStage('setup')">الإعداد</button>
+    <button class="top-btn" onclick="showStage('board')">لوحة اللعبة</button>
+    <button class="top-btn" onclick="showStage('question')">وضع السؤال</button>
+    <button class="top-btn" onclick="openAdmin()">لوحة التحكم</button>
+  </div>
 
-    // عناصر المودال
-    const adminBtn   = document.getElementById("adminBtn");
-    const adminModal = document.getElementById("adminModal");
-    const closeX     = document.getElementById("closeX");
-    const cancelBtn  = document.getElementById("cancelBtn");
-    const loginBtn   = document.getElementById("loginBtn");
-    const pwInput    = document.getElementById("pw");
-    const errorArea  = document.getElementById("errorArea");
+  <div class="header-actions">
+    <button class="top-btn" onclick="resetGame()">إعادة ضبط</button>
+  </div>
+</header>
 
-    // فتح المودال
-    adminBtn.addEventListener("click", () => {
-      pwInput.value = "";
-      errorArea.textContent = "";
-      adminModal.classList.add("active");
-      pwInput.focus();
-    });
+<!-- SETUP STAGE -->
+<section id="stage-setup" class="stage active">
+  <div class="big-card">
+    <div class="section-title">
+      <span>إعداد اللعبة</span>
+      <span class="section-note">اختيار حتى ٦ فئات تقنية</span>
+    </div>
 
-    // إغلاق المودال (X أو إلغاء)
-    function closeModal(){
-      adminModal.classList.remove("active");
-    }
-    closeX.addEventListener("click", closeModal);
-    cancelBtn.addEventListener("click", closeModal);
+    <div class="team-setup-row">
+      <div class="team-block-input">
+        <label>اسم الفريق 1</label>
+        <input id="setupTeam1Name" type="text" placeholder="الفريق الأول"/>
+      </div>
+      <div class="team-block-input">
+        <label>اسم الفريق 2</label>
+        <input id="setupTeam2Name" type="text" placeholder="الفريق الثاني"/>
+      </div>
+    </div>
 
-    // التحقق من الباسورد - مسموح نكتبها هنا لأنك موافقة تكون عامة
-    function isAuthorized(pw) {
-      return pw === "PTI on top";
-    }
+    <div class="category-select-grid" id="setupCategoryGrid"></div>
 
-    // زر دخول
-    loginBtn.addEventListener("click", () => {
-      const entered = pwInput.value.trim();
-      if (isAuthorized(entered)) {
-        window.location.href = "admin.html";
-      } else {
-        errorArea.textContent = "كلمة المرور غير صحيحة";
+    <button class="start-game-btn" onclick="startGame()">بدء اللعبة</button>
+  </div>
+</section>
+
+<!-- BOARD STAGE -->
+<section id="stage-board" class="stage">
+  <div class="board-area">
+    <div class="board-columns" id="boardColumns"></div>
+  </div>
+
+  <div class="team-bar" id="teamBarBoard">
+    <div class="team-card" data-team="0">
+      <div class="team-header-line">
+        <div class="team-name-display" id="boardTeamName0">فريق 1</div>
+        <div class="team-score-display" id="boardTeamScore0">0</div>
+      </div>
+      <div class="team-assist-row">
+        <button class="assist-btn" id="assistDouble-0" onclick="useAssist('double',0)">دبل بوينت</button>
+        <button class="assist-btn" id="assistMute-0" onclick="useAssist('mute',0)">ميوت</button>
+        <button class="assist-btn" id="assistCall-0" onclick="useAssist('call',0)">اتصال صديق</button>
+      </div>
+    </div>
+
+    <div class="team-card" data-team="1">
+      <div class="team-header-line">
+        <div class="team-name-display" id="boardTeamName1">فريق 2</div>
+        <div class="team-score-display" id="boardTeamScore1">0</div>
+      </div>
+      <div class="team-assist-row">
+        <button class="assist-btn" id="assistDouble-1" onclick="useAssist('double',1)">دبل بوينت</button>
+        <button class="assist-btn" id="assistMute-1" onclick="useAssist('mute',1)">ميوت</button>
+        <button class="assist-btn" id="assistCall-1" onclick="useAssist('call',1)">اتصال صديق</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QUESTION STAGE -->
+<section id="stage-question" class="stage">
+  <div class="question-layout">
+
+    <div class="question-card">
+
+      <div class="timer-mini-wrapper">
+        <div class="timer-number" id="timerDisplay">30</div>
+        <button class="timer-icon-btn" title="إيقاف" onclick="stopTimer()">
+          <svg viewBox="0 0 24 24"><line x1="9" y1="5" x2="9" y2="19"></line><line x1="15" y1="5" x2="15" y2="19"></line></svg>
+        </button>
+        <button class="timer-icon-btn" title="إعادة" onclick="resetTimer()">
+          <svg viewBox="0 0 24 24"><polyline points="3 3 3 10 10 10"></polyline><path d="M3 3a9 9 0 1 1-2 5"></path></svg>
+        </button>
+      </div>
+
+      <div class="current-question-wrap">
+        <div class="current-question-text" id="currentQuestionText">
+          اختر سؤال من لوحة اللعبة ليظهر هنا
+        </div>
+
+        <div class="current-question-points" id="currentQuestionPoints">
+          قيمة السؤال: -
+        </div>
+
+        <div class="answer-box" id="answerBox"></div>
+      </div>
+
+      <div class="q-control-row">
+        <button class="q-btn" onclick="revealAnswer()">إظهار الإجابة</button>
+        <button class="q-btn" onclick="showStage('board')">رجوع للوحة</button>
+      </div>
+    </div>
+
+    <div class="question-side-teams">
+      <div class="q-team-card">
+        <div class="q-team-headline">
+          <span id="qTeamName0">فريق 1</span>
+          <span class="q-team-score" id="qTeamScore0">0</span>
+        </div>
+
+        <div class="q-team-assists">
+          <button class="assist-icon-btn" id="assistDoubleQ-0" title="دبل بوينت" onclick="useAssist('double',0)">
+            <svg viewBox="0 0 24 24">
+              <polygon points="12 3 15 10 22 10 16.5 14 18.5 21 12 17 5.5 21 7.5 14 2 10 9 10 12 3"/>
+            </svg>
+          </button>
+          <button class="assist-icon-btn" id="assistMuteQ-0" title="ميوت" onclick="useAssist('mute',0)">
+            <svg viewBox="0 0 24 24">
+              <polygon points="11 5 6 9 3 9 3 15 6 15 11 19 11 5"/>
+              <line x1="14" y1="10" x2="20" y2="16"/>
+              <line x1="20" y1="10" x2="14" y2="16"/>
+            </svg>
+          </button>
+          <button class="assist-icon-btn" id="assistCallQ-0" title="اتصال صديق" onclick="useAssist('call',0)">
+            <svg viewBox="0 0 24 24">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2
+                       19.86 19.86 0 0 1-8.63-3.07
+                       19.5 19.5 0 0 1-6-6
+                       19.86 19.86 0 0 1-3.07-8.67
+                       A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72
+                       c.12.81.37 1.6.72 2.34a2 2 0 0 1-.45 2.11L8.09 9.91
+                       a16 16 0 0 0 6 6l1.74-1.31
+                       a2 2 0 0 1 2.11-.45
+                       c.74.35 1.53.6 2.34.72A2 2 0 0 1 22 16.92z"/>
+            </svg>
+          </button>
+        </div>
+
+        <button class="correct-btn" onclick="markCorrect(0)">هذا الفريق جاوب صح</button>
+      </div>
+
+      <div class="q-team-card">
+        <div class="q-team-headline">
+          <span id="qTeamName1">فريق 2</span>
+          <span class="q-team-score" id="qTeamScore1">0</span>
+        </div>
+
+        <div class="q-team-assists">
+          <button class="assist-icon-btn" id="assistDoubleQ-1" title="دبل بوينت" onclick="useAssist('double',1)">
+            <svg viewBox="0 0 24 24">
+              <polygon points="12 3 15 10 22 10 16.5 14 18.5 21 12 17 5.5 21 7.5 14 2 10 9 10 12 3"/>
+            </svg>
+          </button>
+          <button class="assist-icon-btn" id="assistMuteQ-1" title="ميوت" onclick="useAssist('mute',1)">
+            <svg viewBox="0 0 24 24">
+              <polygon points="11 5 6 9 3 9 3 15 6 15 11 19 11 5"/>
+              <line x1="14" y1="10" x2="20" y2="16"/>
+              <line x1="20" y1="10" x2="14" y2="16"/>
+            </svg>
+          </button>
+          <button class="assist-icon-btn" id="assistCallQ-1" title="اتصال صديق" onclick="useAssist('call',1)">
+            <svg viewBox="0 0 24 24">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2
+                       19.86 19.86 0 0 1-8.63-3.07
+                       19.5 19.5 0 0 1-6-6
+                       19.86 19.86 0 0 1-3.07-8.67
+                       A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72
+                       c.12.81.37 1.6.72 2.34a2 2 0 0 1-.45 2.11L8.09 9.91
+                       a16 16 0 0 0 6 6l1.74-1.31
+                       a2 2 0 0 1 2.11-.45
+                       c.74.35 1.53.6 2.34.72A2 2 0 0 1 22 16.92z"/>
+            </svg>
+          </button>
+        </div>
+
+        <button class="correct-btn" onclick="markCorrect(1)">هذا الفريق جاوب صح</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ADMIN MODAL -->
+<div id="adminModalOverlay">
+  <div id="adminModal">
+    <button id="adminCloseBtn" onclick="closeAdmin()">إغلاق</button>
+
+    <div id="adminLoginBlock">
+      <h2>لوحة التحكم</h2>
+      <p>أدخل كلمة المرور للدخول إلى التحكم.</p>
+      <input id="adminPasswordInput" type="password" class="admin-pass-input" placeholder="••••••••"/>
+      <button class="admin-pass-btn" onclick="tryAdminLogin()">دخول</button>
+      <div class="admin-error" id="adminLoginError"></div>
+    </div>
+
+    <div id="adminContent" style="display:none;">
+      <!-- TEAMS -->
+      <div class="admin-section-title">
+        <span>الفرق</span>
+        <span style="color:var(--accent-purple);font-size:.8rem;">تعديل الأسماء والنقاط</span>
+      </div>
+      <div class="admin-block" id="adminTeamsBlock">
+        <div class="admin-row">
+          <div class="admin-col">
+            <label>اسم الفريق 1</label>
+            <input id="adminTeamName0" type="text"/>
+          </div>
+          <div class="admin-col">
+            <label>نقاط الفريق 1</label>
+            <input id="adminTeamScore0" type="number"/>
+          </div>
+          <div class="admin-col" style="align-self:flex-end;">
+            <button class="small-btn" onclick="saveTeamEdits(0)">حفظ الفريق 1</button>
+          </div>
+        </div>
+
+        <div class="admin-row">
+          <div class="admin-col">
+            <label>اسم الفريق 2</label>
+            <input id="adminTeamName1" type="text"/>
+          </div>
+          <div class="admin-col">
+            <label>نقاط الفريق 2</label>
+            <input id="adminTeamScore1" type="number"/>
+          </div>
+          <div class="admin-col" style="align-self:flex-end;">
+            <button class="small-btn" onclick="saveTeamEdits(1)">حفظ الفريق 2</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CATEGORIES -->
+      <div class="admin-section-title">
+        <span>الفئات</span>
+        <span style="color:var(--accent-purple);font-size:.8rem;">الاسم / الوصف / رابط الصورة</span>
+      </div>
+      <div class="admin-block" id="adminCategoriesBlock">
+        <div id="adminCategoryList"></div>
+
+        <div class="admin-row" style="border-top:1px solid var(--surface-border-strong);padding-top:12px;margin-top:12px;">
+          <div class="admin-col">
+            <label>اسم فئة جديدة</label>
+            <input id="newCategoryTitle" type="text" placeholder="مثال: برمجة الويب"/>
+          </div>
+          <div class="admin-col">
+            <label>وصف مختصر</label>
+            <input id="newCategoryDesc" type="text" placeholder="مثال: HTML/CSS/JS"/>
+          </div>
+          <div class="admin-col">
+            <label>رابط صورة</label>
+            <input id="newCategoryImg" type="text" placeholder="https://example.com/image.png"/>
+          </div>
+          <div class="admin-col" style="align-self:flex-end;">
+            <button class="small-btn" onclick="addNewCategory()">إضافة فئة</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- QUESTIONS -->
+      <div class="admin-section-title">
+        <span>الأسئلة</span>
+        <span style="color:var(--accent-purple);font-size:.8rem;">اختيار فئة وتحرير أسئلتها</span>
+      </div>
+      <div class="admin-block" id="adminQuestionsBlock">
+        <div class="admin-row">
+          <div class="admin-col">
+            <label>اختر الفئة</label>
+            <select id="questionCategorySelect" onchange="renderQuestionEditor()"></select>
+          </div>
+        </div>
+
+        <div id="questionEditorArea"></div>
+
+        <div class="admin-row" style="border-top:1px solid var(--surface-border-strong);padding-top:12px;margin-top:12px;">
+          <div class="admin-col">
+            <label>نص سؤال جديد</label>
+            <textarea id="newQuestionText" rows="2" placeholder="اكتب السؤال هنا..."></textarea>
+          </div>
+          <div class="admin-col">
+            <label>قيمة النقاط</label>
+            <input id="newQuestionPoints" type="number" placeholder="200"/>
+          </div>
+          <div class="admin-col">
+            <label>الإجابة الصحيحة</label>
+            <input id="newQuestionAnswer" type="text" placeholder="الإجابة"/>
+          </div>
+          <div class="admin-col" style="align-self:flex-end;">
+            <button class="small-btn" onclick="addNewQuestion()">إضافة سؤال</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TIMER -->
+      <div class="admin-section-title">
+        <span>الإعدادات العامة</span>
+        <span style="color:var(--accent-purple);font-size:.8rem;">الوقت الافتراضي للمؤقت</span>
+      </div>
+      <div class="admin-block">
+        <div class="admin-row">
+          <div class="admin-col">
+            <label>الوقت الافتراضي (بالثواني)</label>
+            <input id="defaultTimerInput" type="number" min="5" step="5"/>
+          </div>
+          <div class="admin-col" style="align-self:flex-end;">
+            <button class="small-btn" onclick="saveDefaultTimer()">حفظ الوقت</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- NAV -->
+      <div class="admin-section-title"><span>تنقّل سريع</span></div>
+      <div class="admin-block">
+        <div class="nav-row">
+          <button class="nav-btn" onclick="showStage('setup')">شاشة الإعداد</button>
+          <button class="nav-btn" onclick="showStage('board')">لوحة اللعبة</button>
+          <button class="nav-btn" onclick="showStage('question')">شاشة السؤال</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- WINNER OVERLAY -->
+<div id="winnerOverlay">
+  <div class="winner-box">
+    <div id="winnerTitle">الفريق الفائز</div>
+    <div id="winnerName">-</div>
+    <div id="winnerScore">- نقطة</div>
+    <button id="winnerCloseBtn" onclick="closeWinner()">رجوع للرئيسية</button>
+  </div>
+</div>
+
+<script>
+const ADMIN_PASSWORD = "PTI on top";
+
+let defaultTimerSeconds = 30;
+let timerInterval = null;
+let timerValue = defaultTimerSeconds;
+
+// الفرق + النقاط + المساعدات المستخدمة
+let teams = [
+  { name: "فريق 1", score: 0, used: {double:false, mute:false, call:false} },
+  { name: "فريق 2", score: 0, used: {double:false, mute:false, call:false} },
+];
+
+// الأسئلة، الآن كل سؤال له خاصية answered عشان ما يتكرر
+let categories = [
+  {
+    id: "prog",
+    title: "برمجة",
+    desc: "مفاهيم لغة البرمجة والمنطق البرمجي.",
+    img: "",
+    questions: [
+      { points: 200, text: "ما هو المتغير (variable)؟", answer: "مكان نخزن فيه قيمة يمكن تغييرها", answered:false },
+      { points: 400, text: "ما الفرق بين if و switch؟", answer: "if شروط/مرونة، switch اختيار حالة من قيم ثابتة", answered:false },
+      { points: 600, text: "اشرح مفهوم البرمجة الكائنية (OOP).", answer: "تنظيم الكود في كائنات لها بيانات ودوال", answered:false },
+    ],
+  },
+  {
+    id: "net",
+    title: "الشبكات",
+    desc: "العناوين والبروتوكولات والاتصال.",
+    img: "",
+    questions: [
+      { points: 200, text: "ما هو عنوان IP؟", answer: "رقم يعرّف جهازك على الشبكة", answered:false },
+      { points: 400, text: "ما الفرق بين TCP و UDP؟", answer: "TCP موثوق/أبطأ، UDP أسرع/بدون تأكيد", answered:false },
+      { points: 600, text: "ما هو نظام أسماء النطاقات (DNS)؟", answer: "خدمة تحويل اسم النطاق إلى IP", answered:false },
+    ],
+  },
+  {
+    id: "sec",
+    title: "أمن المعلومات",
+    desc: "الحماية والاختراق والتهديدات.",
+    img: "",
+    questions: [
+      { points: 200, text: "ما معنى هجوم التصيّد (phishing)؟", answer: "محاولة خداعك لتسليم بياناتك", answered:false },
+      { points: 400, text: "لماذا كلمة المرور القوية مهمة؟", answer: "تصعّب عملية التخمين أو الكسر", answered:false },
+      { points: 600, text: "اشرح مفهوم الهندسة الاجتماعية.", answer: "استغلال البشر بدل مهاجمة التقنية نفسها", answered:false },
+    ],
+  },
+  {
+    id: "ai",
+    title: "الذكاء الاصطناعي",
+    desc: "النماذج والتعلم من البيانات.",
+    img: "",
+    questions: [
+      { points: 200, text: "ما المقصود بنموذج ذكاء اصطناعي؟", answer: "نظام يتنبأ أو يقرر بناءً على بيانات", answered:false },
+      { points: 400, text: "ماذا يعني تدريب نموذج؟", answer: "تعديل بارامترات على بيانات حتى يتعلم النمط", answered:false },
+      { points: 600, text: "ما الفرق بين تعلم الآلة والتعلم العميق؟", answer: "العميق = شبكات عصبية بطبقات كثيرة", answered:false },
+    ],
+  },
+  {
+    id: "hw",
+    title: "الهاردوير",
+    desc: "المعالج والذاكرة والبطاقات.",
+    img: "",
+    questions: [
+      { points: 200, text: "ما هو RAM؟", answer: "ذاكرة مؤقتة وسريعة للحالة الحالية", answered:false },
+      { points: 400, text: "ما وظيفة CPU؟", answer: "تنفيذ الأوامر والتعليمات", answered:false },
+      { points: 600, text: "لماذا مهم وجود GPU قوي؟", answer: "لعمليات معالجة متوازية كثيفة", answered:false },
+    ],
+  },
+  {
+    id: "os",
+    title: "أنظمة التشغيل",
+    desc: "المهام والعمليات وإدارة الموارد.",
+    img: "",
+    questions: [
+      { points: 200, text: "ما هو نظام التشغيل؟", answer: "البرنامج الأساسي الذي يدير العتاد والبرامج", answered:false },
+      { points: 400, text: "ما المقصود بعملية (Process)؟", answer: "برنامج شغّال وله موارده", answered:false },
+      { points: 600, text: "لماذا يُستخدم Linux في الخوادم؟", answer: "ثابت، آمن، قابل للتخصيص، أداء عالي", answered:false },
+    ],
+  },
+];
+
+// الفئات اللي تم اختيارها في الإعداد
+let activeCategoryIds = [];
+
+// السؤال الحالي المعروض
+let currentQuestion = {
+  catIndex: null,
+  qIndex: null,
+  text: "",
+  basePoints: 0,
+  effectivePoints: 0,
+  answer: ""
+};
+
+/* --------- مراحل العرض --------- */
+function showStage(which){
+  document.querySelectorAll(".stage").forEach(st => st.classList.remove("active"));
+  document.getElementById(`stage-${which}`).classList.add("active");
+  document.documentElement.scrollLeft = 0;
+  document.body.scrollLeft = 0;
+}
+
+/* --------- شاشة الفائز --------- */
+function checkWinnerIfDone(){
+  // نشيك هل كل الأسئلة اللي في الفئات المختارة تم الإجابة عليها
+  for (let cid of activeCategoryIds){
+    const catObj = categories.find(c=>c.id===cid);
+    if(!catObj) continue;
+    for (let q of catObj.questions){
+      if (!q.answered){
+        return; // باقي أسئلة
       }
+    }
+  }
+
+  // هنا يعني خلصت كل الأسئلة
+  // نحدد أعلى سكور
+  let winnerIdx = 0;
+  if (teams[1].score > teams[0].score) {
+    winnerIdx = 1;
+  }
+
+  const wName = teams[winnerIdx].name;
+  const wScore = teams[winnerIdx].score;
+
+  document.getElementById("winnerName").textContent = wName;
+  document.getElementById("winnerScore").textContent = wScore + " نقطة";
+  document.getElementById("winnerOverlay").style.display = "flex";
+}
+
+function closeWinner(){
+  // نرجع للإعداد (بداية جديدة)
+  document.getElementById("winnerOverlay").style.display = "none";
+  showStage('setup');
+}
+
+/* --------- الإعداد --------- */
+
+// عرض الفئات في صفحة الإعداد
+function renderSetupCategories(){
+  const grid = document.getElementById("setupCategoryGrid");
+  grid.innerHTML = "";
+  categories.forEach(cat=>{
+    const isActive = activeCategoryIds.includes(cat.id);
+    const card = document.createElement("div");
+    card.className = "category-card" + (isActive ? " active":"");
+    card.onclick = ()=>toggleCategorySelect(cat.id);
+
+    const imgHtml = cat.img && cat.img.trim() !== ""
+      ? `<img class="category-image" src="${cat.img}" alt="${cat.title}"/>`
+      : "";
+
+    card.innerHTML = `
+      ${imgHtml}
+      <div class="category-name">${cat.title}</div>
+      <div class="category-desc">${cat.desc}</div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+// اختيار/إلغاء اختيار فئة
+function toggleCategorySelect(catId){
+  const idx = activeCategoryIds.indexOf(catId);
+  if(idx !== -1){
+    activeCategoryIds.splice(idx,1);
+  } else {
+    if(activeCategoryIds.length >= 6){
+      alert("الحد الأقصى ٦ فئات.");
+      return;
+    }
+    activeCategoryIds.push(catId);
+  }
+  renderSetupCategories();
+}
+
+// بدء اللعبة
+function startGame(){
+  // أسماء الفرق
+  const t1 = document.getElementById("setupTeam1Name").value.trim() || "فريق 1";
+  const t2 = document.getElementById("setupTeam2Name").value.trim() || "فريق 2";
+  teams[0].name = t1;
+  teams[1].name = t2;
+
+  syncTeamsUI();
+  renderBoard();
+  showStage("board");
+}
+
+/* --------- لوحة اللعبة (BOARD) --------- */
+
+function renderBoard(){
+  const board = document.getElementById("boardColumns");
+  board.innerHTML = "";
+
+  activeCategoryIds.forEach(catId=>{
+    const cat = categories.find(c=>c.id===catId);
+    if(!cat) return;
+
+    const catIndex = categories.indexOf(cat);
+
+    const col = document.createElement("div");
+    col.className = "board-col";
+
+    const header = document.createElement("div");
+    header.className = "board-col-header";
+    header.textContent = cat.title;
+    col.appendChild(header);
+
+    cat.questions.forEach((q, qIndex)=>{
+      const btn = document.createElement("button");
+      btn.className = "point-btn";
+      btn.textContent = q.answered ? "" : q.points;
+      if(q.answered){
+        btn.classList.add("disabled","hidden-question");
+      } else {
+        btn.onclick = ()=>openQuestion(catIndex,qIndex);
+      }
+      col.appendChild(btn);
     });
-  </script>
+
+    board.appendChild(col);
+  });
+
+  // بعد ما نعيد رسم اللوحة نحدّث النقاط واسماء الفرق
+  syncTeamsUI();
+}
+
+/* --------- مزامنة المعلومات على الواجهات --------- */
+
+function syncTeamsUI(){
+  // لوحة اللعبة
+  for(let i=0;i<teams.length;i++){
+    const nameEl = document.getElementById(`boardTeamName${i}`);
+    const scoreEl = document.getElementById(`boardTeamScore${i}`);
+    if(nameEl) nameEl.textContent = teams[i].name;
+    if(scoreEl) scoreEl.textContent = teams[i].score;
+  }
+  // شاشة السؤال
+  for(let i=0;i<teams.length;i++){
+    const nameEl = document.getElementById(`qTeamName${i}`);
+    const scoreEl = document.getElementById(`qTeamScore${i}`);
+    if(nameEl) nameEl.textContent = teams[i].name;
+    if(scoreEl) scoreEl.textContent = teams[i].score;
+  }
+  // لوحة التحكم الحية
+  const t0n = document.getElementById("adminTeamName0");
+  const t1n = document.getElementById("adminTeamName1");
+  const t0s = document.getElementById("adminTeamScore0");
+  const t1s = document.getElementById("adminTeamScore1");
+  if(t0n){t0n.value = teams[0].name;}
+  if(t1n){t1n.value = teams[1].name;}
+  if(t0s){t0s.value = teams[0].score;}
+  if(t1s){t1s.value = teams[1].score;}
+
+  // تحديث حالة أزرار المساعدة (board stage)
+  updateAssistButtons();
+}
+
+/* --------- عرض السؤال (QUESTION FLOW) --------- */
+
+function openQuestion(catIndex,qIndex){
+  const qData = categories[catIndex].questions[qIndex];
+  if(qData.answered){
+    return; // سؤال مستخدم قبل
+  }
+
+  currentQuestion.catIndex = catIndex;
+  currentQuestion.qIndex = qIndex;
+  currentQuestion.text = qData.text;
+  currentQuestion.basePoints = qData.points;
+  currentQuestion.effectivePoints = qData.points;
+  currentQuestion.answer = qData.answer || "";
+
+  // نعرضه على الشاشة
+  document.getElementById("currentQuestionText").textContent = qData.text;
+  document.getElementById("currentQuestionPoints").textContent =
+    "قيمة السؤال: " + currentQuestion.effectivePoints + " نقطة";
+  document.getElementById("answerBox").textContent = "";
+
+  // المؤقت
+  resetTimer();
+  startTimer();
+
+  // نعرض شاشة السؤال
+  showStage("question");
+}
+
+// إظهار الإجابة
+function revealAnswer(){
+  const ans = currentQuestion.answer && currentQuestion.answer.trim()
+    ? currentQuestion.answer
+    : "لا توجد إجابة مسجلة";
+  document.getElementById("answerBox").textContent = ans;
+}
+
+// فريق جاوب صح
+function markCorrect(teamIndex){
+  // عط النقاط للفريق
+  if(currentQuestion.effectivePoints>0){
+    teams[teamIndex].score += currentQuestion.effectivePoints;
+  }
+  if(teams[teamIndex].score<0) teams[teamIndex].score=0;
+
+  // علم السؤال إنه خلاص انتهى
+  if(currentQuestion.catIndex !== null && currentQuestion.qIndex !== null){
+    categories[currentQuestion.catIndex].questions[currentQuestion.qIndex].answered = true;
+  }
+
+  // رجع القيم الافتراضية للسؤال الحالي
+  clearCurrentQuestion();
+
+  // نحدّث الواجهات
+  syncTeamsUI();
+  renderBoard();
+
+  // رجع للوحة اللعبة
+  showStage("board");
+
+  // اذا ما بقي ولا سؤال، طلع شاشة الفائز
+  checkWinnerIfDone();
+}
+
+// نصفر بيانات السؤال الحالي
+function clearCurrentQuestion(){
+  currentQuestion = {
+    catIndex: null,
+    qIndex: null,
+    text: "",
+    basePoints: 0,
+    effectivePoints: 0,
+    answer: ""
+  };
+}
+
+/* --------- المؤقت (TIMER) --------- */
+
+function updateTimerDisplay(){
+  document.getElementById("timerDisplay").textContent = timerValue;
+}
+function startTimer(){
+  if(timerInterval) return;
+  timerInterval = setInterval(()=>{
+    timerValue--;
+    if(timerValue<=0){
+      timerValue=0;
+      stopTimer();
+    }
+    updateTimerDisplay();
+  },1000);
+}
+function stopTimer(){
+  clearInterval(timerInterval);
+  timerInterval=null;
+}
+function resetTimer(){
+  stopTimer();
+  timerValue = defaultTimerSeconds;
+  updateTimerDisplay();
+}
+
+/* --------- المساعدات ---------
+  لكل فريق:
+  double = دبل بوينت للسؤال الحالي (مرة وحده)
+  mute   = ميوت (يوقف المؤقت) (مرة وحده)
+  call   = اتصال صديق (يعرض تلميح) (مرة وحده)
+---------------------------------*/
+
+function useAssist(type, teamIndex){
+  const team = teams[teamIndex];
+  if(!team) return;
+
+  // لو مستخدم من قبل
+  if(team.used[type]) return;
+
+  // فعل المساعدة
+  team.used[type] = true;
+
+  if(type === "double"){
+    // ضاعف النقاط الحالية لو فيه سؤال مفتوح
+    if(currentQuestion && currentQuestion.basePoints>0){
+      currentQuestion.effectivePoints = currentQuestion.basePoints * 2;
+      document.getElementById("currentQuestionPoints").textContent =
+        "قيمة السؤال: " + currentQuestion.effectivePoints + " نقطة";
+    }
+  }
+
+  if(type === "mute"){
+    // وقف المؤقت الآن
+    stopTimer();
+  }
+
+  if(type === "call"){
+    // اتصال صديق = تلميح
+    // نحط جزء من الاجابة داخل مربع الاجابة إذا فيه سؤال مفتوح
+    if(currentQuestion.answer){
+      const hint = currentQuestion.answer.substring(0,3) + "...";
+      document.getElementById("answerBox").textContent = "تلميح: " + hint;
+    } else {
+      document.getElementById("answerBox").textContent = "لا يوجد تلميح مسجل.";
+    }
+  }
+
+  // تحديث الواجهات: نخفي/نقفل الزر
+  updateAssistButtons();
+}
+
+// تحدث شكل الأزرار عشان نبين المساعدات اللي خلصت
+function updateAssistButtons(){
+  for(let i=0;i<teams.length;i++){
+    const t = teams[i];
+
+    // أزرار في لوحة اللعبة
+    const dBoard = document.getElementById(`assistDouble-${i}`);
+    const mBoard = document.getElementById(`assistMute-${i}`);
+    const cBoard = document.getElementById(`assistCall-${i}`);
+
+    if(dBoard){
+      dBoard.classList.toggle("used", t.used.double);
+      dBoard.disabled = t.used.double;
+    }
+    if(mBoard){
+      mBoard.classList.toggle("used", t.used.mute);
+      mBoard.disabled = t.used.mute;
+    }
+    if(cBoard){
+      cBoard.classList.toggle("used", t.used.call);
+      cBoard.disabled = t.used.call;
+    }
+
+    // أزرار في شاشة السؤال (الأيقونات)
+    const dQ = document.getElementById(`assistDoubleQ-${i}`);
+    const mQ = document.getElementById(`assistMuteQ-${i}`);
+    const cQ = document.getElementById(`assistCallQ-${i}`);
+
+    if(dQ){
+      dQ.classList.toggle("used", t.used.double);
+    }
+    if(mQ){
+      mQ.classList.toggle("used", t.used.mute);
+    }
+    if(cQ){
+      cQ.classList.toggle("used", t.used.call);
+    }
+  }
+}
+
+/* --------- إعادة ضبط اللعبة كاملة --------- */
+
+function resetGame(){
+  // صفر النقاط
+  teams = [
+    { name: teams[0].name || "فريق 1", score: 0, used: {double:false, mute:false, call:false} },
+    { name: teams[1].name || "فريق 2", score: 0, used: {double:false, mute:false, call:false} },
+  ];
+
+  // رجع المؤقت
+  resetTimer();
+
+  // رجع الأسئلة كلها لغير مجابة
+  categories.forEach(cat=>{
+    cat.questions.forEach(q=>{ q.answered=false; });
+  });
+
+  // فضي السؤال الحالي
+  clearCurrentQuestion();
+
+  // فضي اختيار الفئات
+  activeCategoryIds = [];
+
+  renderSetupCategories();
+  renderBoard();
+  syncTeamsUI();
+  showStage("setup");
+}
+
+/* --------- لوحة التحكم (ADMIN) --------- */
+
+function openAdmin(){
+  document.getElementById("adminModalOverlay").style.display="flex";
+  document.getElementById("adminLoginBlock").style.display="block";
+  document.getElementById("adminContent").style.display="none";
+  document.getElementById("adminLoginError").textContent="";
+  const defTimer = document.getElementById("defaultTimerInput");
+  if(defTimer) defTimer.value = defaultTimerSeconds;
+}
+function closeAdmin(){
+  document.getElementById("adminModalOverlay").style.display="none";
+}
+
+function tryAdminLogin(){
+  const input = document.getElementById("adminPasswordInput").value;
+  const err = document.getElementById("adminLoginError");
+  if(input === ADMIN_PASSWORD){
+    err.textContent="";
+    document.getElementById("adminLoginBlock").style.display="none";
+    document.getElementById("adminContent").style.display="block";
+
+    syncTeamsUI();
+    renderAdminCategories();
+    renderQuestionCategorySelect();
+    renderQuestionEditor();
+    const defTimer = document.getElementById("defaultTimerInput");
+    if(defTimer) defTimer.value = defaultTimerSeconds;
+  }else{
+    err.textContent="كلمة المرور غير صحيحة";
+  }
+}
+
+// حفظ تعديل فريق
+function saveTeamEdits(i){
+  const nameEl = document.getElementById(`adminTeamName${i}`);
+  const scoreEl = document.getElementById(`adminTeamScore${i}`);
+  if(nameEl) teams[i].name = nameEl.value.trim()||teams[i].name;
+  if(scoreEl){
+    const v = parseInt(scoreEl.value,10);
+    if(!isNaN(v) && v>=0){
+      teams[i].score = v;
+    }
+  }
+  syncTeamsUI();
+}
+
+/* --------- إدارة الفئات داخل لوحة التحكم --------- */
+
+function renderAdminCategories(){
+  const list = document.getElementById("adminCategoryList");
+  list.innerHTML = "";
+  categories.forEach((cat,idx)=>{
+    const row = document.createElement("div");
+    row.className="admin-row";
+    row.style.border = "1px solid var(--surface-border-strong)";
+    row.style.borderRadius = "10px";
+    row.style.padding = "12px";
+
+    row.innerHTML = `
+      <div class="admin-col">
+        <label>اسم الفئة</label>
+        <input id="catTitle-${idx}" type="text" value="${cat.title}"/>
+      </div>
+      <div class="admin-col">
+        <label>وصف مختصر</label>
+        <input id="catDesc-${idx}" type="text" value="${cat.desc}"/>
+      </div>
+      <div class="admin-col">
+        <label>رابط الصورة</label>
+        <input id="catImg-${idx}" type="text" value="${cat.img || ''}" placeholder="https://..."/>
+      </div>
+      <div class="admin-col" style="align-self:flex-end;">
+        <button class="small-btn" onclick="saveCategory(${idx})">حفظ</button>
+        <button class="small-btn" onclick="deleteCategory(${idx})">حذف</button>
+      </div>
+    `;
+    list.appendChild(row);
+  });
+}
+
+function saveCategory(idx){
+  const t = document.getElementById(`catTitle-${idx}`);
+  const d = document.getElementById(`catDesc-${idx}`);
+  const i = document.getElementById(`catImg-${idx}`);
+
+  if(t) categories[idx].title = t.value.trim()||categories[idx].title;
+  if(d) categories[idx].desc  = d.value.trim()||categories[idx].desc;
+  if(i) categories[idx].img   = i.value.trim()||"";
+
+  renderSetupCategories();
+  renderBoard();
+  renderQuestionCategorySelect();
+}
+
+function deleteCategory(idx){
+  const removedId = categories[idx].id;
+  categories.splice(idx,1);
+
+  const idPos = activeCategoryIds.indexOf(removedId);
+  if(idPos !== -1){
+    activeCategoryIds.splice(idPos,1);
+  }
+
+  renderSetupCategories();
+  renderBoard();
+  renderAdminCategories();
+  renderQuestionCategorySelect();
+  renderQuestionEditor();
+}
+
+function addNewCategory(){
+  const titleEl = document.getElementById("newCategoryTitle");
+  const descEl  = document.getElementById("newCategoryDesc");
+  const imgEl   = document.getElementById("newCategoryImg");
+
+  const newTitle = (titleEl.value||"").trim();
+  const newDesc  = (descEl.value||"").trim();
+  const newImg   = (imgEl.value||"").trim();
+
+  if(!newTitle){
+    alert("اكتب اسم الفئة");
+    return;
+  }
+
+  const newId = "cat_"+Date.now();
+  categories.push({
+    id:newId,
+    title:newTitle,
+    desc:newDesc||"",
+    img:newImg||"",
+    questions:[]
+  });
+
+  titleEl.value="";
+  descEl.value="";
+  imgEl.value="";
+
+  renderSetupCategories();
+  renderBoard();
+  renderAdminCategories();
+  renderQuestionCategorySelect();
+  renderQuestionEditor();
+}
+
+/* --------- إدارة الأسئلة داخل لوحة التحكم --------- */
+
+function renderQuestionCategorySelect(){
+  const sel = document.getElementById("questionCategorySelect");
+  if(!sel) return;
+  sel.innerHTML="";
+  categories.forEach((cat)=>{
+    const opt = document.createElement("option");
+    opt.value = cat.id;
+    opt.textContent = cat.title;
+    sel.appendChild(opt);
+  });
+}
+
+function getSelectedQuestionCategory(){
+  const sel = document.getElementById("questionCategorySelect");
+  if(!sel) return null;
+  const catId = sel.value;
+  return categories.find(c=>c.id===catId) || null;
+}
+
+function renderQuestionEditor(){
+  const area = document.getElementById("questionEditorArea");
+  if(!area) return;
+  const catObj = getSelectedQuestionCategory();
+  if(!catObj){
+    area.innerHTML = "<div class='admin-row'><div>لا توجد فئة محددة.</div></div>";
+    return;
+  }
+  if(!catObj.questions) catObj.questions=[];
+
+  let html = "";
+  catObj.questions.forEach((q,qIdx)=>{
+    html += `
+      <div class="admin-row" style="border:1px solid var(--surface-border-strong);border-radius:10px;padding:12px;">
+        <div class="admin-col">
+          <label>نص السؤال (#${qIdx+1})</label>
+          <textarea id="qText-${catObj.id}-${qIdx}" rows="2">${q.text}</textarea>
+        </div>
+        <div class="admin-col">
+          <label>قيمة النقاط</label>
+          <input id="qPoints-${catObj.id}-${qIdx}" type="number" value="${q.points}"/>
+        </div>
+        <div class="admin-col">
+          <label>الإجابة الصحيحة</label>
+          <input id="qAnswer-${catObj.id}-${qIdx}" type="text" value="${q.answer||""}"/>
+        </div>
+        <div class="admin-col" style="align-self:flex-end;">
+          <button class="small-btn" onclick="saveQuestion('${catObj.id}',${qIdx})">حفظ</button>
+          <button class="small-btn" onclick="deleteQuestion('${catObj.id}',${qIdx})">حذف</button>
+        </div>
+      </div>
+    `;
+  });
+
+  area.innerHTML = html || "<div class='admin-row'><div>لا توجد أسئلة.</div></div>";
+}
+
+function saveQuestion(catId,qIdx){
+  const catObj = categories.find(c=>c.id===catId);
+  if(!catObj) return;
+  const tEl = document.getElementById(`qText-${catId}-${qIdx}`);
+  const pEl = document.getElementById(`qPoints-${catId}-${qIdx}`);
+  const aEl = document.getElementById(`qAnswer-${catId}-${qIdx}`);
+  if(!catObj.questions[qIdx]) return;
+
+  if(tEl) catObj.questions[qIdx].text = tEl.value.trim()||catObj.questions[qIdx].text;
+  if(pEl){
+    const v = parseInt(pEl.value,10);
+    if(!isNaN(v)&&v>0){
+      catObj.questions[qIdx].points=v;
+      // اذا حدّثنا النقاط الأصلية، نرجعها لو السؤال الحالي نفس هذا
+      if(currentQuestion.catIndex !== null &&
+         currentQuestion.qIndex !== null &&
+         categories[currentQuestion.catIndex] === catObj &&
+         currentQuestion.qIndex === qIdx){
+        currentQuestion.basePoints = v;
+        currentQuestion.effectivePoints = v;
+        document.getElementById("currentQuestionPoints").textContent =
+          "قيمة السؤال: " + currentQuestion.effectivePoints + " نقطة";
+      }
+    }
+  }
+  if(aEl){
+    catObj.questions[qIdx].answer = aEl.value.trim()||"";
+    if(currentQuestion.catIndex !== null &&
+       currentQuestion.qIndex !== null &&
+       categories[currentQuestion.catIndex] === catObj &&
+       currentQuestion.qIndex === qIdx){
+      currentQuestion.answer = aEl.value.trim()||"";
+    }
+  }
+
+  renderSetupCategories();
+  renderBoard();
+  renderQuestionEditor();
+}
+
+function deleteQuestion(catId,qIdx){
+  const catObj = categories.find(c=>c.id===catId);
+  if(!catObj) return;
+  catObj.questions.splice(qIdx,1);
+
+  renderSetupCategories();
+  renderBoard();
+  renderQuestionEditor();
+}
+
+function addNewQuestion(){
+  const catObj = getSelectedQuestionCategory();
+  if(!catObj){
+    alert("اختر الفئة أول.");
+    return;
+  }
+  const txt = (document.getElementById("newQuestionText").value||"").trim();
+  const ptsVal = parseInt(document.getElementById("newQuestionPoints").value,10);
+  const ansVal = (document.getElementById("newQuestionAnswer").value||"").trim();
+
+  if(!txt){
+    alert("اكتب نص السؤال.");
+    return;
+  }
+  if(isNaN(ptsVal) || ptsVal<=0){
+    alert("ضع قيمة نقاط صحيحة.");
+    return;
+  }
+
+  catObj.questions.push({
+    points: ptsVal,
+    text: txt,
+    answer: ansVal,
+    answered:false
+  });
+
+  document.getElementById("newQuestionText").value="";
+  document.getElementById("newQuestionPoints").value="";
+  document.getElementById("newQuestionAnswer").value="";
+
+  renderSetupCategories();
+  renderBoard();
+  renderQuestionEditor();
+}
+
+/* --------- حفظ الوقت الافتراضي للمؤقت --------- */
+
+function saveDefaultTimer(){
+  const inp = document.getElementById("defaultTimerInput");
+  if(!inp) return;
+  const v = parseInt(inp.value,10);
+  if(!isNaN(v) && v>0){
+    defaultTimerSeconds = v;
+    resetTimer();
+  }
+}
+
+/* --------- INIT --------- */
+function init(){
+  renderSetupCategories();
+  syncTeamsUI();
+  resetTimer();
+
+  const logoBox = document.getElementById("gameLogo");
+  const img = document.getElementById("logoImg");
+  if(img){
+    img.addEventListener("error", ()=>{
+      logoBox.innerHTML = "PTI";
+      logoBox.style.display = "flex";
+      logoBox.style.alignItems = "center";
+      logoBox.style.justifyContent = "center";
+      logoBox.style.fontWeight = "600";
+      logoBox.style.fontSize = "14px";
+      logoBox.style.color = "var(--accent-purple)";
+      logoBox.style.background = "#fff";
+    });
+  }
+}
+init();
+</script>
 </body>
 </html>
