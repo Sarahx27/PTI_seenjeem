@@ -1,2012 +1,276 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>سين جيم - PTI</title>
-<style>
-:root {
-  --bg-deep: #eaf3ff;
-  --bg-deeper: #ffffff;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>سين جيم - PTI</title>
+  <style>
+    :root {
+      --bg-main: #0a0f1a;
+      --panel-bg: rgba(255,255,255,0.03);
+      --panel-border: rgba(255,255,255,0.12);
+      --text-main: #ffffff;
+      --text-dim: #94a3b8;
+      --accent: #38bdf8; /* لو تبينك تغيرينه للون جامد للهوية لاحقاً */
+      --radius-xl: 24px;
+      --radius-md: 10px;
+    }
 
-  --surface-main: #ffffff;
-  --surface-alt: #f6f8fc;
-  --surface-border: rgba(0,0,0,0.08);
-  --surface-border-strong: rgba(0,0,0,0.12);
+    * {
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
 
-  --accent-purple: #5a4fa3;
-  --accent-purple-dark: #463d86;
-  --accent-orange: #ffb24d;
-  --teal-main: #3fa89b;
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      min-height: 100vh;
+      margin: 0;
+      display: grid;
+      place-items: center;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
 
-  --text-strong: #1a1a1a;
-  --text-mid: #444;
-  --text-dim: #666;
-  --text-invert: #fff;
+    /* خلفية إضاءة خفيفة */
+    .glow {
+      position: absolute;
+      width: 480px;
+      height: 480px;
+      background: radial-gradient(circle at 50% 50%, rgba(56,189,248,0.18) 0%, rgba(10,15,26,0) 70%);
+      filter: blur(40px);
+      opacity: 0.6;
+      pointer-events: none;
+      top: 10%;
+      right: 10%;
+    }
 
-  --radius-xl: 20px;
-  --radius-lg: 14px;
-  --radius-md: 8px;
-  --radius-sm: 4px;
+    .frame {
+      position: relative;
+      width: 100%;
+      max-width: 420px;
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: var(--radius-xl);
+      padding: 2rem 2rem 2.25rem;
+      box-shadow:
+        0 30px 100px rgba(0,0,0,0.9),
+        0 0 120px rgba(56,189,248,0.15);
+      backdrop-filter: blur(10px);
+    }
 
-  --shadow-card: 0 20px 40px rgba(0,0,0,0.08);
-  --shadow-pop: 0 30px 70px rgba(0,0,0,0.18);
+    /* هيدر داخل الكارد */
+    .header-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
 
-  --header-h: 72px;
-  --max-stage-w: 1200px;
+    .logo-circle {
+      width: 64px;
+      height: 64px;
+      border-radius: var(--radius-md);
+      background: radial-gradient(circle at 30% 30%, rgba(56,189,248,0.4) 0%, rgba(10,15,26,0) 70%);
+      border: 1px solid var(--panel-border);
+      display: grid;
+      place-items: center;
+      font-size: 0.7rem;
+      line-height: 1.1rem;
+      text-align: center;
+      color: var(--text-main);
+      font-weight: 500;
+      letter-spacing: -.03em;
+      padding: .5rem;
+    }
 
-  --transition-fast: .15s ease;
+    .titles {
+      display: flex;
+      flex-direction: column;
+      gap: .4rem;
+    }
 
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
-}
+    .main-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--text-main);
+      letter-spacing: -.04em;
+    }
 
-*{box-sizing:border-box;}
-body{
-  margin:0;
-  min-height:100vh;
-  background: radial-gradient(circle at 30% 20%, var(--bg-deep) 0%, var(--bg-deeper) 60%);
-  color: var(--text-strong);
-  display:flex;
-  flex-direction:column;
-  overflow-x:hidden;
-}
+    .sub-title {
+      font-size: .8rem;
+      font-weight: 400;
+      color: var(--text-dim);
+      line-height: 1.4;
+      letter-spacing: -.03em;
+    }
 
-/* HEADER */
-.header-bar{
-  height:var(--header-h);
-  min-height:var(--header-h);
-  background:linear-gradient(90deg, var(--accent-purple) 0%, #6c62c4 50%, #8e93ff 100%);
-  color:#fff;
-  display:flex;
-  align-items:center;
-  gap:16px;
-  padding:0 20px;
-  box-shadow:0 12px 30px rgba(0,0,0,0.15);
-  position:sticky;
-  top:0;
-  z-index:1000;
-  border-bottom:1px solid rgba(255,255,255,.25);
-}
+    /* الأزرار */
+    .actions {
+      display: flex;
+      flex-direction: column;
+      gap: .8rem;
+    }
 
-.header-left{
-  display:flex;
-  align-items:center;
-  gap:16px;
-  min-width:0;
-}
-.game-logo{
-  width:60px;
-  height:60px;
-  flex-shrink:0;
-  border-radius:var(--radius-md);
-  background:#fff;
-  color:var(--accent-purple);
-  font-weight:600;
-  font-size:14px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  overflow:hidden;
-  box-shadow:0 10px 24px rgba(0,0,0,0.2);
-}
-.game-logo img{
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  display:block;
-  border-radius:var(--radius-md);
-}
-.game-info{
-  display:flex;
-  flex-direction:column;
-  min-width:0;
-}
-.game-title{
-  font-size:1.1rem;
-  font-weight:700;
-  line-height:1.2;
-  color:#fff;
-  white-space:nowrap;
-}
-.game-sub{
-  font-size:.8rem;
-  color:rgba(255,255,255,0.8);
-  line-height:1.2;
-}
+    .btn-start {
+      width: 100%;
+      background: var(--accent);
+      color: #000;
+      font-size: 1rem;
+      font-weight: 600;
+      text-align: center;
+      border: 0;
+      border-radius: var(--radius-md);
+      padding: .9rem 1rem;
+      cursor: pointer;
+      line-height: 1.2rem;
+      letter-spacing: -.03em;
+      box-shadow:
+        0 20px 60px rgba(56,189,248,0.4),
+        0 2px 6px rgba(0,0,0,0.8) inset;
+      transition: box-shadow .15s, transform .15s;
+    }
 
-.header-actions{
-  margin-right:auto;
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-}
-.top-btn{
-  background:rgba(255,255,255,0.12);
-  border:1px solid rgba(255,255,255,0.4);
-  color:#fff;
-  border-radius:var(--radius-md);
-  padding:9px 12px;
-  font-size:.9rem;
-  font-weight:600;
-  cursor:pointer;
-  line-height:1.2;
-  box-shadow:0 10px 24px rgba(0,0,0,0.25);
-  transition:var(--transition-fast);
-}
-.top-btn:hover{
-  background:rgba(255,255,255,0.22);
-}
+    .btn-start:active {
+      transform: scale(.98);
+      box-shadow:
+        0 10px 30px rgba(56,189,248,0.35),
+        0 1px 3px rgba(0,0,0,0.8) inset;
+    }
 
-/* STAGE WRAPPER */
-.stage{
-  width:100%;
-  max-width:var(--max-stage-w);
-  margin:24px auto 60px auto;
-  padding:0 20px;
-  display:none;
-}
-.stage.active{
-  display:block;
-}
+    .btn-admin {
+      width: 100%;
+      background: rgba(255,255,255,0.03);
+      color: var(--text-dim);
+      font-size: .8rem;
+      font-weight: 500;
+      text-align: center;
+      border: 1px solid var(--panel-border);
+      border-radius: var(--radius-md);
+      padding: .7rem 1rem;
+      cursor: pointer;
+      line-height: 1.1rem;
+      letter-spacing: -.03em;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: .5rem;
+      transition: background .15s, color .15s, border-color .15s;
+    }
 
-/* GENERIC CARD */
-.big-card{
-  background:var(--surface-main);
-  border:1px solid var(--surface-border);
-  border-radius:var(--radius-xl);
-  box-shadow:var(--shadow-card);
-  padding:24px 24px 28px;
-  color:var(--text-strong);
-}
+    .btn-admin:hover {
+      background: rgba(255,255,255,0.06);
+      color: var(--text-main);
+      border-color: rgba(255,255,255,0.3);
+    }
 
-/* TITLES */
-.section-title{
-  font-size:1rem;
-  font-weight:600;
-  color:var(--text-strong);
-  margin-bottom:16px;
-  display:flex;
-  justify-content:space-between;
-  flex-wrap:wrap;
-}
-.section-note{
-  font-size:.8rem;
-  font-weight:500;
-  color:var(--accent-purple);
-}
+    .admin-hint {
+      font-size: .7rem;
+      line-height: 1.2rem;
+      color: var(--text-dim);
+      text-align: center;
+      margin-top: .2rem;
+      letter-spacing: -.03em;
+      user-select: none;
+    }
 
-/* TEAM INPUTS (setup) */
-.team-setup-row{
-  background:var(--surface-alt);
-  border:1px solid var(--surface-border);
-  border-radius:var(--radius-lg);
-  box-shadow:var(--shadow-card);
-  padding:16px;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:16px;
-  margin-bottom:24px;
-}
-.team-block-input label{
-  font-size:.9rem;
-  font-weight:600;
-  color:var(--text-strong);
-  margin-bottom:6px;
-  display:block;
-}
-.team-block-input input{
-  width:100%;
-  background:#fff;
-  color:var(--text-strong);
-  border-radius:var(--radius-md);
-  border:1px solid var(--surface-border-strong);
-  font-size:1rem;
-  padding:10px 12px;
-  font-weight:600;
-  box-shadow:inset 0 1px 2px rgba(0,0,0,0.05);
-}
+    /* خط فاصل رقيق */
+    .divider {
+      height: 1px;
+      width: 100%;
+      background: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 70%);
+      opacity: .3;
+      margin: 1rem 0 0.5rem;
+    }
 
-/* CATEGORY GRID (setup screen) */
-.category-select-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:16px;
-  margin-bottom:24px;
-}
-.category-card{
-  background:#fff;
-  border:2px solid var(--surface-border);
-  border-radius:var(--radius-lg);
-  box-shadow:var(--shadow-card);
-  min-height:160px;
-  padding:16px;
-  cursor:pointer;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-  transition:var(--transition-fast);
-}
-.category-card.active{
-  border:2px solid var(--accent-orange);
-  box-shadow:0 16px 40px rgba(255,178,77,0.4);
-}
-.category-topline{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap:8px;
-}
-.category-name{
-  font-size:1.05rem;
-  font-weight:700;
-  color:var(--text-strong);
-  line-height:1.3;
-}
-.category-desc{
-  font-size:.8rem;
-  color:var(--text-mid);
-  line-height:1.5;
-  flex-grow:1;
-  margin-top:8px;
-}
+    /* فوتر بسيط */
+    .footer-note {
+      text-align: center;
+      font-size: .7rem;
+      color: var(--text-dim);
+      line-height: 1.4;
+      margin-top: 1.25rem;
+      letter-spacing: -.03em;
+      user-select: none;
+    }
 
-/* START GAME BUTTON */
-.start-game-btn{
-  background:var(--accent-purple);
-  color:#fff;
-  border:0;
-  border-radius:var(--radius-lg);
-  font-size:1rem;
-  font-weight:700;
-  width:100%;
-  padding:16px;
-  cursor:pointer;
-  line-height:1.2;
-  text-align:center;
-  box-shadow:0 20px 50px rgba(0,0,0,0.2);
-  transition:var(--transition-fast);
-}
-.start-game-btn:hover{
-  background:var(--accent-purple-dark);
-}
-
-/* BOARD AREA */
-.board-area{
-  background:var(--surface-main);
-  border:1px solid var(--surface-border);
-  border-radius:var(--radius-xl);
-  box-shadow:var(--shadow-card);
-  padding:24px;
-  margin-bottom:16px;
-}
-
-/* ثابت ٣ أعمدة (٣ فوق / ٣ تحت = ٦ فئات) */
-.board-columns{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:16px;
-}
-
-.board-col{
-  background:var(--surface-alt);
-  border:2px solid var(--surface-border);
-  border-radius:var(--radius-lg);
-  box-shadow:var(--shadow-card);
-  display:flex;
-  flex-direction:column;
-  overflow:hidden;
-  min-height:240px;
-}
-.board-col-header{
-  background:var(--accent-purple);
-  color:#fff;
-  text-align:center;
-  padding:16px;
-  font-size:1rem;
-  font-weight:700;
-  line-height:1.4;
-  border-bottom:1px solid rgba(0,0,0,0.15);
-  min-height:70px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
-.point-btn{
-  flex:1;
-  background:#fff;
-  border:0;
-  border-bottom:1px solid var(--surface-border);
-  color:var(--text-strong);
-  font-size:1.3rem;
-  font-weight:700;
-  line-height:1;
-  padding:20px 10px;
-  cursor:pointer;
-  transition:var(--transition-fast);
-  position:relative;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  text-align:center;
-}
-.point-btn:hover{
-  background:var(--accent-orange);
-  color:#000;
-}
-
-/* سؤال مقفول */
-.point-btn.used{
-  background:#ddd !important;
-  color:#777 !important;
-  cursor:not-allowed !important;
-  box-shadow:none !important;
-}
-
-/* TEAM BAR (board + mini assists UI icons) */
-.team-bar{
-  background:var(--surface-main);
-  border:1px solid var(--surface-border);
-  border-radius:var(--radius-xl);
-  box-shadow:var(--shadow-card);
-  padding:16px;
-  display:flex;
-  flex-wrap:wrap;
-  gap:16px;
-  justify-content:space-between;
-  align-items:stretch;
-}
-.team-card{
-  flex:1 1 260px;
-  min-width:240px;
-  background:var(--surface-alt);
-  border:2px solid var(--surface-border);
-  border-radius:var(--radius-lg);
-  box-shadow:var(--shadow-card);
-  padding:16px;
-  color:var(--text-strong);
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-  gap:12px;
-}
-.team-header-line{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  flex-wrap:wrap;
-  gap:8px;
-}
-.team-name-display{
-  font-size:1rem;
-  font-weight:700;
-  color:var(--text-strong);
-  line-height:1.2;
-}
-.team-score-display{
-  font-size:1.5rem;
-  font-weight:800;
-  line-height:1;
-  color:var(--accent-orange);
-  min-width:60px;
-  text-align:left;
-}
-
-.team-assist-row{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-}
-
-.assist-icon-btn{
-  background:var(--teal-main);
-  border:1px solid rgba(0,0,0,0.2);
-  border-radius:var(--radius-md);
-  width:36px;
-  height:36px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
-  box-shadow:0 10px 24px rgba(0,0,0,0.15);
-  transition:var(--transition-fast);
-}
-.assist-icon-btn[disabled]{
-  opacity:.4;
-  cursor:not-allowed;
-}
-.assist-icon-btn svg{
-  width:20px;
-  height:20px;
-  stroke:#fff;
-  stroke-width:2;
-  fill:none;
-}
-.assist-icon-btn:hover{
-  background:var(--accent-orange);
-  border-color:rgba(0,0,0,0.2);
-}
-.assist-icon-btn:hover svg{
-  stroke:#000;
-}
-
-.correct-btn{
-  background:var(--accent-orange);
-  border:0;
-  border-radius:var(--radius-md);
-  padding:10px 12px;
-  font-size:.9rem;
-  font-weight:700;
-  line-height:1.2;
-  cursor:pointer;
-  text-align:center;
-  box-shadow:0 12px 28px rgba(0,0,0,0.18);
-  color:#000;
-  transition:var(--transition-fast);
-}
-.correct-btn:hover{
-  filter:brightness(1.05);
-}
-
-/* QUESTION SCREEN */
-.question-layout{
-  display:grid;
-  grid-template-columns:2fr 1fr;
-  gap:16px;
-  min-height:60vh;
-}
-
-.question-card{
-  background:var(--surface-main);
-  border:1px solid var(--surface-border);
-  border-radius:var(--radius-xl);
-  box-shadow:var(--shadow-card);
-  padding:24px;
-  color:var(--text-strong);
-  min-height:50vh;
-  display:flex;
-  flex-direction:column;
-  gap:16px;
-  position:relative;
-}
-
-/* timer pill */
-.timer-mini-wrapper{
-  position:absolute;
-  top:12px;
-  left:12px;
-  display:flex;
-  align-items:center;
-  gap:6px;
-  background:var(--accent-purple);
-  color:#fff;
-  border-radius:var(--radius-md);
-  border:2px solid rgba(0,0,0,0.15);
-  box-shadow:0 12px 28px rgba(0,0,0,0.18);
-  padding:6px 8px;
-  min-width:100px;
-  justify-content:center;
-  font-size:1rem;
-  font-weight:700;
-}
-.timer-number{
-  min-width:32px;
-  text-align:center;
-  font-variant-numeric:tabular-nums;
-}
-.timer-icon-btn{
-  background:#fff0;
-  border:0;
-  padding:4px;
-  cursor:pointer;
-  line-height:0;
-  border-radius:var(--radius-sm);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-.timer-icon-btn svg{
-  width:18px;
-  height:18px;
-  stroke:#fff;
-  stroke-width:2;
-  fill:none;
-}
-.timer-icon-btn:hover{
-  background:rgba(255,255,255,0.15);
-}
-
-.current-question-wrap{
-  text-align:center;
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-  margin-top:32px; /* لأن التايمر فوق */
-}
-.current-question-text{
-  font-size:2rem;
-  font-weight:700;
-  line-height:1.4;
-  text-align:center;
-  color:var(--text-strong);
-  min-height:3em;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-wrap:balance;
-  white-space:pre-wrap;
-  margin:0;
-}
-.current-question-points{
-  font-size:.9rem;
-  font-weight:600;
-  color:var(--accent-orange);
-  text-align:center;
-  margin:0;
-  line-height:1.4;
-}
-
-/* سطر حالة المساعدات */
-.assist-status-line{
-  font-size:.9rem;
-  font-weight:600;
-  color:var(--text-mid);
-  text-align:center;
-  min-height:1.4em;
-}
-.assist-status-line .highlight{
-  color:var(--accent-purple);
-}
-.assist-status-line .danger{
-  color:var(--accent-orange);
-}
-
-.answer-box{
-  background:var(--surface-alt);
-  border:2px solid var(--surface-border);
-  border-radius:var(--radius-md);
-  padding:16px;
-  font-size:1.4rem;
-  font-weight:600;
-  color:var(--text-strong);
-  min-height:3em;
-  text-align:center;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  white-space:pre-wrap;
-}
-
-/* bottom controls of question card */
-.q-control-row{
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  gap:10px;
-}
-.q-btn{
-  background:var(--accent-purple);
-  border:0;
-  border-radius:var(--radius-md);
-  padding:10px 14px;
-  font-size:.9rem;
-  font-weight:600;
-  line-height:1.2;
-  cursor:pointer;
-  color:#fff;
-  min-width:120px;
-  text-align:center;
-  box-shadow:0 12px 28px rgba(0,0,0,0.18);
-  transition:var(--transition-fast);
-}
-.q-btn:hover{
-  background:var(--accent-purple-dark);
-  color:#fff;
-}
-
-/* SIDE TEAMS IN QUESTION SCREEN */
-.question-side-teams{
-  background:var(--surface-main);
-  border:1px solid var(--surface-border);
-  border-radius:var(--radius-xl);
-  box-shadow:var(--shadow-card);
-  padding:16px;
-  color:var(--text-strong);
-  display:flex;
-  flex-direction:column;
-  gap:16px;
-  min-height:300px;
-}
-.q-team-card{
-  background:var(--surface-alt);
-  border:2px solid var(--surface-border);
-  border-radius:var(--radius-lg);
-  box-shadow:var(--shadow-card);
-  padding:16px;
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-}
-.q-team-headline{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  flex-wrap:wrap;
-  gap:8px;
-  font-size:1rem;
-  font-weight:700;
-  color:var(--text-strong);
-}
-.q-team-score{
-  font-size:1.3rem;
-  font-weight:800;
-  color:var(--accent-orange);
-  line-height:1;
-}
-.q-team-assists{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-}
-
-/* CONTROL PANEL MODAL */
-#adminModalOverlay{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.4);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  z-index:2000;
-}
-#adminModal{
-  width:90%;
-  max-width:1000px;
-  max-height:90vh;
-  overflow-y:auto;
-  background:#ffffff;
-  color:var(--text-strong);
-  border-radius:var(--radius-xl);
-  box-shadow:var(--shadow-pop);
-  border:2px solid var(--surface-border-strong);
-  padding:24px;
-  position:relative;
-  font-size:.9rem;
-  line-height:1.5;
-}
-#adminCloseBtn{
-  position:absolute;
-  top:16px;
-  left:16px;
-  background:#ddd;
-  border:0;
-  color:#000;
-  border-radius:var(--radius-md);
-  padding:6px 10px;
-  cursor:pointer;
-  font-size:.8rem;
-  font-weight:600;
-}
-#adminCloseBtn:hover{
-  background:#ccc;
-}
-
-.admin-section-title{
-  font-size:1rem;
-  font-weight:700;
-  color:var(--text-strong);
-  margin-top:24px;
-  margin-bottom:8px;
-  display:flex;
-  justify-content:space-between;
-  flex-wrap:wrap;
-}
-.admin-block{
-  background:var(--surface-alt);
-  border:1px solid var(--surface-border-strong);
-  border-radius:var(--radius-lg);
-  box-shadow:var(--shadow-card);
-  padding:16px;
-  margin-bottom:16px;
-}
-
-/* login block */
-#adminLoginBlock{
-  text-align:center;
-}
-#adminLoginBlock h2{
-  font-size:1.05rem;
-  font-weight:700;
-  margin:0 0 12px 0;
-  color:var(--text-strong);
-}
-.admin-pass-input{
-  width:100%;
-  max-width:260px;
-  margin:0 auto 12px auto;
-  display:block;
-  border-radius:var(--radius-md);
-  border:1px solid var(--surface-border-strong);
-  background:#fff;
-  color:#000;
-  font-size:1rem;
-  font-weight:600;
-  padding:10px 12px;
-  text-align:center;
-  box-shadow:inset 0 1px 2px rgba(0,0,0,0.08);
-}
-.admin-pass-btn{
-  background:var(--accent-purple);
-  border:0;
-  border-radius:var(--radius-md);
-  padding:10px 14px;
-  font-size:1rem;
-  font-weight:700;
-  color:#fff;
-  cursor:pointer;
-  min-width:120px;
-  box-shadow:0 16px 36px rgba(0,0,0,0.2);
-}
-.admin-pass-btn:hover{
-  background:var(--accent-purple-dark);
-}
-.admin-error{
-  font-size:.8rem;
-  color:#d00000;
-  font-weight:600;
-  min-height:1.2em;
-  margin-top:8px;
-  text-align:center;
-}
-
-/* admin forms */
-.admin-row{
-  display:flex;
-  flex-wrap:wrap;
-  gap:12px;
-  margin-bottom:12px;
-}
-.admin-col{
-  flex:1 1 200px;
-  min-width:200px;
-  display:flex;
-  flex-direction:column;
-}
-.admin-col label{
-  color:var(--text-strong);
-  font-size:.8rem;
-  font-weight:600;
-  margin-bottom:4px;
-}
-.admin-col input,
-.admin-col textarea,
-.admin-col select{
-  background:#fff;
-  color:#000;
-  border-radius:var(--radius-md);
-  border:1px solid var(--surface-border-strong);
-  font-size:.9rem;
-  font-weight:500;
-  padding:8px 10px;
-  box-shadow:inset 0 1px 2px rgba(0,0,0,0.07);
-}
-
-.small-btn{
-  background:var(--accent-purple);
-  border:0;
-  border-radius:var(--radius-md);
-  color:#fff;
-  padding:8px 10px;
-  cursor:pointer;
-  font-size:.8rem;
-  font-weight:600;
-  line-height:1.2;
-  box-shadow:0 12px 30px rgba(0,0,0,0.15);
-  transition:var(--transition-fast);
-  white-space:nowrap;
-}
-.small-btn:hover{
-  background:var(--accent-purple-dark);
-  color:#fff;
-}
-
-/* nav in admin */
-.nav-row{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  margin-top:12px;
-}
-.nav-btn{
-  background:#ddd;
-  border:0;
-  border-radius:var(--radius-md);
-  color:#000;
-  padding:8px 10px;
-  cursor:pointer;
-  font-size:.8rem;
-  font-weight:600;
-  line-height:1.2;
-}
-.nav-btn:hover{
-  background:#ccc;
-}
-
-/* responsive */
-@media(max-width:768px){
-  .team-setup-row{grid-template-columns:1fr;}
-  .question-layout{grid-template-columns:1fr;}
-}
-</style>
+    @media (min-width:480px){
+      .main-title{
+        font-size:1.3rem;
+      }
+      .sub-title{
+        font-size:.8rem;
+      }
+      .btn-start{
+        font-size:1rem;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<header class="header-bar">
-  <div class="header-left">
-    <div class="game-logo" id="gameLogo">
-      <img id="logoImg" src="pti-logo.png" alt="PTI Logo"/>
-    </div>
-    <div class="game-info">
-      <div class="game-title">سين جيم - PTI</div>
-      <div class="game-sub">لعبة الأسئلة التقنية</div>
-    </div>
-  </div>
+  <!-- إضاءة خلفية خفيفة -->
+  <div class="glow"></div>
 
-  <div class="header-actions">
-    <button class="top-btn" onclick="showStage('setup')">الإعداد</button>
-    <button class="top-btn" onclick="showStage('board')">لوحة اللعبة</button>
-    <button class="top-btn" onclick="openAdmin()">لوحة التحكم</button>
-  </div>
+  <!-- الإطار الرئيسي -->
+  <section class="frame">
 
-  <div class="header-actions">
-    <button class="top-btn" onclick="resetGame()">إعادة ضبط</button>
-  </div>
-</header>
-
-<!-- SETUP -->
-<section id="stage-setup" class="stage active">
-  <div class="big-card">
-    <div class="section-title">
-      <span>إعداد اللعبة</span>
-      <span class="section-note">لازم تختارين بالضبط ٦ فئات</span>
-    </div>
-
-    <div class="team-setup-row">
-      <div class="team-block-input">
-        <label>اسم الفريق 1</label>
-        <input id="setupTeam1Name" type="text" placeholder="الفريق الأول"/>
+    <!-- الهيدر -->
+    <header class="header-block">
+      <!-- مكان اللوقو: حالياً مربع متوهج بكلمة PTI -->
+      <div class="logo-circle">
+        PTI<br>SEENJEEM
       </div>
-      <div class="team-block-input">
-        <label>اسم الفريق 2</label>
-        <input id="setupTeam2Name" type="text" placeholder="الفريق الثاني"/>
+
+      <div class="titles">
+        <div class="main-title">سين جيم - PTI</div>
+        <div class="sub-title">
+          منصة الأسئلة المباشرة لفريق PTI.<br>
+          اختبر معلوماتك. أثبت فريقك.
+        </div>
+      </div>
+    </header>
+
+    <!-- الأزرار -->
+    <div class="actions">
+      <button class="btn-start" id="startBtn">
+        بدء
+      </button>
+
+      <div class="divider"></div>
+
+      <button class="btn-admin" id="adminBtn">
+        <span>لوحة التحكم</span>
+      </button>
+      <div class="admin-hint">
+        مخصص للإدارة فقط
       </div>
     </div>
 
-    <div class="category-select-grid" id="setupCategoryGrid"></div>
-
-    <button class="start-game-btn" onclick="startGame()">بدء اللعبة</button>
-  </div>
-</section>
-
-<!-- BOARD -->
-<section id="stage-board" class="stage">
-  <div class="board-area">
-    <div class="board-columns" id="boardColumns"></div>
-  </div>
-
-  <div class="team-bar" id="teamBarBoard">
-
-    <div class="team-card" data-team="0">
-      <div class="team-header-line">
-        <div class="team-name-display" id="boardTeamName0">فريق 1</div>
-        <div class="team-score-display" id="boardTeamScore0">0</div>
-      </div>
-
-      <div class="team-assist-row">
-        <!-- دبل بوينت -->
-        <button class="assist-icon-btn" title="دبل بوينت" onclick="assistDouble(0)">
-          <svg viewBox="0 0 24 24">
-            <polygon points="12 3 15 10 22 10 16.5 14 18.5 21 12 17 5.5 21 7.5 14 2 10 9 10 12 3"/>
-          </svg>
-        </button>
-
-        <!-- ميوت -->
-        <button class="assist-icon-btn" title="ميوت" onclick="assistMute(0)">
-          <svg viewBox="0 0 24 24">
-            <polygon points="11 5 6 9 3 9 3 15 6 15 11 19 11 5"/>
-            <line x1="14" y1="10" x2="20" y2="16"/>
-            <line x1="20" y1="10" x2="14" y2="16"/>
-          </svg>
-        </button>
-
-        <!-- اتصال صديق -->
-        <button class="assist-icon-btn" title="اتصال صديق" onclick="assistCall(0)">
-          <svg viewBox="0 0 24 24">
-            <path d="M22 16.92v3a2 2 0 0 1-2.18 2
-                     19.86 19.86 0 0 1-8.63-3.07
-                     19.5 19.5 0 0 1-6-6
-                     19.86 19.86 0 0 1-3.07-8.67
-                     A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72
-                     c.12.81.37 1.6.72 2.34a2 2 0 0 1-.45 2.11L8.09 9.91
-                     a16 16 0 0 0 6 6l1.74-1.31
-                     a2 2 0 0 1 2.11-.45
-                     c.74.35 1.53.6 2.34.72A2 2 0 0 1 22 16.92z"/>
-          </svg>
-        </button>
-      </div>
-
-      <button class="correct-btn" onclick="markCorrect(0)">هذا الفريق جاوب صح</button>
+    <!-- فوتر -->
+    <div class="footer-note">
+      PTI Internal Game Interface
     </div>
+  </section>
 
-    <div class="team-card" data-team="1">
-      <div class="team-header-line">
-        <div class="team-name-display" id="boardTeamName1">فريق 2</div>
-        <div class="team-score-display" id="boardTeamScore1">0</div>
-      </div>
-
-      <div class="team-assist-row">
-        <!-- دبل بوينت -->
-        <button class="assist-icon-btn" title="دبل بوينت" onclick="assistDouble(1)">
-          <svg viewBox="0 0 24 24">
-            <polygon points="12 3 15 10 22 10 16.5 14 18.5 21 12 17 5.5 21 7.5 14 2 10 9 10 12 3"/>
-          </svg>
-        </button>
-
-        <!-- ميوت -->
-        <button class="assist-icon-btn" title="ميوت" onclick="assistMute(1)">
-          <svg viewBox="0 0 24 24">
-            <polygon points="11 5 6 9 3 9 3 15 6 15 11 19 11 5"/>
-            <line x1="14" y1="10" x2="20" y2="16"/>
-            <line x1="20" y1="10" x2="14" y2="16"/>
-          </svg>
-        </button>
-
-        <!-- اتصال صديق -->
-        <button class="assist-icon-btn" title="اتصال صديق" onclick="assistCall(1)">
-          <svg viewBox="0 0 24 24">
-            <path d="M22 16.92v3a2 2 0 0 1-2.18 2
-                     19.86 19.86 0 0 1-8.63-3.07
-                     19.5 19.5 0 0 1-6-6
-                     19.86 19.86 0 0 1-3.07-8.67
-                     A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72
-                     c.12.81.37 1.6.72 2.34a2 2 0 0 1-.45 2.11L8.09 9.91
-                     a16 16 0 0 0 6 6l1.74-1.31
-                     a2 2 0 0 1 2.11-.45
-                     c.74.35 1.53.6 2.34.72A2 2 0 0 1 22 16.92z"/>
-          </svg>
-        </button>
-      </div>
-
-      <button class="correct-btn" onclick="markCorrect(1)">هذا الفريق جاوب صح</button>
-    </div>
-
-  </div>
-</section>
-
-<!-- QUESTION -->
-<section id="stage-question" class="stage">
-  <div class="question-layout">
-
-    <div class="question-card">
-
-      <!-- Timer -->
-      <div class="timer-mini-wrapper" id="timerWrapper">
-        <div class="timer-number" id="timerDisplay">30</div>
-        <button class="timer-icon-btn" title="تشغيل / استئناف" onclick="startTimer()">
-          <svg viewBox="0 0 24 24"><polygon points="8,5 19,12 8,19 8,5"></polygon></svg>
-        </button>
-        <button class="timer-icon-btn" title="إيقاف" onclick="stopTimer()">
-          <svg viewBox="0 0 24 24">
-            <line x1="9" y1="5" x2="9" y2="19"></line>
-            <line x1="15" y1="5" x2="15" y2="19"></line>
-          </svg>
-        </button>
-        <button class="timer-icon-btn" title="إعادة" onclick="resetTimer()">
-          <svg viewBox="0 0 24 24">
-            <polyline points="3 3 3 10 10 10"></polyline>
-            <path d="M3 3a9 9 0 1 1-2 5"></path>
-          </svg>
-        </button>
-      </div>
-
-      <div class="current-question-wrap">
-        <div class="current-question-text" id="currentQuestionText">
-          اختر سؤال من لوحة اللعبة ليظهر هنا
-        </div>
-
-        <div class="current-question-points" id="currentQuestionPoints">
-          -
-        </div>
-
-        <div class="assist-status-line" id="assistStatusLine"></div>
-
-        <div class="answer-box" id="answerBox"></div>
-      </div>
-
-      <div class="q-control-row">
-        <button class="q-btn" onclick="revealAnswer()">إظهار الإجابة</button>
-        <button class="q-btn" onclick="showStage('board')">رجوع للوحة</button>
-      </div>
-    </div>
-
-    <div class="question-side-teams">
-
-      <div class="q-team-card" data-team="0">
-        <div class="q-team-headline">
-          <span id="qTeamName0">فريق 1</span>
-          <span class="q-team-score" id="qTeamScore0">0</span>
-        </div>
-
-        <div class="q-team-assists">
-          <button class="assist-icon-btn" title="دبل بوينت" onclick="assistDouble(0)">
-            <svg viewBox="0 0 24 24">
-              <polygon points="12 3 15 10 22 10 16.5 14 18.5 21 12 17 5.5 21 7.5 14 2 10 9 10 12 3"/>
-            </svg>
-          </button>
-          <button class="assist-icon-btn" title="ميوت" onclick="assistMute(0)">
-            <svg viewBox="0 0 24 24">
-              <polygon points="11 5 6 9 3 9 3 15 6 15 11 19 11 5"/>
-              <line x1="14" y1="10" x2="20" y2="16"/>
-              <line x1="20" y1="10" x2="14" y2="16"/>
-            </svg>
-          </button>
-          <button class="assist-icon-btn" title="اتصال صديق" onclick="assistCall(0)">
-            <svg viewBox="0 0 24 24">
-              <path d="M22 16.92v3a2 2 0 0 1-2.18 2
-                       19.86 19.86 0 0 1-8.63-3.07
-                       19.5 19.5 0 0 1-6-6
-                       19.86 19.86 0 0 1-3.07-8.67
-                       A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72
-                       c.12.81.37 1.6.72 2.34a2 2 0 0 1-.45 2.11L8.09 9.91
-                       a16 16 0 0 0 6 6l1.74-1.31
-                       a2 2 0 0 1 2.11-.45
-                       c.74.35 1.53.6 2.34.72A2 2 0 0 1 22 16.92z"/>
-            </svg>
-          </button>
-        </div>
-
-        <button class="correct-btn" onclick="markCorrect(0)">هذا الفريق جاوب صح</button>
-      </div>
-
-      <div class="q-team-card" data-team="1">
-        <div class="q-team-headline">
-          <span id="qTeamName1">فريق 2</span>
-          <span class="q-team-score" id="qTeamScore1">0</span>
-        </div>
-
-        <div class="q-team-assists">
-          <button class="assist-icon-btn" title="دبل بوينت" onclick="assistDouble(1)">
-            <svg viewBox="0 0 24 24">
-              <polygon points="12 3 15 10 22 10 16.5 14 18.5 21 12 17 5.5 21 7.5 14 2 10 9 10 12 3"/>
-            </svg>
-          </button>
-          <button class="assist-icon-btn" title="ميوت" onclick="assistMute(1)">
-            <svg viewBox="0 0 24 24">
-              <polygon points="11 5 6 9 3 9 3 15 6 15 11 19 11 5"/>
-              <line x1="14" y1="10" x2="20" y2="16"/>
-              <line x1="20" y1="10" x2="14" y2="16"/>
-            </svg>
-          </button>
-          <button class="assist-icon-btn" title="اتصال صديق" onclick="assistCall(1)">
-            <svg viewBox="0 0 24 24">
-              <path d="M22 16.92v3a2 2 0 0 1-2.18 2
-                       19.86 19.86 0 0 1-8.63-3.07
-                       19.5 19.5 0 0 1-6-6
-                       19.86 19.86 0 0 1-3.07-8.67
-                       A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72
-                       c.12.81.37 1.6.72 2.34a2 2 0 0 1-.45 2.11L8.09 9.91
-                       a16 16 0 0 0 6 6l1.74-1.31
-                       a2 2 0 0 1 2.11-.45
-                       c.74.35 1.53.6 2.34.72A2 2 0 0 1 22 16.92z"/>
-            </svg>
-          </button>
-        </div>
-
-        <button class="correct-btn" onclick="markCorrect(1)">هذا الفريق جاوب صح</button>
-      </div>
-
-    </div>
-
-  </div>
-</section>
-
-<!-- ADMIN MODAL -->
-<div id="adminModalOverlay">
-  <div id="adminModal">
-    <button id="adminCloseBtn" onclick="closeAdmin()">إغلاق</button>
-
-    <div id="adminLoginBlock">
-      <h2>لوحة التحكم</h2>
-      <p>أدخل كلمة المرور للدخول إلى التحكم.</p>
-      <input id="adminPasswordInput" type="password" class="admin-pass-input" placeholder="••••••••"/>
-      <button class="admin-pass-btn" onclick="tryAdminLogin()">دخول</button>
-      <div class="admin-error" id="adminLoginError"></div>
-    </div>
-
-    <div id="adminContent" style="display:none;">
-      <!-- TEAMS -->
-      <div class="admin-section-title">
-        <span>الفرق</span>
-        <span style="color:var(--accent-purple);font-size:.8rem;">تعديل الأسماء والنقاط</span>
-      </div>
-      <div class="admin-block" id="adminTeamsBlock">
-        <div class="admin-row">
-          <div class="admin-col">
-            <label>اسم الفريق 1</label>
-            <input id="adminTeamName0" type="text"/>
-          </div>
-          <div class="admin-col">
-            <label>نقاط الفريق 1</label>
-            <input id="adminTeamScore0" type="number"/>
-          </div>
-          <div class="admin-col" style="align-self:flex-end;">
-            <button class="small-btn" onclick="saveTeamEdits(0)">حفظ الفريق 1</button>
-          </div>
-        </div>
-
-        <div class="admin-row">
-          <div class="admin-col">
-            <label>اسم الفريق 2</label>
-            <input id="adminTeamName1" type="text"/>
-          </div>
-          <div class="admin-col">
-            <label>نقاط الفريق 2</label>
-            <input id="adminTeamScore1" type="number"/>
-          </div>
-          <div class="admin-col" style="align-self:flex-end;">
-            <button class="small-btn" onclick="saveTeamEdits(1)">حفظ الفريق 2</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- CATEGORIES -->
-      <div class="admin-section-title">
-        <span>الفئات</span>
-        <span style="color:var(--accent-purple);font-size:.8rem;">إعادة تسمية / إضافة / حذف</span>
-      </div>
-      <div class="admin-block" id="adminCategoriesBlock">
-        <div id="adminCategoryList"></div>
-
-        <div class="admin-row" style="border-top:1px solid var(--surface-border-strong);padding-top:12px;margin-top:12px;">
-          <div class="admin-col">
-            <label>اسم فئة جديدة</label>
-            <input id="newCategoryTitle" type="text" placeholder="مثال: برمجة الويب"/>
-          </div>
-          <div class="admin-col">
-            <label>وصف مختصر</label>
-            <input id="newCategoryDesc" type="text" placeholder="مثال: HTML/CSS/JS"/>
-          </div>
-          <div class="admin-col" style="align-self:flex-end;">
-            <button class="small-btn" onclick="addNewCategory()">إضافة فئة</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- QUESTIONS -->
-      <div class="admin-section-title">
-        <span>الأسئلة</span>
-        <span style="color:var(--accent-purple);font-size:.8rem;">اختيار فئة وتحرير أسئلتها</span>
-      </div>
-      <div class="admin-block" id="adminQuestionsBlock">
-        <div class="admin-row">
-          <div class="admin-col">
-            <label>اختر الفئة</label>
-            <select id="questionCategorySelect" onchange="renderQuestionEditor()"></select>
-          </div>
-        </div>
-
-        <div id="questionEditorArea"></div>
-
-        <div class="admin-row" style="border-top:1px solid var(--surface-border-strong);padding-top:12px;margin-top:12px;">
-          <div class="admin-col">
-            <label>نص سؤال جديد</label>
-            <textarea id="newQuestionText" rows="2" placeholder="اكتب السؤال هنا..."></textarea>
-          </div>
-          <div class="admin-col">
-            <label>قيمة النقاط</label>
-            <input id="newQuestionPoints" type="number" placeholder="200"/>
-          </div>
-          <div class="admin-col">
-            <label>الإجابة الصحيحة</label>
-            <input id="newQuestionAnswer" type="text" placeholder="الإجابة"/>
-          </div>
-          <div class="admin-col" style="align-self:flex-end;">
-            <button class="small-btn" onclick="addNewQuestion()">إضافة سؤال</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- TIMER -->
-      <div class="admin-section-title">
-        <span>الإعدادات العامة</span>
-        <span style="color:var(--accent-purple);font-size:.8rem;">الوقت الافتراضي للمؤقت</span>
-      </div>
-      <div class="admin-block">
-        <div class="admin-row">
-          <div class="admin-col">
-            <label>الوقت الافتراضي (بالثواني)</label>
-            <input id="defaultTimerInput" type="number" min="5" step="5"/>
-          </div>
-          <div class="admin-col" style="align-self:flex-end;">
-            <button class="small-btn" onclick="saveDefaultTimer()">حفظ الوقت</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- NAV -->
-      <div class="admin-section-title"><span>تنقّل سريع</span></div>
-      <div class="admin-block">
-        <div class="nav-row">
-          <button class="nav-btn" onclick="showStage('setup')">شاشة الإعداد</button>
-          <button class="nav-btn" onclick="showStage('board')">لوحة اللعبة</button>
-          <button class="nav-btn" onclick="showStage('question')">شاشة السؤال</button>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</div>
-
-<script>
-const ADMIN_PASSWORD = "PTI on top";
-
-let defaultTimerSeconds = 30;
-
-// حالة الفرق
-let teams = [
-  {
-    name: "فريق 1",
-    score: 0,
-    doubleActive: false,
-    doubleUsed: false,
-    muteUsed: false,
-    callUsed: false,
-    mutingOther: false
-  },
-  {
-    name: "فريق 2",
-    score: 0,
-    doubleActive: false,
-    doubleUsed: false,
-    muteUsed: false,
-    callUsed: false,
-    mutingOther: false
-  },
-];
-
-// تتبع الأسئلة اللي استُخدمت
-let usedQuestions = {};
-
-// بنك الفئات
-let categories = [
-  {
-    id: "prog",
-    title: "برمجة",
-    desc: "مفاهيم لغة البرمجة والمنطق البرمجي.",
-    questions: [
-      { points: 200, text: "ما هو المتغير (variable)؟", answer: "مكان نخزن فيه قيمة يمكن تغييرها" },
-      { points: 400, text: "ما الفرق بين if و switch؟", answer: "if شروط/مرونة، switch اختيار حالة من قيم ثابتة" },
-      { points: 600, text: "اشرح مفهوم البرمجة الكائنية (OOP).", answer: "تنظيم الكود في كائنات لها بيانات ودوال" },
-    ],
-  },
-  {
-    id: "net",
-    title: "الشبكات",
-    desc: "العناوين والبروتوكولات والاتصال.",
-    questions: [
-      { points: 200, text: "ما هو عنوان IP؟", answer: "رقم يعرّف جهازك على الشبكة" },
-      { points: 400, text: "ما الفرق بين TCP و UDP؟", answer: "TCP موثوق/أبطأ، UDP أسرع/بدون تأكيد" },
-      { points: 600, text: "ما هو نظام أسماء النطاقات (DNS)؟", answer: "خدمة تحويل اسم النطاق إلى IP" },
-    ],
-  },
-  {
-    id: "sec",
-    title: "أمن المعلومات",
-    desc: "الحماية والاختراق والتهديدات.",
-    questions: [
-      { points: 200, text: "ما معنى هجوم التصيّد (phishing)؟", answer: "محاولة خداعك لتسليم بياناتك" },
-      { points: 400, text: "لماذا كلمة المرور القوية مهمة؟", answer: "تصعّب عملية التخمين أو الكسر" },
-      { points: 600, text: "اشرح مفهوم الهندسة الاجتماعية.", answer: "استغلال البشر بدل مهاجمة التقنية نفسها" },
-    ],
-  },
-  {
-    id: "ai",
-    title: "الذكاء الاصطناعي",
-    desc: "النماذج والتعلم من البيانات.",
-    questions: [
-      { points: 200, text: "ما المقصود بنموذج ذكاء اصطناعي؟", answer: "نظام يتنبأ أو يقرر بناءً على بيانات" },
-      { points: 400, text: "ماذا يعني تدريب نموذج؟", answer: "تعديل بارامترات على بيانات حتى يتعلم النمط" },
-      { points: 600, text: "ما الفرق بين تعلم الآلة والتعلم العميق؟", answer: "العميق = شبكات عصبية بطبقات كثيرة" },
-    ],
-  },
-  {
-    id: "hw",
-    title: "الهاردوير",
-    desc: "المعالج والذاكرة والبطاقات.",
-    questions: [
-      { points: 200, text: "ما هو RAM؟", answer: "ذاكرة مؤقتة وسريعة للحالة الحالية" },
-      { points: 400, text: "ما وظيفة CPU؟", answer: "تنفيذ الأوامر والتعليمات" },
-      { points: 600, text: "لماذا مهم وجود GPU قوي؟", answer: "لعمليات معالجة متوازية كثيفة" },
-    ],
-  },
-  {
-    id: "os",
-    title: "أنظمة التشغيل",
-    desc: "المهام والعمليات وإدارة الموارد.",
-    questions: [
-      { points: 200, text: "ما هو نظام التشغيل؟", answer: "البرنامج الأساسي الذي يدير العتاد والبرامج" },
-      { points: 400, text: "ما المقصود بعملية (Process)؟", answer: "برنامج شغّال وله موارده" },
-      { points: 600, text: "لماذا يُستخدم Linux في الخوادم؟", answer: "ثابت، آمن، قابل للتخصيص، أداء عالي" },
-    ],
-  },
-];
-
-// الفئات المختارة للعبة
-let activeCategoryIds = [];
-
-// السؤال الحالي
-let currentQuestion = {
-  catId: null,
-  text: "",
-  points: 0,
-  answer: ""
-};
-
-// المؤقت
-let timerInterval = null;
-let timerValue = defaultTimerSeconds;
-
-/* ======= تنقّل بين الشاشات ======= */
-function showStage(which){
-  document.querySelectorAll(".stage").forEach(st => st.classList.remove("active"));
-  document.getElementById(`stage-${which}`).classList.add("active");
-  document.documentElement.scrollLeft = 0;
-  document.body.scrollLeft = 0;
-}
-
-/* ======= شاشة الإعداد: عرض الفئات واختيارها ======= */
-function renderSetupCategories(){
-  const grid = document.getElementById("setupCategoryGrid");
-  grid.innerHTML = "";
-  categories.forEach(cat=>{
-    const isActive = activeCategoryIds.includes(cat.id);
-    const card = document.createElement("div");
-    card.className = "category-card" + (isActive ? " active":"");
-    card.onclick = ()=>toggleCategorySelect(cat.id);
-    // بدون عرض النقاط داخل شاشة الإعداد
-    card.innerHTML = `
-      <div class="category-topline">
-        <div class="category-name">${cat.title}</div>
-      </div>
-      <div class="category-desc">${cat.desc}</div>
-    `;
-    grid.appendChild(card);
-  });
-}
-
-/* اختيار الفئة (لازم ٦ بالضبط) */
-function toggleCategorySelect(catId){
-  const idx = activeCategoryIds.indexOf(catId);
-
-  if(idx !== -1){
-    activeCategoryIds.splice(idx,1);
-  } else {
-    if(activeCategoryIds.length >= 6){
-      alert("تقدرين تختارين ٦ فئات فقط.");
-      return;
-    }
-    activeCategoryIds.push(catId);
-  }
-
-  renderSetupCategories();
-}
-
-/* ======= عرض اللوحة الرئيسية ======= */
-function renderBoard(){
-  const board = document.getElementById("boardColumns");
-  board.innerHTML = "";
-
-  activeCategoryIds.forEach(catId=>{
-    const cat = categories.find(c=>c.id===catId);
-    if(!cat) return;
-
-    const col = document.createElement("div");
-    col.className = "board-col";
-
-    const header = document.createElement("div");
-    header.className = "board-col-header";
-    header.textContent = cat.title;
-    col.appendChild(header);
-
-    cat.questions.forEach(q=>{
-      const qKey = cat.id + "-" + q.points;
-      const btn = document.createElement("button");
-      btn.className = "point-btn";
-      btn.textContent = q.points;
-
-      if(usedQuestions[qKey]){
-        btn.classList.add("used");
-        btn.disabled = true;
-      } else {
-        btn.onclick = ()=>{
-          openQuestion(cat.id,q.text,q.points,q.answer);
-          usedQuestions[qKey] = true;
-          renderBoard(); // يعيد الرسم ويقفل السؤال
-        };
-      }
-
-      col.appendChild(btn);
+  <script>
+    // زر بدء -> ينقل اللاعب لواجهة اللعبة الفعلية
+    // غيري "game.html" إلى الملف الحقيقي للّعبة (مثلاً: "seenjeem.html")
+    document.getElementById("startBtn").addEventListener("click", () => {
+      window.location.href = "seenjeem.html";
     });
 
-    board.appendChild(col);
-  });
-
-  syncTeamsUI();
-  updateAssistUI();
-}
-
-/* ======= تزامن بيانات الفرق في كل الشاشات ======= */
-function syncTeamsUI(){
-  for(let i=0;i<teams.length;i++){
-    // في اللوحة
-    const nameElBoard = document.getElementById(`boardTeamName${i}`);
-    const scoreElBoard = document.getElementById(`boardTeamScore${i}`);
-    if(nameElBoard) nameElBoard.textContent = teams[i].name;
-    if(scoreElBoard) scoreElBoard.textContent = teams[i].score;
-
-    // في شاشة السؤال
-    const nameElQ = document.getElementById(`qTeamName${i}`);
-    const scoreElQ = document.getElementById(`qTeamScore${i}`);
-    if(nameElQ) nameElQ.textContent = teams[i].name;
-    if(scoreElQ) scoreElQ.textContent = teams[i].score;
-  }
-
-  // لوحة الأدمن
-  const t0n = document.getElementById("adminTeamName0");
-  const t1n = document.getElementById("adminTeamName1");
-  const t0s = document.getElementById("adminTeamScore0");
-  const t1s = document.getElementById("adminTeamScore1");
-  if(t0n){t0n.value = teams[0].name;}
-  if(t1n){t1n.value = teams[1].name;}
-  if(t0s){t0s.value = teams[0].score;}
-  if(t1s){t1s.value = teams[1].score;}
-}
-
-/* ======= فتح السؤال ======= */
-function openQuestion(catId,text,points,answer){
-  currentQuestion.catId = catId;
-  currentQuestion.text = text;
-  currentQuestion.points = points;
-  currentQuestion.answer = answer || "";
-
-  const catObj = categories.find(c=>c.id===catId);
-  const catName = catObj ? catObj.title : "";
-
-  document.getElementById("currentQuestionText").textContent = text;
-
-  // نعرض: اسم الفئة • النقاط
-  document.getElementById("currentQuestionPoints").textContent =
-    (catName ? catName + " • " : "") + points + " نقطة";
-
-  // نخلي الصندوق فاضي لين نكشف الإجابة
-  document.getElementById("answerBox").textContent = "";
-
-  // بداية سؤال جديد → الميوت القديم ينتهي
-  teams.forEach(t=>{
-    t.mutingOther = false;
-  });
-
-  resetTimer();
-  startTimer(); // يبدأ تلقائي
-
-  syncTeamsUI();
-  updateAssistUI();
-  updateAssistStatusLine();
-  showStage("question");
-}
-
-/* كشف الإجابة */
-function revealAnswer(){
-  const ans = currentQuestion.answer && currentQuestion.answer.trim()
-    ? currentQuestion.answer
-    : "لا توجد إجابة مسجلة";
-  document.getElementById("answerBox").textContent = ans;
-}
-
-/* ======= المساعدات ======= */
-function assistDouble(teamIndex){
-  const t = teams[teamIndex];
-  if (t.doubleUsed) return;
-  t.doubleActive = true; // مفعلة للسؤال الحالي
-  t.doubleUsed = true;   // ما يقدر يعيدها
-  updateAssistUI();
-  updateAssistStatusLine();
-}
-function assistMute(teamIndex){
-  const t = teams[teamIndex];
-  if (t.muteUsed) return;
-  t.muteUsed = true;
-  const other = teamIndex === 0 ? 1 : 0;
-  t.mutingOther = true;
-  teams[other].mutingOther = false;
-  updateAssistUI();
-  updateAssistStatusLine();
-}
-function assistCall(teamIndex){
-  const t = teams[teamIndex];
-  if (t.callUsed) return;
-  t.callUsed = true;
-  updateAssistUI();
-  updateAssistStatusLine();
-}
-
-/* قفل الأزرار (في اللوحة وفي شاشة السؤال) */
-function updateAssistUI(){
-  // كل كروت الفرق سواء على اللوحة أو على شاشة السؤال
-  const allTeamCards = document.querySelectorAll(".team-card, .q-team-card");
-  allTeamCards.forEach(card=>{
-    // نحاول نحدد أي فريق هذا
-    let teamIndex = parseInt(card.getAttribute("data-team"),10);
-    if(isNaN(teamIndex)){
-      // fallback: نحدد حسب ترتيب العنصر داخل الأب
-      const siblings = Array.from(card.parentNode.children);
-      teamIndex = siblings.indexOf(card);
-    }
-    const t = teams[teamIndex];
-    if(!t) return;
-
-    const iconBtns = card.querySelectorAll(".assist-icon-btn");
-    if(iconBtns[0]){ iconBtns[0].disabled = t.doubleUsed; }
-    if(iconBtns[1]){ iconBtns[1].disabled = t.muteUsed; }
-    if(iconBtns[2]){ iconBtns[2].disabled = t.callUsed; }
-  });
-}
-
-/* السطر اللي يوضح حالة المساعدات */
-function updateAssistStatusLine(){
-  const line = document.getElementById("assistStatusLine");
-  if(!line) return;
-
-  let msgs = [];
-
-  // دبل بوينت
-  teams.forEach((t)=>{
-    if(t.doubleActive){
-      msgs.push(`<span class="highlight">دبل بوينت مفعّلة لـ ${t.name}</span>`);
-    }
-  });
-
-  // ميوت
-  teams.forEach((t,idx)=>{
-    if(t.mutingOther){
-      const otherName = idx===0 ? teams[1].name : teams[0].name;
-      msgs.push(`<span class="danger">${otherName} تحت ميوت</span>`);
-    }
-  });
-
-  // اتصال صديق
-  teams.forEach((t)=>{
-    if(t.callUsed){
-      msgs.push(`اتصال صديق مستهلك لـ ${t.name}`);
-    }
-  });
-
-  line.innerHTML = msgs.join(" • ");
-}
-
-/* ======= لما أحد يجاوب صح ======= */
-function markCorrect(teamIndex){
-  if(currentQuestion.points>0){
-    let gained = currentQuestion.points;
-    if(teams[teamIndex].doubleActive){
-      gained = gained * 2;
-    }
-    teams[teamIndex].score += gained;
-    if(teams[teamIndex].score<0) teams[teamIndex].score=0;
-  }
-
-  // بعد ما خلص السؤال:
-  teams.forEach(t=>{
-    t.doubleActive = false;
-    t.mutingOther = false;
-  });
-
-  syncTeamsUI();
-  updateAssistUI();
-  updateAssistStatusLine();
-
-  renderBoard();
-  showStage('board');
-}
-
-/* ======= المؤقت ======= */
-function updateTimerDisplay(){
-  document.getElementById("timerDisplay").textContent = timerValue;
-}
-function startTimer(){
-  if(timerInterval) return;
-  timerInterval = setInterval(()=>{
-    timerValue--;
-    if(timerValue<=0){
-      timerValue=0;
-      stopTimer();
-      const wrap = document.getElementById("timerWrapper");
-      wrap.style.background = "var(--accent-orange)";
-      wrap.style.color = "#000";
-    }
-    updateTimerDisplay();
-  },1000);
-}
-function stopTimer(){
-  clearInterval(timerInterval);
-  timerInterval=null;
-}
-function resetTimer(){
-  stopTimer();
-  timerValue = defaultTimerSeconds;
-  updateTimerDisplay();
-
-  const wrap = document.getElementById("timerWrapper");
-  wrap.style.background = "var(--accent-purple)";
-  wrap.style.color = "#fff";
-}
-
-/* ======= بدء اللعبة ======= */
-function startGame(){
-  const t1 = document.getElementById("setupTeam1Name").value.trim() || "فريق 1";
-  const t2 = document.getElementById("setupTeam2Name").value.trim() || "فريق 2";
-
-  if(activeCategoryIds.length !== 6){
-    alert("لازم تختارين بالضبط ٦ فئات قبل بدء اللعبة.");
-    return;
-  }
-
-  usedQuestions = {};
-
-  teams = [
-    {
-      name: t1,
-      score: 0,
-      doubleActive:false,
-      doubleUsed:false,
-      muteUsed:false,
-      callUsed:false,
-      mutingOther:false
-    },
-    {
-      name: t2,
-      score: 0,
-      doubleActive:false,
-      doubleUsed:false,
-      muteUsed:false,
-      callUsed:false,
-      mutingOther:false
-    },
-  ];
-
-  syncTeamsUI();
-  updateAssistUI();
-  updateAssistStatusLine();
-  renderBoard();
-  showStage("board");
-}
-
-/* ======= إعادة ضبط شاملة ======= */
-function resetGame(){
-  usedQuestions = {};
-
-  teams = [
-    {
-      name: "فريق 1",
-      score: 0,
-      doubleActive:false,
-      doubleUsed:false,
-      muteUsed:false,
-      callUsed:false,
-      mutingOther:false
-    },
-    {
-      name: "فريق 2",
-      score: 0,
-      doubleActive:false,
-      doubleUsed:false,
-      muteUsed:false,
-      callUsed:false,
-      mutingOther:false
-    },
-  ];
-
-  syncTeamsUI();
-  updateAssistUI();
-  updateAssistStatusLine();
-
-  resetTimer();
-  currentQuestion = {catId:null,text:"",points:0,answer:""};
-  document.getElementById("currentQuestionText").textContent =
-    "اختر سؤال من لوحة اللعبة ليظهر هنا";
-  document.getElementById("currentQuestionPoints").textContent = "-";
-  document.getElementById("answerBox").textContent = "";
-
-  activeCategoryIds = [];
-  renderSetupCategories();
-  renderBoard();
-  showStage("setup");
-}
-
-/* ======= لوحة التحكم (أدمن) ======= */
-function openAdmin(){
-  document.getElementById("adminModalOverlay").style.display="flex";
-  document.getElementById("adminLoginBlock").style.display="block";
-  document.getElementById("adminContent").style.display="none";
-  document.getElementById("adminLoginError").textContent="";
-  const defTimer = document.getElementById("defaultTimerInput");
-  if(defTimer) defTimer.value = defaultTimerSeconds;
-}
-function closeAdmin(){
-  document.getElementById("adminModalOverlay").style.display="none";
-}
-function tryAdminLogin(){
-  const input = document.getElementById("adminPasswordInput").value;
-  const err = document.getElementById("adminLoginError");
-  if(input === ADMIN_PASSWORD){
-    err.textContent="";
-    document.getElementById("adminLoginBlock").style.display="none";
-    document.getElementById("adminContent").style.display="block";
-
-    syncTeamsUI();
-    renderAdminCategories();
-    renderQuestionCategorySelect();
-    renderQuestionEditor();
-    const defTimer = document.getElementById("defaultTimerInput");
-    if(defTimer) defTimer.value = defaultTimerSeconds;
-  }else{
-    err.textContent="كلمة المرور غير صحيحة";
-  }
-}
-
-/* حفظ الفريق من الأدمن */
-function saveTeamEdits(i){
-  const nameEl = document.getElementById(`adminTeamName${i}`);
-  const scoreEl = document.getElementById(`adminTeamScore${i}`);
-  if(nameEl) teams[i].name = nameEl.value.trim()||teams[i].name;
-  if(scoreEl){
-    const v = parseInt(scoreEl.value,10);
-    if(!isNaN(v) && v>=0){
-      teams[i].score = v;
-    }
-  }
-  syncTeamsUI();
-}
-
-/* CATEGORIES ADMIN */
-function renderAdminCategories(){
-  const list = document.getElementById("adminCategoryList");
-  list.innerHTML = "";
-  categories.forEach((cat,idx)=>{
-    const row = document.createElement("div");
-    row.className="admin-row";
-    row.innerHTML = `
-      <div class="admin-col">
-        <label>اسم الفئة</label>
-        <input id="catTitle-${idx}" type="text" value="${cat.title}"/>
-      </div>
-      <div class="admin-col">
-        <label>وصف مختصر</label>
-        <input id="catDesc-${idx}" type="text" value="${cat.desc}"/>
-      </div>
-      <div class="admin-col" style="align-self:flex-end;">
-        <button class="small-btn" onclick="saveCategory(${idx})">حفظ</button>
-        <button class="small-btn" onclick="deleteCategory(${idx})">حذف</button>
-      </div>
-    `;
-    list.appendChild(row);
-  });
-}
-function saveCategory(idx){
-  const t = document.getElementById(`catTitle-${idx}`);
-  const d = document.getElementById(`catDesc-${idx}`);
-  if(t) categories[idx].title = t.value.trim()||categories[idx].title;
-  if(d) categories[idx].desc = d.value.trim()||categories[idx].desc;
-
-  renderSetupCategories();
-  renderBoard();
-  renderQuestionCategorySelect();
-}
-function deleteCategory(idx){
-  const removedId = categories[idx].id;
-  categories.splice(idx,1);
-
-  const idPos = activeCategoryIds.indexOf(removedId);
-  if(idPos !== -1){
-    activeCategoryIds.splice(idPos,1);
-  }
-
-  renderSetupCategories();
-  renderBoard();
-  renderAdminCategories();
-  renderQuestionCategorySelect();
-  renderQuestionEditor();
-}
-function addNewCategory(){
-  const titleEl = document.getElementById("newCategoryTitle");
-  const descEl  = document.getElementById("newCategoryDesc");
-  const newTitle = (titleEl.value||"").trim();
-  const newDesc  = (descEl.value||"").trim();
-  if(!newTitle){
-    alert("اكتب اسم الفئة");
-    return;
-  }
-  const newId = "cat_"+Date.now();
-  categories.push({
-    id:newId,
-    title:newTitle,
-    desc:newDesc||"",
-    questions:[]
-  });
-  titleEl.value="";
-  descEl.value="";
-
-  renderSetupCategories();
-  renderBoard();
-  renderAdminCategories();
-  renderQuestionCategorySelect();
-  renderQuestionEditor();
-}
-
-/* QUESTIONS ADMIN */
-function renderQuestionCategorySelect(){
-  const sel = document.getElementById("questionCategorySelect");
-  if(!sel) return;
-  sel.innerHTML="";
-  categories.forEach((cat)=>{
-    const opt = document.createElement("option");
-    opt.value = cat.id;
-    opt.textContent = cat.title;
-    sel.appendChild(opt);
-  });
-}
-function getSelectedQuestionCategory(){
-  const sel = document.getElementById("questionCategorySelect");
-  if(!sel) return null;
-  const catId = sel.value;
-  return categories.find(c=>c.id===catId) || null;
-}
-function renderQuestionEditor(){
-  const area = document.getElementById("questionEditorArea");
-  if(!area) return;
-  const catObj = getSelectedQuestionCategory();
-  if(!catObj){
-    area.innerHTML = "<div class='admin-row'><div>لا توجد فئة محددة.</div></div>";
-    return;
-  }
-  if(!catObj.questions) catObj.questions=[];
-
-  let html = "";
-  catObj.questions.forEach((q,qIdx)=>{
-    html += `
-      <div class="admin-row" style="border:1px solid var(--surface-border-strong);border-radius:10px;padding:12px;">
-        <div class="admin-col">
-          <label>نص السؤال (#${qIdx+1})</label>
-          <textarea id="qText-${catObj.id}-${qIdx}" rows="2">${q.text}</textarea>
-        </div>
-        <div class="admin-col">
-          <label>قيمة النقاط</label>
-          <input id="qPoints-${catObj.id}-${qIdx}" type="number" value="${q.points}"/>
-        </div>
-        <div class="admin-col">
-          <label>الإجابة الصحيحة</label>
-          <input id="qAnswer-${catObj.id}-${qIdx}" type="text" value="${q.answer||""}"/>
-        </div>
-        <div class="admin-col" style="align-self:flex-end;">
-          <button class="small-btn" onclick="saveQuestion('${catObj.id}',${qIdx})">حفظ</button>
-          <button class="small-btn" onclick="deleteQuestion('${catObj.id}',${qIdx})">حذف</button>
-        </div>
-      </div>
-    `;
-  });
-
-  area.innerHTML = html || "<div class='admin-row'><div>لا توجد أسئلة.</div></div>";
-}
-function saveQuestion(catId,qIdx){
-  const catObj = categories.find(c=>c.id===catId);
-  if(!catObj) return;
-  const tEl = document.getElementById(`qText-${catId}-${qIdx}`);
-  const pEl = document.getElementById(`qPoints-${catId}-${qIdx}`);
-  const aEl = document.getElementById(`qAnswer-${catId}-${qIdx}`);
-  if(!catObj.questions[qIdx]) return;
-
-  if(tEl) catObj.questions[qIdx].text = tEl.value.trim()||catObj.questions[qIdx].text;
-  if(pEl){
-    const v = parseInt(pEl.value,10);
-    if(!isNaN(v)&&v>0){
-      catObj.questions[qIdx].points=v;
-    }
-  }
-  if(aEl){
-    catObj.questions[qIdx].answer = aEl.value.trim()||"";
-  }
-
-  renderSetupCategories();
-  renderBoard();
-  renderQuestionEditor();
-}
-function deleteQuestion(catId,qIdx){
-  const catObj = categories.find(c=>c.id===catId);
-  if(!catObj) return;
-  catObj.questions.splice(qIdx,1);
-
-  renderSetupCategories();
-  renderBoard();
-  renderQuestionEditor();
-}
-function addNewQuestion(){
-  const catObj = getSelectedQuestionCategory();
-  if(!catObj){
-    alert("اختر الفئة أول.");
-    return;
-  }
-  const txt = (document.getElementById("newQuestionText").value||"").trim();
-  const ptsVal = parseInt(document.getElementById("newQuestionPoints").value,10);
-  const ansVal = (document.getElementById("newQuestionAnswer").value||"").trim();
-
-  if(!txt){
-    alert("اكتب نص السؤال.");
-    return;
-  }
-  if(isNaN(ptsVal) || ptsVal<=0){
-    alert("ضع قيمة نقاط صحيحة.");
-    return;
-  }
-
-  catObj.questions.push({
-    points: ptsVal,
-    text: txt,
-    answer: ansVal
-  });
-
-  document.getElementById("newQuestionText").value="";
-  document.getElementById("newQuestionPoints").value="";
-  document.getElementById("newQuestionAnswer").value="";
-
-  renderSetupCategories();
-  renderBoard();
-  renderQuestionEditor();
-}
-
-/* TIMER DEFAULT */
-function saveDefaultTimer(){
-  const inp = document.getElementById("defaultTimerInput");
-  if(!inp) return;
-  const v = parseInt(inp.value,10);
-  if(!isNaN(v) && v>0){
-    defaultTimerSeconds = v;
-    resetTimer();
-  }
-}
-
-/* INIT */
-function init(){
-  renderSetupCategories();
-  syncTeamsUI();
-  resetTimer();
-  updateAssistUI();
-  updateAssistStatusLine();
-
-  const logoBox = document.getElementById("gameLogo");
-  const img = document.getElementById("logoImg");
-  if(img){
-    img.addEventListener("error", ()=>{
-      logoBox.innerHTML = "PTI";
-      logoBox.style.display = "flex";
-      logoBox.style.alignItems = "center";
-      logoBox.style.justifyContent = "center";
-      logoBox.style.fontWeight = "600";
-      logoBox.style.fontSize = "14px";
-      logoBox.style.color = "var(--accent-purple)";
-      logoBox.style.background = "#fff";
+    // زر لوحة التحكم -> هذا لاحقاً يفتح مودال الإدمن بدل ما يطلع للكل
+    document.getElementById("adminBtn").addEventListener("click", () => {
+      // حالياً: توجيه مؤقت. لاحقاً نسويه Modal مع باسورد PTI on top
+      alert("لوحة التحكم (Admin Panel) غير مفعلة هنا بعد.");
     });
-  }
-}
-init();
-</script>
+  </script>
+
 </body>
 </html>
