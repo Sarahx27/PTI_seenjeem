@@ -331,7 +331,15 @@ body{
   align-items:center;
   text-align:center;
 }
-.point-btn:hover{
+.point-btn.disabled{
+  background:#ddd;
+  color:#777;
+  cursor:not-allowed;
+}
+.point-btn.hidden-question{
+  visibility:hidden;
+}
+.point-btn:hover:not(.disabled){
   background:var(--accent-orange);
   color:#000;
 }
@@ -403,6 +411,12 @@ body{
   box-shadow:0 10px 24px rgba(0,0,0,0.15);
   transition:var(--transition-fast);
 }
+.assist-btn.used,
+.assist-icon-btn.used{
+  background:#555 !important;
+  cursor:not-allowed !important;
+  opacity:0.5;
+}
 .assist-btn:hover{
   background:var(--accent-orange);
   color:#000;
@@ -455,7 +469,6 @@ body{
   font-variant-numeric:tabular-nums;
 }
 
-/* small icon buttons for timer control */
 .timer-icon-btn{
   background:#fff0;
   border:0;
@@ -483,7 +496,7 @@ body{
   display:flex;
   flex-direction:column;
   gap:8px;
-  margin-top:32px; /* لأن المؤقت فوق الزاوية */
+  margin-top:32px;
 }
 .current-question-text{
   font-size:1.6rem;
@@ -523,7 +536,6 @@ body{
   white-space:pre-wrap;
 }
 
-/* bottom controls of question card */
 .q-control-row{
   display:flex;
   flex-wrap:wrap;
@@ -551,7 +563,7 @@ body{
   color:#fff;
 }
 
-/* SIDE TEAMS */
+/* SIDE TEAMS in question */
 .question-side-teams{
   background:var(--surface-main);
   border:1px solid var(--surface-border);
@@ -591,7 +603,6 @@ body{
   line-height:1;
 }
 
-/* icons row instead of text assists */
 .q-team-assists{
   display:flex;
   flex-wrap:wrap;
@@ -610,6 +621,11 @@ body{
   box-shadow:0 10px 24px rgba(0,0,0,0.15);
   transition:var(--transition-fast);
 }
+.assist-icon-btn.used{
+  background:#555 !important;
+  cursor:not-allowed !important;
+  opacity:0.5;
+}
 .assist-icon-btn svg{
   width:20px;
   height:20px;
@@ -617,11 +633,11 @@ body{
   stroke-width:2;
   fill:none;
 }
-.assist-icon-btn:hover{
+.assist-icon-btn:hover:not(.used){
   background:var(--accent-orange);
   border-color:rgba(0,0,0,0.2);
 }
-.assist-icon-btn:hover svg{
+.assist-icon-btn:hover:not(.used) svg{
   stroke:#000;
 }
 
@@ -804,7 +820,6 @@ body{
   color:#fff;
 }
 
-/* nav in admin */
 .nav-row{
   display:flex;
   flex-wrap:wrap;
@@ -824,6 +839,62 @@ body{
 }
 .nav-btn:hover{
   background:#ccc;
+}
+
+/* WINNER SCREEN */
+#winnerOverlay{
+  position:fixed;
+  inset:0;
+  z-index:3000;
+  background:linear-gradient(160deg, var(--accent-purple) 0%, #6c62c4 50%, #8e93ff 100%);
+  color:#fff;
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:24px;
+}
+.winner-box{
+  background:rgba(255,255,255,0.1);
+  border:2px solid rgba(255,255,255,0.4);
+  border-radius:var(--radius-xl);
+  box-shadow:0 30px 70px rgba(0,0,0,0.4);
+  padding:24px 32px;
+  max-width:90%;
+  width:400px;
+}
+#winnerTitle{
+  font-size:1.2rem;
+  font-weight:600;
+  margin-bottom:8px;
+  color:#fff;
+}
+#winnerName{
+  font-size:1.6rem;
+  font-weight:800;
+  margin-bottom:4px;
+  color:#fff;
+}
+#winnerScore{
+  font-size:1rem;
+  font-weight:600;
+  color:rgba(255,255,255,.8);
+  margin-bottom:16px;
+}
+#winnerCloseBtn{
+  background:#fff;
+  color:#000;
+  border:0;
+  border-radius:var(--radius-md);
+  padding:10px 16px;
+  font-weight:600;
+  font-size:.9rem;
+  cursor:pointer;
+  box-shadow:0 16px 36px rgba(0,0,0,0.4);
+}
+#winnerCloseBtn:hover{
+  background:#f0f0f0;
 }
 
 /* responsive */
@@ -858,7 +929,7 @@ body{
   </div>
 </header>
 
-<!-- SETUP -->
+<!-- SETUP STAGE -->
 <section id="stage-setup" class="stage active">
   <div class="big-card">
     <div class="section-title">
@@ -883,7 +954,7 @@ body{
   </div>
 </section>
 
-<!-- BOARD -->
+<!-- BOARD STAGE -->
 <section id="stage-board" class="stage">
   <div class="board-area">
     <div class="board-columns" id="boardColumns"></div>
@@ -896,41 +967,38 @@ body{
         <div class="team-score-display" id="boardTeamScore0">0</div>
       </div>
       <div class="team-assist-row">
-        <button class="assist-btn">دبل بوينت</button>
-        <button class="assist-btn">ميوت</button>
-        <button class="assist-btn">اتصال صديق</button>
+        <button class="assist-btn" id="assistDouble-0" onclick="useAssist('double',0)">دبل بوينت</button>
+        <button class="assist-btn" id="assistMute-0" onclick="useAssist('mute',0)">ميوت</button>
+        <button class="assist-btn" id="assistCall-0" onclick="useAssist('call',0)">اتصال صديق</button>
       </div>
     </div>
 
     <div class="team-card" data-team="1">
-        <div class="team-header-line">
-          <div class="team-name-display" id="boardTeamName1">فريق 2</div>
-          <div class="team-score-display" id="boardTeamScore1">0</div>
-        </div>
-        <div class="team-assist-row">
-          <button class="assist-btn">دبل بوينت</button>
-          <button class="assist-btn">ميوت</button>
-          <button class="assist-btn">اتصال صديق</button>
-        </div>
+      <div class="team-header-line">
+        <div class="team-name-display" id="boardTeamName1">فريق 2</div>
+        <div class="team-score-display" id="boardTeamScore1">0</div>
+      </div>
+      <div class="team-assist-row">
+        <button class="assist-btn" id="assistDouble-1" onclick="useAssist('double',1)">دبل بوينت</button>
+        <button class="assist-btn" id="assistMute-1" onclick="useAssist('mute',1)">ميوت</button>
+        <button class="assist-btn" id="assistCall-1" onclick="useAssist('call',1)">اتصال صديق</button>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- QUESTION -->
+<!-- QUESTION STAGE -->
 <section id="stage-question" class="stage">
   <div class="question-layout">
 
     <div class="question-card">
 
-      <!-- Mini Timer in corner -->
       <div class="timer-mini-wrapper">
         <div class="timer-number" id="timerDisplay">30</div>
         <button class="timer-icon-btn" title="إيقاف" onclick="stopTimer()">
-          <!-- pause icon -->
           <svg viewBox="0 0 24 24"><line x1="9" y1="5" x2="9" y2="19"></line><line x1="15" y1="5" x2="15" y2="19"></line></svg>
         </button>
         <button class="timer-icon-btn" title="إعادة" onclick="resetTimer()">
-          <!-- reset icon -->
           <svg viewBox="0 0 24 24"><polyline points="3 3 3 10 10 10"></polyline><path d="M3 3a9 9 0 1 1-2 5"></path></svg>
         </button>
       </div>
@@ -961,19 +1029,19 @@ body{
         </div>
 
         <div class="q-team-assists">
-          <button class="assist-icon-btn" title="دبل بوينت">
+          <button class="assist-icon-btn" id="assistDoubleQ-0" title="دبل بوينت" onclick="useAssist('double',0)">
             <svg viewBox="0 0 24 24">
               <polygon points="12 3 15 10 22 10 16.5 14 18.5 21 12 17 5.5 21 7.5 14 2 10 9 10 12 3"/>
             </svg>
           </button>
-          <button class="assist-icon-btn" title="ميوت">
+          <button class="assist-icon-btn" id="assistMuteQ-0" title="ميوت" onclick="useAssist('mute',0)">
             <svg viewBox="0 0 24 24">
               <polygon points="11 5 6 9 3 9 3 15 6 15 11 19 11 5"/>
               <line x1="14" y1="10" x2="20" y2="16"/>
               <line x1="20" y1="10" x2="14" y2="16"/>
             </svg>
           </button>
-          <button class="assist-icon-btn" title="اتصال صديق">
+          <button class="assist-icon-btn" id="assistCallQ-0" title="اتصال صديق" onclick="useAssist('call',0)">
             <svg viewBox="0 0 24 24">
               <path d="M22 16.92v3a2 2 0 0 1-2.18 2
                        19.86 19.86 0 0 1-8.63-3.07
@@ -998,19 +1066,19 @@ body{
         </div>
 
         <div class="q-team-assists">
-          <button class="assist-icon-btn" title="دبل بوينت">
+          <button class="assist-icon-btn" id="assistDoubleQ-1" title="دبل بوينت" onclick="useAssist('double',1)">
             <svg viewBox="0 0 24 24">
               <polygon points="12 3 15 10 22 10 16.5 14 18.5 21 12 17 5.5 21 7.5 14 2 10 9 10 12 3"/>
             </svg>
           </button>
-          <button class="assist-icon-btn" title="ميوت">
+          <button class="assist-icon-btn" id="assistMuteQ-1" title="ميوت" onclick="useAssist('mute',1)">
             <svg viewBox="0 0 24 24">
               <polygon points="11 5 6 9 3 9 3 15 6 15 11 19 11 5"/>
               <line x1="14" y1="10" x2="20" y2="16"/>
               <line x1="20" y1="10" x2="14" y2="16"/>
             </svg>
           </button>
-          <button class="assist-icon-btn" title="اتصال صديق">
+          <button class="assist-icon-btn" id="assistCallQ-1" title="اتصال صديق" onclick="useAssist('call',1)">
             <svg viewBox="0 0 24 24">
               <path d="M22 16.92v3a2 2 0 0 1-2.18 2
                        19.86 19.86 0 0 1-8.63-3.07
@@ -1084,7 +1152,7 @@ body{
       <!-- CATEGORIES -->
       <div class="admin-section-title">
         <span>الفئات</span>
-        <span style="color:var(--accent-purple);font-size:.8rem;">الاسم / الوصف / صورة</span>
+        <span style="color:var(--accent-purple);font-size:.8rem;">الاسم / الوصف / رابط الصورة</span>
       </div>
       <div class="admin-block" id="adminCategoriesBlock">
         <div id="adminCategoryList"></div>
@@ -1173,6 +1241,16 @@ body{
   </div>
 </div>
 
+<!-- WINNER OVERLAY -->
+<div id="winnerOverlay">
+  <div class="winner-box">
+    <div id="winnerTitle">الفريق الفائز</div>
+    <div id="winnerName">-</div>
+    <div id="winnerScore">- نقطة</div>
+    <button id="winnerCloseBtn" onclick="closeWinner()">رجوع للرئيسية</button>
+  </div>
+</div>
+
 <script>
 const ADMIN_PASSWORD = "PTI on top";
 
@@ -1180,12 +1258,13 @@ let defaultTimerSeconds = 30;
 let timerInterval = null;
 let timerValue = defaultTimerSeconds;
 
+// الفرق + النقاط + المساعدات المستخدمة
 let teams = [
-  { name: "فريق 1", score: 0 },
-  { name: "فريق 2", score: 0 },
+  { name: "فريق 1", score: 0, used: {double:false, mute:false, call:false} },
+  { name: "فريق 2", score: 0, used: {double:false, mute:false, call:false} },
 ];
 
-// الآن كل فئة عندها img (رابط صورة)
+// الأسئلة، الآن كل سؤال له خاصية answered عشان ما يتكرر
 let categories = [
   {
     id: "prog",
@@ -1193,9 +1272,9 @@ let categories = [
     desc: "مفاهيم لغة البرمجة والمنطق البرمجي.",
     img: "",
     questions: [
-      { points: 200, text: "ما هو المتغير (variable)؟", answer: "مكان نخزن فيه قيمة يمكن تغييرها" },
-      { points: 400, text: "ما الفرق بين if و switch؟", answer: "if شروط/مرونة، switch اختيار حالة من قيم ثابتة" },
-      { points: 600, text: "اشرح مفهوم البرمجة الكائنية (OOP).", answer: "تنظيم الكود في كائنات لها بيانات ودوال" },
+      { points: 200, text: "ما هو المتغير (variable)؟", answer: "مكان نخزن فيه قيمة يمكن تغييرها", answered:false },
+      { points: 400, text: "ما الفرق بين if و switch؟", answer: "if شروط/مرونة، switch اختيار حالة من قيم ثابتة", answered:false },
+      { points: 600, text: "اشرح مفهوم البرمجة الكائنية (OOP).", answer: "تنظيم الكود في كائنات لها بيانات ودوال", answered:false },
     ],
   },
   {
@@ -1204,9 +1283,9 @@ let categories = [
     desc: "العناوين والبروتوكولات والاتصال.",
     img: "",
     questions: [
-      { points: 200, text: "ما هو عنوان IP؟", answer: "رقم يعرّف جهازك على الشبكة" },
-      { points: 400, text: "ما الفرق بين TCP و UDP؟", answer: "TCP موثوق/أبطأ، UDP أسرع/بدون تأكيد" },
-      { points: 600, text: "ما هو نظام أسماء النطاقات (DNS)؟", answer: "خدمة تحويل اسم النطاق إلى IP" },
+      { points: 200, text: "ما هو عنوان IP؟", answer: "رقم يعرّف جهازك على الشبكة", answered:false },
+      { points: 400, text: "ما الفرق بين TCP و UDP؟", answer: "TCP موثوق/أبطأ، UDP أسرع/بدون تأكيد", answered:false },
+      { points: 600, text: "ما هو نظام أسماء النطاقات (DNS)؟", answer: "خدمة تحويل اسم النطاق إلى IP", answered:false },
     ],
   },
   {
@@ -1215,9 +1294,9 @@ let categories = [
     desc: "الحماية والاختراق والتهديدات.",
     img: "",
     questions: [
-      { points: 200, text: "ما معنى هجوم التصيّد (phishing)؟", answer: "محاولة خداعك لتسليم بياناتك" },
-      { points: 400, text: "لماذا كلمة المرور القوية مهمة؟", answer: "تصعّب عملية التخمين أو الكسر" },
-      { points: 600, text: "اشرح مفهوم الهندسة الاجتماعية.", answer: "استغلال البشر بدل مهاجمة التقنية نفسها" },
+      { points: 200, text: "ما معنى هجوم التصيّد (phishing)؟", answer: "محاولة خداعك لتسليم بياناتك", answered:false },
+      { points: 400, text: "لماذا كلمة المرور القوية مهمة؟", answer: "تصعّب عملية التخمين أو الكسر", answered:false },
+      { points: 600, text: "اشرح مفهوم الهندسة الاجتماعية.", answer: "استغلال البشر بدل مهاجمة التقنية نفسها", answered:false },
     ],
   },
   {
@@ -1226,9 +1305,9 @@ let categories = [
     desc: "النماذج والتعلم من البيانات.",
     img: "",
     questions: [
-      { points: 200, text: "ما المقصود بنموذج ذكاء اصطناعي؟", answer: "نظام يتنبأ أو يقرر بناءً على بيانات" },
-      { points: 400, text: "ماذا يعني تدريب نموذج؟", answer: "تعديل بارامترات على بيانات حتى يتعلم النمط" },
-      { points: 600, text: "ما الفرق بين تعلم الآلة والتعلم العميق؟", answer: "العميق = شبكات عصبية بطبقات كثيرة" },
+      { points: 200, text: "ما المقصود بنموذج ذكاء اصطناعي؟", answer: "نظام يتنبأ أو يقرر بناءً على بيانات", answered:false },
+      { points: 400, text: "ماذا يعني تدريب نموذج؟", answer: "تعديل بارامترات على بيانات حتى يتعلم النمط", answered:false },
+      { points: 600, text: "ما الفرق بين تعلم الآلة والتعلم العميق؟", answer: "العميق = شبكات عصبية بطبقات كثيرة", answered:false },
     ],
   },
   {
@@ -1237,9 +1316,9 @@ let categories = [
     desc: "المعالج والذاكرة والبطاقات.",
     img: "",
     questions: [
-      { points: 200, text: "ما هو RAM؟", answer: "ذاكرة مؤقتة وسريعة للحالة الحالية" },
-      { points: 400, text: "ما وظيفة CPU؟", answer: "تنفيذ الأوامر والتعليمات" },
-      { points: 600, text: "لماذا مهم وجود GPU قوي؟", answer: "لعمليات معالجة متوازية كثيفة" },
+      { points: 200, text: "ما هو RAM؟", answer: "ذاكرة مؤقتة وسريعة للحالة الحالية", answered:false },
+      { points: 400, text: "ما وظيفة CPU؟", answer: "تنفيذ الأوامر والتعليمات", answered:false },
+      { points: 600, text: "لماذا مهم وجود GPU قوي؟", answer: "لعمليات معالجة متوازية كثيفة", answered:false },
     ],
   },
   {
@@ -1248,22 +1327,27 @@ let categories = [
     desc: "المهام والعمليات وإدارة الموارد.",
     img: "",
     questions: [
-      { points: 200, text: "ما هو نظام التشغيل؟", answer: "البرنامج الأساسي الذي يدير العتاد والبرامج" },
-      { points: 400, text: "ما المقصود بعملية (Process)؟", answer: "برنامج شغّال وله موارده" },
-      { points: 600, text: "لماذا يُستخدم Linux في الخوادم؟", answer: "ثابت، آمن، قابل للتخصيص، أداء عالي" },
+      { points: 200, text: "ما هو نظام التشغيل؟", answer: "البرنامج الأساسي الذي يدير العتاد والبرامج", answered:false },
+      { points: 400, text: "ما المقصود بعملية (Process)؟", answer: "برنامج شغّال وله موارده", answered:false },
+      { points: 600, text: "لماذا يُستخدم Linux في الخوادم؟", answer: "ثابت، آمن، قابل للتخصيص، أداء عالي", answered:false },
     ],
   },
 ];
 
+// الفئات اللي تم اختيارها في الإعداد
 let activeCategoryIds = [];
+
+// السؤال الحالي المعروض
 let currentQuestion = {
-  catId: null,
+  catIndex: null,
+  qIndex: null,
   text: "",
-  points: 0,
+  basePoints: 0,
+  effectivePoints: 0,
   answer: ""
 };
 
-/* NAV */
+/* --------- مراحل العرض --------- */
 function showStage(which){
   document.querySelectorAll(".stage").forEach(st => st.classList.remove("active"));
   document.getElementById(`stage-${which}`).classList.add("active");
@@ -1271,7 +1355,43 @@ function showStage(which){
   document.body.scrollLeft = 0;
 }
 
-/* SETUP CATEGORIES */
+/* --------- شاشة الفائز --------- */
+function checkWinnerIfDone(){
+  // نشيك هل كل الأسئلة اللي في الفئات المختارة تم الإجابة عليها
+  for (let cid of activeCategoryIds){
+    const catObj = categories.find(c=>c.id===cid);
+    if(!catObj) continue;
+    for (let q of catObj.questions){
+      if (!q.answered){
+        return; // باقي أسئلة
+      }
+    }
+  }
+
+  // هنا يعني خلصت كل الأسئلة
+  // نحدد أعلى سكور
+  let winnerIdx = 0;
+  if (teams[1].score > teams[0].score) {
+    winnerIdx = 1;
+  }
+
+  const wName = teams[winnerIdx].name;
+  const wScore = teams[winnerIdx].score;
+
+  document.getElementById("winnerName").textContent = wName;
+  document.getElementById("winnerScore").textContent = wScore + " نقطة";
+  document.getElementById("winnerOverlay").style.display = "flex";
+}
+
+function closeWinner(){
+  // نرجع للإعداد (بداية جديدة)
+  document.getElementById("winnerOverlay").style.display = "none";
+  showStage('setup');
+}
+
+/* --------- الإعداد --------- */
+
+// عرض الفئات في صفحة الإعداد
 function renderSetupCategories(){
   const grid = document.getElementById("setupCategoryGrid");
   grid.innerHTML = "";
@@ -1281,7 +1401,6 @@ function renderSetupCategories(){
     card.className = "category-card" + (isActive ? " active":"");
     card.onclick = ()=>toggleCategorySelect(cat.id);
 
-    // صورة الفئة لو متوفرة
     const imgHtml = cat.img && cat.img.trim() !== ""
       ? `<img class="category-image" src="${cat.img}" alt="${cat.title}"/>`
       : "";
@@ -1295,7 +1414,7 @@ function renderSetupCategories(){
   });
 }
 
-/* toggle category selection */
+// اختيار/إلغاء اختيار فئة
 function toggleCategorySelect(catId){
   const idx = activeCategoryIds.indexOf(catId);
   if(idx !== -1){
@@ -1310,97 +1429,9 @@ function toggleCategorySelect(catId){
   renderSetupCategories();
 }
 
-/* BOARD RENDER */
-function renderBoard(){
-  const board = document.getElementById("boardColumns");
-  board.innerHTML = "";
-
-  activeCategoryIds.forEach(catId=>{
-    const cat = categories.find(c=>c.id===catId);
-    if(!cat) return;
-    const col = document.createElement("div");
-    col.className = "board-col";
-
-    const header = document.createElement("div");
-    header.className = "board-col-header";
-    header.textContent = cat.title;
-    col.appendChild(header);
-
-    cat.questions.forEach(q=>{
-      const btn = document.createElement("button");
-      btn.className = "point-btn";
-      btn.textContent = q.points; // الأرقام تبان هنا، مو في الإعداد
-      btn.onclick = ()=>openQuestion(cat.id,q.text,q.points,q.answer);
-      col.appendChild(btn);
-    });
-
-    board.appendChild(col);
-  });
-}
-
-/* TEAMS SYNC */
-function syncTeamsUI(){
-  for(let i=0;i<teams.length;i++){
-    const nameEl = document.getElementById(`boardTeamName${i}`);
-    const scoreEl = document.getElementById(`boardTeamScore${i}`);
-    if(nameEl) nameEl.textContent = teams[i].name;
-    if(scoreEl) scoreEl.textContent = teams[i].score;
-  }
-  for(let i=0;i<teams.length;i++){
-    const nameEl = document.getElementById(`qTeamName${i}`);
-    const scoreEl = document.getElementById(`qTeamScore${i}`);
-    if(nameEl) nameEl.textContent = teams[i].name;
-    if(scoreEl) scoreEl.textContent = teams[i].score;
-  }
-
-  const t0n = document.getElementById("adminTeamName0");
-  const t1n = document.getElementById("adminTeamName1");
-  const t0s = document.getElementById("adminTeamScore0");
-  const t1s = document.getElementById("adminTeamScore1");
-  if(t0n){t0n.value = teams[0].name;}
-  if(t1n){t1n.value = teams[1].name;}
-  if(t0s){t0s.value = teams[0].score;}
-  if(t1s){t1s.value = teams[1].score;}
-}
-
-/* QUESTION FLOW */
-function openQuestion(catId,text,points,answer){
-  currentQuestion.catId = catId;
-  currentQuestion.text = text;
-  currentQuestion.points = points;
-  currentQuestion.answer = answer || "";
-
-  document.getElementById("currentQuestionText").textContent = text;
-  document.getElementById("currentQuestionPoints").textContent =
-    "قيمة السؤال: " + points + " نقطة";
-
-  // نخلي صندوق الإجابة فاضي لين نضغط "إظهار الإجابة"
-  document.getElementById("answerBox").textContent = "";
-
-  resetTimer();
-  startTimer(); // المؤقت يشتغل تلقائياً
-  showStage("question");
-}
-
-/* reveal answer */
-function revealAnswer(){
-  const ans = currentQuestion.answer && currentQuestion.answer.trim()
-    ? currentQuestion.answer
-    : "لا توجد إجابة مسجلة";
-  document.getElementById("answerBox").textContent = ans;
-}
-
-/* mark correct */
-function markCorrect(teamIndex){
-  if(currentQuestion.points>0){
-    teams[teamIndex].score += currentQuestion.points;
-  }
-  if(teams[teamIndex].score<0) teams[teamIndex].score=0;
-  syncTeamsUI();
-}
-
-/* start game */
+// بدء اللعبة
 function startGame(){
+  // أسماء الفرق
   const t1 = document.getElementById("setupTeam1Name").value.trim() || "فريق 1";
   const t2 = document.getElementById("setupTeam2Name").value.trim() || "فريق 2";
   teams[0].name = t1;
@@ -1411,7 +1442,154 @@ function startGame(){
   showStage("board");
 }
 
-/* TIMER */
+/* --------- لوحة اللعبة (BOARD) --------- */
+
+function renderBoard(){
+  const board = document.getElementById("boardColumns");
+  board.innerHTML = "";
+
+  activeCategoryIds.forEach(catId=>{
+    const cat = categories.find(c=>c.id===catId);
+    if(!cat) return;
+
+    const catIndex = categories.indexOf(cat);
+
+    const col = document.createElement("div");
+    col.className = "board-col";
+
+    const header = document.createElement("div");
+    header.className = "board-col-header";
+    header.textContent = cat.title;
+    col.appendChild(header);
+
+    cat.questions.forEach((q, qIndex)=>{
+      const btn = document.createElement("button");
+      btn.className = "point-btn";
+      btn.textContent = q.answered ? "" : q.points;
+      if(q.answered){
+        btn.classList.add("disabled","hidden-question");
+      } else {
+        btn.onclick = ()=>openQuestion(catIndex,qIndex);
+      }
+      col.appendChild(btn);
+    });
+
+    board.appendChild(col);
+  });
+
+  // بعد ما نعيد رسم اللوحة نحدّث النقاط واسماء الفرق
+  syncTeamsUI();
+}
+
+/* --------- مزامنة المعلومات على الواجهات --------- */
+
+function syncTeamsUI(){
+  // لوحة اللعبة
+  for(let i=0;i<teams.length;i++){
+    const nameEl = document.getElementById(`boardTeamName${i}`);
+    const scoreEl = document.getElementById(`boardTeamScore${i}`);
+    if(nameEl) nameEl.textContent = teams[i].name;
+    if(scoreEl) scoreEl.textContent = teams[i].score;
+  }
+  // شاشة السؤال
+  for(let i=0;i<teams.length;i++){
+    const nameEl = document.getElementById(`qTeamName${i}`);
+    const scoreEl = document.getElementById(`qTeamScore${i}`);
+    if(nameEl) nameEl.textContent = teams[i].name;
+    if(scoreEl) scoreEl.textContent = teams[i].score;
+  }
+  // لوحة التحكم الحية
+  const t0n = document.getElementById("adminTeamName0");
+  const t1n = document.getElementById("adminTeamName1");
+  const t0s = document.getElementById("adminTeamScore0");
+  const t1s = document.getElementById("adminTeamScore1");
+  if(t0n){t0n.value = teams[0].name;}
+  if(t1n){t1n.value = teams[1].name;}
+  if(t0s){t0s.value = teams[0].score;}
+  if(t1s){t1s.value = teams[1].score;}
+
+  // تحديث حالة أزرار المساعدة (board stage)
+  updateAssistButtons();
+}
+
+/* --------- عرض السؤال (QUESTION FLOW) --------- */
+
+function openQuestion(catIndex,qIndex){
+  const qData = categories[catIndex].questions[qIndex];
+  if(qData.answered){
+    return; // سؤال مستخدم قبل
+  }
+
+  currentQuestion.catIndex = catIndex;
+  currentQuestion.qIndex = qIndex;
+  currentQuestion.text = qData.text;
+  currentQuestion.basePoints = qData.points;
+  currentQuestion.effectivePoints = qData.points;
+  currentQuestion.answer = qData.answer || "";
+
+  // نعرضه على الشاشة
+  document.getElementById("currentQuestionText").textContent = qData.text;
+  document.getElementById("currentQuestionPoints").textContent =
+    "قيمة السؤال: " + currentQuestion.effectivePoints + " نقطة";
+  document.getElementById("answerBox").textContent = "";
+
+  // المؤقت
+  resetTimer();
+  startTimer();
+
+  // نعرض شاشة السؤال
+  showStage("question");
+}
+
+// إظهار الإجابة
+function revealAnswer(){
+  const ans = currentQuestion.answer && currentQuestion.answer.trim()
+    ? currentQuestion.answer
+    : "لا توجد إجابة مسجلة";
+  document.getElementById("answerBox").textContent = ans;
+}
+
+// فريق جاوب صح
+function markCorrect(teamIndex){
+  // عط النقاط للفريق
+  if(currentQuestion.effectivePoints>0){
+    teams[teamIndex].score += currentQuestion.effectivePoints;
+  }
+  if(teams[teamIndex].score<0) teams[teamIndex].score=0;
+
+  // علم السؤال إنه خلاص انتهى
+  if(currentQuestion.catIndex !== null && currentQuestion.qIndex !== null){
+    categories[currentQuestion.catIndex].questions[currentQuestion.qIndex].answered = true;
+  }
+
+  // رجع القيم الافتراضية للسؤال الحالي
+  clearCurrentQuestion();
+
+  // نحدّث الواجهات
+  syncTeamsUI();
+  renderBoard();
+
+  // رجع للوحة اللعبة
+  showStage("board");
+
+  // اذا ما بقي ولا سؤال، طلع شاشة الفائز
+  checkWinnerIfDone();
+}
+
+// نصفر بيانات السؤال الحالي
+function clearCurrentQuestion(){
+  currentQuestion = {
+    catIndex: null,
+    qIndex: null,
+    text: "",
+    basePoints: 0,
+    effectivePoints: 0,
+    answer: ""
+  };
+}
+
+/* --------- المؤقت (TIMER) --------- */
+
 function updateTimerDisplay(){
   document.getElementById("timerDisplay").textContent = timerValue;
 }
@@ -1436,24 +1614,123 @@ function resetTimer(){
   updateTimerDisplay();
 }
 
-/* RESET */
+/* --------- المساعدات ---------
+  لكل فريق:
+  double = دبل بوينت للسؤال الحالي (مرة وحده)
+  mute   = ميوت (يوقف المؤقت) (مرة وحده)
+  call   = اتصال صديق (يعرض تلميح) (مرة وحده)
+---------------------------------*/
+
+function useAssist(type, teamIndex){
+  const team = teams[teamIndex];
+  if(!team) return;
+
+  // لو مستخدم من قبل
+  if(team.used[type]) return;
+
+  // فعل المساعدة
+  team.used[type] = true;
+
+  if(type === "double"){
+    // ضاعف النقاط الحالية لو فيه سؤال مفتوح
+    if(currentQuestion && currentQuestion.basePoints>0){
+      currentQuestion.effectivePoints = currentQuestion.basePoints * 2;
+      document.getElementById("currentQuestionPoints").textContent =
+        "قيمة السؤال: " + currentQuestion.effectivePoints + " نقطة";
+    }
+  }
+
+  if(type === "mute"){
+    // وقف المؤقت الآن
+    stopTimer();
+  }
+
+  if(type === "call"){
+    // اتصال صديق = تلميح
+    // نحط جزء من الاجابة داخل مربع الاجابة إذا فيه سؤال مفتوح
+    if(currentQuestion.answer){
+      const hint = currentQuestion.answer.substring(0,3) + "...";
+      document.getElementById("answerBox").textContent = "تلميح: " + hint;
+    } else {
+      document.getElementById("answerBox").textContent = "لا يوجد تلميح مسجل.";
+    }
+  }
+
+  // تحديث الواجهات: نخفي/نقفل الزر
+  updateAssistButtons();
+}
+
+// تحدث شكل الأزرار عشان نبين المساعدات اللي خلصت
+function updateAssistButtons(){
+  for(let i=0;i<teams.length;i++){
+    const t = teams[i];
+
+    // أزرار في لوحة اللعبة
+    const dBoard = document.getElementById(`assistDouble-${i}`);
+    const mBoard = document.getElementById(`assistMute-${i}`);
+    const cBoard = document.getElementById(`assistCall-${i}`);
+
+    if(dBoard){
+      dBoard.classList.toggle("used", t.used.double);
+      dBoard.disabled = t.used.double;
+    }
+    if(mBoard){
+      mBoard.classList.toggle("used", t.used.mute);
+      mBoard.disabled = t.used.mute;
+    }
+    if(cBoard){
+      cBoard.classList.toggle("used", t.used.call);
+      cBoard.disabled = t.used.call;
+    }
+
+    // أزرار في شاشة السؤال (الأيقونات)
+    const dQ = document.getElementById(`assistDoubleQ-${i}`);
+    const mQ = document.getElementById(`assistMuteQ-${i}`);
+    const cQ = document.getElementById(`assistCallQ-${i}`);
+
+    if(dQ){
+      dQ.classList.toggle("used", t.used.double);
+    }
+    if(mQ){
+      mQ.classList.toggle("used", t.used.mute);
+    }
+    if(cQ){
+      cQ.classList.toggle("used", t.used.call);
+    }
+  }
+}
+
+/* --------- إعادة ضبط اللعبة كاملة --------- */
+
 function resetGame(){
-  teams[0].score = 0;
-  teams[1].score = 0;
-  syncTeamsUI();
+  // صفر النقاط
+  teams = [
+    { name: teams[0].name || "فريق 1", score: 0, used: {double:false, mute:false, call:false} },
+    { name: teams[1].name || "فريق 2", score: 0, used: {double:false, mute:false, call:false} },
+  ];
+
+  // رجع المؤقت
   resetTimer();
-  currentQuestion = {catId:null,text:"",points:0,answer:""};
-  document.getElementById("currentQuestionText").textContent =
-    "اختر سؤال من لوحة اللعبة ليظهر هنا";
-  document.getElementById("currentQuestionPoints").textContent = "قيمة السؤال: -";
-  document.getElementById("answerBox").textContent = "";
+
+  // رجع الأسئلة كلها لغير مجابة
+  categories.forEach(cat=>{
+    cat.questions.forEach(q=>{ q.answered=false; });
+  });
+
+  // فضي السؤال الحالي
+  clearCurrentQuestion();
+
+  // فضي اختيار الفئات
   activeCategoryIds = [];
+
   renderSetupCategories();
   renderBoard();
+  syncTeamsUI();
   showStage("setup");
 }
 
-/* ADMIN */
+/* --------- لوحة التحكم (ADMIN) --------- */
+
 function openAdmin(){
   document.getElementById("adminModalOverlay").style.display="flex";
   document.getElementById("adminLoginBlock").style.display="block";
@@ -1465,6 +1742,7 @@ function openAdmin(){
 function closeAdmin(){
   document.getElementById("adminModalOverlay").style.display="none";
 }
+
 function tryAdminLogin(){
   const input = document.getElementById("adminPasswordInput").value;
   const err = document.getElementById("adminLoginError");
@@ -1484,7 +1762,7 @@ function tryAdminLogin(){
   }
 }
 
-/* save team edits */
+// حفظ تعديل فريق
 function saveTeamEdits(i){
   const nameEl = document.getElementById(`adminTeamName${i}`);
   const scoreEl = document.getElementById(`adminTeamScore${i}`);
@@ -1498,7 +1776,8 @@ function saveTeamEdits(i){
   syncTeamsUI();
 }
 
-/* categories admin (with image link) */
+/* --------- إدارة الفئات داخل لوحة التحكم --------- */
+
 function renderAdminCategories(){
   const list = document.getElementById("adminCategoryList");
   list.innerHTML = "";
@@ -1595,7 +1874,8 @@ function addNewCategory(){
   renderQuestionEditor();
 }
 
-/* questions admin */
+/* --------- إدارة الأسئلة داخل لوحة التحكم --------- */
+
 function renderQuestionCategorySelect(){
   const sel = document.getElementById("questionCategorySelect");
   if(!sel) return;
@@ -1607,12 +1887,14 @@ function renderQuestionCategorySelect(){
     sel.appendChild(opt);
   });
 }
+
 function getSelectedQuestionCategory(){
   const sel = document.getElementById("questionCategorySelect");
   if(!sel) return null;
   const catId = sel.value;
   return categories.find(c=>c.id===catId) || null;
 }
+
 function renderQuestionEditor(){
   const area = document.getElementById("questionEditorArea");
   if(!area) return;
@@ -1663,10 +1945,26 @@ function saveQuestion(catId,qIdx){
     const v = parseInt(pEl.value,10);
     if(!isNaN(v)&&v>0){
       catObj.questions[qIdx].points=v;
+      // اذا حدّثنا النقاط الأصلية، نرجعها لو السؤال الحالي نفس هذا
+      if(currentQuestion.catIndex !== null &&
+         currentQuestion.qIndex !== null &&
+         categories[currentQuestion.catIndex] === catObj &&
+         currentQuestion.qIndex === qIdx){
+        currentQuestion.basePoints = v;
+        currentQuestion.effectivePoints = v;
+        document.getElementById("currentQuestionPoints").textContent =
+          "قيمة السؤال: " + currentQuestion.effectivePoints + " نقطة";
+      }
     }
   }
   if(aEl){
     catObj.questions[qIdx].answer = aEl.value.trim()||"";
+    if(currentQuestion.catIndex !== null &&
+       currentQuestion.qIndex !== null &&
+       categories[currentQuestion.catIndex] === catObj &&
+       currentQuestion.qIndex === qIdx){
+      currentQuestion.answer = aEl.value.trim()||"";
+    }
   }
 
   renderSetupCategories();
@@ -1706,7 +2004,8 @@ function addNewQuestion(){
   catObj.questions.push({
     points: ptsVal,
     text: txt,
-    answer: ansVal
+    answer: ansVal,
+    answered:false
   });
 
   document.getElementById("newQuestionText").value="";
@@ -1718,7 +2017,8 @@ function addNewQuestion(){
   renderQuestionEditor();
 }
 
-/* TIMER DEFAULT */
+/* --------- حفظ الوقت الافتراضي للمؤقت --------- */
+
 function saveDefaultTimer(){
   const inp = document.getElementById("defaultTimerInput");
   if(!inp) return;
@@ -1729,7 +2029,7 @@ function saveDefaultTimer(){
   }
 }
 
-/* INIT */
+/* --------- INIT --------- */
 function init(){
   renderSetupCategories();
   syncTeamsUI();
