@@ -218,36 +218,34 @@ body{
   border:2px solid var(--surface-border);
   border-radius:var(--radius-lg);
   box-shadow:var(--shadow-card);
-  min-height:160px;
+  min-height:180px;
   padding:16px;
   cursor:pointer;
   display:flex;
   flex-direction:column;
-  justify-content:space-between;
+  justify-content:flex-start;
+  align-items:center;
+  text-align:center;
   transition:var(--transition-fast);
 }
 .category-card.active{
   border:2px solid var(--accent-orange);
   box-shadow:0 16px 40px rgba(255,178,77,0.4);
 }
-.category-topline{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap:8px;
+.category-image{
+  width:80px;
+  height:80px;
+  border-radius:12px;
+  object-fit:cover;
+  box-shadow:0 12px 24px rgba(0,0,0,0.15);
+  margin-bottom:8px;
+  border:1px solid var(--surface-border-strong);
 }
 .category-name{
   font-size:1.05rem;
   font-weight:700;
   color:var(--text-strong);
   line-height:1.3;
-}
-.category-points{
-  font-size:.8rem;
-  font-weight:600;
-  color:var(--accent-orange);
-  line-height:1.4;
-  text-align:left;
 }
 .category-desc{
   font-size:.8rem;
@@ -337,7 +335,6 @@ body{
   background:var(--accent-orange);
   color:#000;
 }
-/* حذف "سؤال" بالكامل => ما نحتاج .point-question-label */
 
 /* TEAM BAR */
 .team-bar{
@@ -554,7 +551,7 @@ body{
   color:#fff;
 }
 
-/* SIDE TEAMS (with icons instead of text assists) */
+/* SIDE TEAMS */
 .question-side-teams{
   background:var(--surface-main);
   border:1px solid var(--surface-border);
@@ -906,15 +903,15 @@ body{
     </div>
 
     <div class="team-card" data-team="1">
-      <div class="team-header-line">
-        <div class="team-name-display" id="boardTeamName1">فريق 2</div>
-        <div class="team-score-display" id="boardTeamScore1">0</div>
-      </div>
-      <div class="team-assist-row">
-        <button class="assist-btn">دبل بوينت</button>
-        <button class="assist-btn">ميوت</button>
-        <button class="assist-btn">اتصال صديق</button>
-      </div>
+        <div class="team-header-line">
+          <div class="team-name-display" id="boardTeamName1">فريق 2</div>
+          <div class="team-score-display" id="boardTeamScore1">0</div>
+        </div>
+        <div class="team-assist-row">
+          <button class="assist-btn">دبل بوينت</button>
+          <button class="assist-btn">ميوت</button>
+          <button class="assist-btn">اتصال صديق</button>
+        </div>
     </div>
   </div>
 </section>
@@ -928,10 +925,6 @@ body{
       <!-- Mini Timer in corner -->
       <div class="timer-mini-wrapper">
         <div class="timer-number" id="timerDisplay">30</div>
-        <button class="timer-icon-btn" title="تشغيل / استئناف" onclick="startTimer()">
-          <!-- play icon -->
-          <svg viewBox="0 0 24 24"><polygon points="8,5 19,12 8,19 8,5"></polygon></svg>
-        </button>
         <button class="timer-icon-btn" title="إيقاف" onclick="stopTimer()">
           <!-- pause icon -->
           <svg viewBox="0 0 24 24"><line x1="9" y1="5" x2="9" y2="19"></line><line x1="15" y1="5" x2="15" y2="19"></line></svg>
@@ -968,13 +961,11 @@ body{
         </div>
 
         <div class="q-team-assists">
-          <!-- دبل بوينت (نجمة) -->
           <button class="assist-icon-btn" title="دبل بوينت">
             <svg viewBox="0 0 24 24">
               <polygon points="12 3 15 10 22 10 16.5 14 18.5 21 12 17 5.5 21 7.5 14 2 10 9 10 12 3"/>
             </svg>
           </button>
-          <!-- ميوت (سبيكر مقفول) -->
           <button class="assist-icon-btn" title="ميوت">
             <svg viewBox="0 0 24 24">
               <polygon points="11 5 6 9 3 9 3 15 6 15 11 19 11 5"/>
@@ -982,7 +973,6 @@ body{
               <line x1="20" y1="10" x2="14" y2="16"/>
             </svg>
           </button>
-          <!-- اتصال صديق (سماعة هاتف) -->
           <button class="assist-icon-btn" title="اتصال صديق">
             <svg viewBox="0 0 24 24">
               <path d="M22 16.92v3a2 2 0 0 1-2.18 2
@@ -1094,7 +1084,7 @@ body{
       <!-- CATEGORIES -->
       <div class="admin-section-title">
         <span>الفئات</span>
-        <span style="color:var(--accent-purple);font-size:.8rem;">إعادة تسمية / إضافة / حذف</span>
+        <span style="color:var(--accent-purple);font-size:.8rem;">الاسم / الوصف / صورة</span>
       </div>
       <div class="admin-block" id="adminCategoriesBlock">
         <div id="adminCategoryList"></div>
@@ -1107,6 +1097,10 @@ body{
           <div class="admin-col">
             <label>وصف مختصر</label>
             <input id="newCategoryDesc" type="text" placeholder="مثال: HTML/CSS/JS"/>
+          </div>
+          <div class="admin-col">
+            <label>رابط صورة</label>
+            <input id="newCategoryImg" type="text" placeholder="https://example.com/image.png"/>
           </div>
           <div class="admin-col" style="align-self:flex-end;">
             <button class="small-btn" onclick="addNewCategory()">إضافة فئة</button>
@@ -1183,18 +1177,21 @@ body{
 const ADMIN_PASSWORD = "PTI on top";
 
 let defaultTimerSeconds = 30;
+let timerInterval = null;
+let timerValue = defaultTimerSeconds;
 
 let teams = [
   { name: "فريق 1", score: 0 },
   { name: "فريق 2", score: 0 },
 ];
 
-// الأسئلة + الإجابة
+// الآن كل فئة عندها img (رابط صورة)
 let categories = [
   {
     id: "prog",
     title: "برمجة",
     desc: "مفاهيم لغة البرمجة والمنطق البرمجي.",
+    img: "",
     questions: [
       { points: 200, text: "ما هو المتغير (variable)؟", answer: "مكان نخزن فيه قيمة يمكن تغييرها" },
       { points: 400, text: "ما الفرق بين if و switch؟", answer: "if شروط/مرونة، switch اختيار حالة من قيم ثابتة" },
@@ -1205,6 +1202,7 @@ let categories = [
     id: "net",
     title: "الشبكات",
     desc: "العناوين والبروتوكولات والاتصال.",
+    img: "",
     questions: [
       { points: 200, text: "ما هو عنوان IP؟", answer: "رقم يعرّف جهازك على الشبكة" },
       { points: 400, text: "ما الفرق بين TCP و UDP؟", answer: "TCP موثوق/أبطأ، UDP أسرع/بدون تأكيد" },
@@ -1215,6 +1213,7 @@ let categories = [
     id: "sec",
     title: "أمن المعلومات",
     desc: "الحماية والاختراق والتهديدات.",
+    img: "",
     questions: [
       { points: 200, text: "ما معنى هجوم التصيّد (phishing)؟", answer: "محاولة خداعك لتسليم بياناتك" },
       { points: 400, text: "لماذا كلمة المرور القوية مهمة؟", answer: "تصعّب عملية التخمين أو الكسر" },
@@ -1225,6 +1224,7 @@ let categories = [
     id: "ai",
     title: "الذكاء الاصطناعي",
     desc: "النماذج والتعلم من البيانات.",
+    img: "",
     questions: [
       { points: 200, text: "ما المقصود بنموذج ذكاء اصطناعي؟", answer: "نظام يتنبأ أو يقرر بناءً على بيانات" },
       { points: 400, text: "ماذا يعني تدريب نموذج؟", answer: "تعديل بارامترات على بيانات حتى يتعلم النمط" },
@@ -1235,6 +1235,7 @@ let categories = [
     id: "hw",
     title: "الهاردوير",
     desc: "المعالج والذاكرة والبطاقات.",
+    img: "",
     questions: [
       { points: 200, text: "ما هو RAM؟", answer: "ذاكرة مؤقتة وسريعة للحالة الحالية" },
       { points: 400, text: "ما وظيفة CPU؟", answer: "تنفيذ الأوامر والتعليمات" },
@@ -1245,6 +1246,7 @@ let categories = [
     id: "os",
     title: "أنظمة التشغيل",
     desc: "المهام والعمليات وإدارة الموارد.",
+    img: "",
     questions: [
       { points: 200, text: "ما هو نظام التشغيل؟", answer: "البرنامج الأساسي الذي يدير العتاد والبرامج" },
       { points: 400, text: "ما المقصود بعملية (Process)؟", answer: "برنامج شغّال وله موارده" },
@@ -1254,16 +1256,12 @@ let categories = [
 ];
 
 let activeCategoryIds = [];
-
 let currentQuestion = {
   catId: null,
   text: "",
   points: 0,
   answer: ""
 };
-
-let timerInterval = null;
-let timerValue = defaultTimerSeconds;
 
 /* NAV */
 function showStage(which){
@@ -1282,11 +1280,15 @@ function renderSetupCategories(){
     const card = document.createElement("div");
     card.className = "category-card" + (isActive ? " active":"");
     card.onclick = ()=>toggleCategorySelect(cat.id);
+
+    // صورة الفئة لو متوفرة
+    const imgHtml = cat.img && cat.img.trim() !== ""
+      ? `<img class="category-image" src="${cat.img}" alt="${cat.title}"/>`
+      : "";
+
     card.innerHTML = `
-      <div class="category-topline">
-        <div class="category-name">${cat.title}</div>
-        <div class="category-points">${cat.questions.map(q=>q.points).join(" / ")}</div>
-      </div>
+      ${imgHtml}
+      <div class="category-name">${cat.title}</div>
       <div class="category-desc">${cat.desc}</div>
     `;
     grid.appendChild(card);
@@ -1327,8 +1329,7 @@ function renderBoard(){
     cat.questions.forEach(q=>{
       const btn = document.createElement("button");
       btn.className = "point-btn";
-      // بدون كلمة "سؤال"
-      btn.textContent = q.points;
+      btn.textContent = q.points; // الأرقام تبان هنا، مو في الإعداد
       btn.onclick = ()=>openQuestion(cat.id,q.text,q.points,q.answer);
       col.appendChild(btn);
     });
@@ -1377,6 +1378,7 @@ function openQuestion(catId,text,points,answer){
   document.getElementById("answerBox").textContent = "";
 
   resetTimer();
+  startTimer(); // المؤقت يشتغل تلقائياً
   showStage("question");
 }
 
@@ -1496,13 +1498,17 @@ function saveTeamEdits(i){
   syncTeamsUI();
 }
 
-/* categories admin */
+/* categories admin (with image link) */
 function renderAdminCategories(){
   const list = document.getElementById("adminCategoryList");
   list.innerHTML = "";
   categories.forEach((cat,idx)=>{
     const row = document.createElement("div");
     row.className="admin-row";
+    row.style.border = "1px solid var(--surface-border-strong)";
+    row.style.borderRadius = "10px";
+    row.style.padding = "12px";
+
     row.innerHTML = `
       <div class="admin-col">
         <label>اسم الفئة</label>
@@ -1512,6 +1518,10 @@ function renderAdminCategories(){
         <label>وصف مختصر</label>
         <input id="catDesc-${idx}" type="text" value="${cat.desc}"/>
       </div>
+      <div class="admin-col">
+        <label>رابط الصورة</label>
+        <input id="catImg-${idx}" type="text" value="${cat.img || ''}" placeholder="https://..."/>
+      </div>
       <div class="admin-col" style="align-self:flex-end;">
         <button class="small-btn" onclick="saveCategory(${idx})">حفظ</button>
         <button class="small-btn" onclick="deleteCategory(${idx})">حذف</button>
@@ -1520,16 +1530,21 @@ function renderAdminCategories(){
     list.appendChild(row);
   });
 }
+
 function saveCategory(idx){
   const t = document.getElementById(`catTitle-${idx}`);
   const d = document.getElementById(`catDesc-${idx}`);
+  const i = document.getElementById(`catImg-${idx}`);
+
   if(t) categories[idx].title = t.value.trim()||categories[idx].title;
-  if(d) categories[idx].desc = d.value.trim()||categories[idx].desc;
+  if(d) categories[idx].desc  = d.value.trim()||categories[idx].desc;
+  if(i) categories[idx].img   = i.value.trim()||"";
 
   renderSetupCategories();
   renderBoard();
   renderQuestionCategorySelect();
 }
+
 function deleteCategory(idx){
   const removedId = categories[idx].id;
   categories.splice(idx,1);
@@ -1545,24 +1560,33 @@ function deleteCategory(idx){
   renderQuestionCategorySelect();
   renderQuestionEditor();
 }
+
 function addNewCategory(){
   const titleEl = document.getElementById("newCategoryTitle");
   const descEl  = document.getElementById("newCategoryDesc");
+  const imgEl   = document.getElementById("newCategoryImg");
+
   const newTitle = (titleEl.value||"").trim();
   const newDesc  = (descEl.value||"").trim();
+  const newImg   = (imgEl.value||"").trim();
+
   if(!newTitle){
     alert("اكتب اسم الفئة");
     return;
   }
+
   const newId = "cat_"+Date.now();
   categories.push({
     id:newId,
     title:newTitle,
     desc:newDesc||"",
+    img:newImg||"",
     questions:[]
   });
+
   titleEl.value="";
   descEl.value="";
+  imgEl.value="";
 
   renderSetupCategories();
   renderBoard();
@@ -1625,6 +1649,7 @@ function renderQuestionEditor(){
 
   area.innerHTML = html || "<div class='admin-row'><div>لا توجد أسئلة.</div></div>";
 }
+
 function saveQuestion(catId,qIdx){
   const catObj = categories.find(c=>c.id===catId);
   if(!catObj) return;
@@ -1648,6 +1673,7 @@ function saveQuestion(catId,qIdx){
   renderBoard();
   renderQuestionEditor();
 }
+
 function deleteQuestion(catId,qIdx){
   const catObj = categories.find(c=>c.id===catId);
   if(!catObj) return;
@@ -1657,6 +1683,7 @@ function deleteQuestion(catId,qIdx){
   renderBoard();
   renderQuestionEditor();
 }
+
 function addNewQuestion(){
   const catObj = getSelectedQuestionCategory();
   if(!catObj){
