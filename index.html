@@ -1,2094 +1,1798 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>سين جيم - PTI</title>
-<style>
-:root {
-  --bg-deep: #eaf3ff;
-  --bg-deeper: #ffffff;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سين جيم - PTI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #0a192f;
+            --secondary-color: #112240;
+            --accent-color: #233554;
+            --highlight-color: #64ffda;
+            --text-color: #e6f1ff;
+            --disabled-color: #495670;
+            --correct-color: #2d9d78;
+            --incorrect-color: #e53e3e;
+            --gold-color: #ffd700;
+            --team1-color: #ff6b6b;
+            --team2-color: #4ecdc4;
+        }
 
-  --surface-main: #ffffff;
-  --surface-alt: #f6f8fc;
-  --surface-border: rgba(0,0,0,0.08);
-  --surface-border-strong: rgba(0,0,0,0.12);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+        }
 
-  --accent-purple: #5a4fa3;
-  --accent-purple-dark: #463d86;
-  --accent-orange: #ffb24d;
-  --teal-main: #3fa89b;
+        body {
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            height: 100vh;
+            overflow: hidden;
+        }
 
-  --text-strong: #1a1a1a;
-  --text-mid: #444;
-  --text-dim: #666;
-  --text-invert: #fff;
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            padding: 20px;
+        }
 
-  --radius-xl: 20px;
-  --radius-lg: 14px;
-  --radius-md: 8px;
-  --radius-sm: 4px;
+        .active {
+            display: flex;
+        }
 
-  --shadow-card: 0 20px 40px rgba(0,0,0,0.08);
-  --shadow-pop: 0 30px 70px rgba(0,0,0,0.18);
+        /* Header Styles */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: var(--secondary-color);
+            border-bottom: 2px solid var(--highlight-color);
+            position: relative;
+            z-index: 100;
+            height: 70px;
+        }
 
-  --header-h: 72px;
-  --max-stage-w: 1200px;
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
 
-  --transition-fast: .15s ease;
+        .logo {
+            width: 50px;
+            height: 50px;
+            background-color: var(--highlight-color);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
 
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
-}
+        .game-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--highlight-color);
+        }
 
-*{box-sizing:border-box;}
-body{
-  margin:0;
-  min-height:100vh;
-  background: radial-gradient(circle at 30% 20%, var(--bg-deep) 0%, var(--bg-deeper) 60%);
-  color: var(--text-strong);
-  display:flex;
-  flex-direction:column;
-  overflow-x:hidden;
-}
+        .admin-btn {
+            background-color: var(--accent-color);
+            color: var(--text-color);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
 
-/* HEADER */
-.header-bar{
-  height:var(--header-h);
-  min-height:var(--header-h);
-  background:linear-gradient(90deg, var(--accent-purple) 0%, #6c62c4 50%, #8e93ff 100%);
-  color:#fff;
-  display:flex;
-  align-items:center;
-  gap:16px;
-  padding:0 20px;
-  box-shadow:0 12px 30px rgba(0,0,0,0.15);
-  position:sticky;
-  top:0;
-  z-index:1000;
-  border-bottom:1px solid rgba(255,255,255,.25);
-}
+        .admin-btn:hover {
+            background-color: var(--highlight-color);
+            color: var(--primary-color);
+        }
 
-.header-left{
-  display:flex;
-  align-items:center;
-  gap:16px;
-  min-width:0;
-}
-.game-logo{
-  width:60px;
-  height:60px;
-  flex-shrink:0;
-  border-radius:var(--radius-md);
-  background:#fff;
-  color:var(--accent-purple);
-  font-weight:600;
-  font-size:14px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  overflow:hidden;
-  box-shadow:0 10px 24px rgba(0,0,0,0.2);
-}
-.game-logo img{
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  display:block;
-  border-radius:var(--radius-md);
-}
-.game-info{
-  display:flex;
-  flex-direction:column;
-  min-width:0;
-}
-.game-title{
-  font-size:1.1rem;
-  font-weight:700;
-  line-height:1.2;
-  color:#fff;
-  white-space:nowrap;
-}
-.game-sub{
-  font-size:.8rem;
-  color:rgba(255,255,255,0.8);
-  line-height:1.2;
-}
+        /* Start Screen */
+        #start-screen {
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        }
 
-.header-actions{
-  margin-right:auto;
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-}
-.top-btn{
-  background:rgba(255,255,255,0.12);
-  border:1px solid rgba(255,255,255,0.4);
-  color:#fff;
-  border-radius:var(--radius-md);
-  padding:9px 12px;
-  font-size:.9rem;
-  font-weight:600;
-  cursor:pointer;
-  line-height:1.2;
-  box-shadow:0 10px 24px rgba(0,0,0,0.25);
-  transition:var(--transition-fast);
-}
-.top-btn:hover{
-  background:rgba(255,255,255,0.22);
-}
+        .start-container {
+            text-align: center;
+            max-width: 600px;
+        }
 
-/* STAGE WRAPPER */
-.stage{
-  width:100%;
-  max-width:var(--max-stage-w);
-  margin:24px auto 60px auto;
-  padding:0 20px;
-  display:none;
-}
-.stage.active{
-  display:block;
-}
+        .game-logo {
+            font-size: 48px;
+            margin-bottom: 30px;
+            color: var(--highlight-color);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
 
-/* GENERIC CARD */
-.big-card{
-  background:var(--surface-main);
-  border:1px solid var(--surface-border);
-  border-radius:var(--radius-xl);
-  box-shadow:var(--shadow-card);
-  padding:24px 24px 28px;
-  color:var(--text-strong);
-}
+        .start-btn {
+            background-color: var(--highlight-color);
+            color: var(--primary-color);
+            border: none;
+            padding: 15px 40px;
+            font-size: 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 30px;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
 
-/* TITLES */
-.section-title{
-  font-size:1rem;
-  font-weight:600;
-  color:var(--text-strong);
-  margin-bottom:16px;
-  display:flex;
-  justify-content:space-between;
-  flex-wrap:wrap;
-}
-.section-note{
-  font-size:.8rem;
-  font-weight:500;
-  color:var(--accent-purple);
-}
+        .start-btn:hover {
+            background-color: #4fd3b5;
+            transform: translateY(-2px);
+        }
 
-/* TEAM INPUTS (setup) */
-.team-setup-row{
-  background:var(--surface-alt);
-  border:1px solid var(--surface-border);
-  border-radius:var(--radius-lg);
-  box-shadow:var(--shadow-card);
-  padding:16px;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:16px;
-  margin-bottom:24px;
-}
-.team-block-input label{
-  font-size:.9rem;
-  font-weight:600;
-  color:var(--text-strong);
-  margin-bottom:6px;
-  display:block;
-}
-.team-block-input input{
-  width:100%;
-  background:#fff;
-  color:var(--text-strong);
-  border-radius:var(--radius-md);
-  border:1px solid var(--surface-border-strong);
-  font-size:1rem;
-  padding:10px 12px;
-  font-weight:600;
-  box-shadow:inset 0 1px 2px rgba(0,0,0,0.05);
-}
+        /* Category Selection Screen */
+        #category-screen {
+            padding-top: 0;
+        }
 
-/* CATEGORY GRID */
-.category-select-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:16px;
-  margin-bottom:24px;
-}
-.category-card{
-  background:#fff;
-  border:2px solid var(--surface-border);
-  border-radius:var(--radius-lg);
-  box-shadow:var(--shadow-card);
-  min-height:180px;
-  padding:16px;
-  cursor:pointer;
-  display:flex;
-  flex-direction:column;
-  justify-content:flex-start;
-  align-items:center;
-  text-align:center;
-  transition:var(--transition-fast);
-}
-.category-card.active{
-  border:2px solid var(--accent-orange);
-  box-shadow:0 16px 40px rgba(255,178,77,0.4);
-}
-.category-image{
-  width:80px;
-  height:80px;
-  border-radius:12px;
-  object-fit:cover;
-  box-shadow:0 12px 24px rgba(0,0,0,0.15);
-  margin-bottom:8px;
-  border:1px solid var(--surface-border-strong);
-}
-.category-name{
-  font-size:1.05rem;
-  font-weight:700;
-  color:var(--text-strong);
-  line-height:1.3;
-}
-.category-desc{
-  font-size:.8rem;
-  color:var(--text-mid);
-  line-height:1.5;
-  flex-grow:1;
-  margin-top:8px;
-}
+        .selection-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            gap: 20px;
+        }
 
-/* START GAME BUTTON */
-.start-game-btn{
-  background:var(--accent-purple);
-  color:#fff;
-  border:0;
-  border-radius:var(--radius-lg);
-  font-size:1rem;
-  font-weight:700;
-  width:100%;
-  padding:16px;
-  cursor:pointer;
-  line-height:1.2;
-  text-align:center;
-  box-shadow:0 20px 50px rgba(0,0,0,0.2);
-  transition:var(--transition-fast);
-}
-.start-game-btn:hover{
-  background:var(--accent-purple-dark);
-}
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 20px;
+            flex: 1;
+        }
 
-/* BOARD */
-.board-area{
-  background:var(--surface-main);
-  border:1px solid var(--surface-border);
-  border-radius:var(--radius-xl);
-  box-shadow:var(--shadow-card);
-  padding:24px;
-  margin-bottom:16px;
-}
-.board-columns{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-  gap:16px;
-}
-.board-col{
-  background:var(--surface-alt);
-  border:2px solid var(--surface-border);
-  border-radius:var(--radius-lg);
-  box-shadow:var(--shadow-card);
-  display:flex;
-  flex-direction:column;
-  overflow:hidden;
-  min-height:240px;
-}
-.board-col-header{
-  background:var(--accent-purple);
-  color:#fff;
-  text-align:center;
-  padding:16px;
-  font-size:1rem;
-  font-weight:700;
-  line-height:1.4;
-  border-bottom:1px solid rgba(0,0,0,0.15);
-  min-height:70px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
-.point-btn{
-  flex:1;
-  background:#fff;
-  border:0;
-  border-bottom:1px solid var(--surface-border);
-  color:var(--text-strong);
-  font-size:1.3rem;
-  font-weight:700;
-  line-height:1;
-  padding:20px 10px;
-  cursor:pointer;
-  transition:var(--transition-fast);
-  position:relative;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  text-align:center;
-}
-.point-btn:hover:not(.answered){
-  background:var(--accent-orange);
-  color:#000;
-}
-.point-btn.answered{
-  background:var(--accent-orange);
-  color:#000;
-  cursor:not-allowed;
-}
+        .category-card {
+            background-color: var(--secondary-color);
+            border: 2px solid var(--accent-color);
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            padding: 20px;
+            transition: all 0.3s ease;
+            min-height: 120px;
+        }
 
-/* TEAM BAR */
-.team-bar{
-  background:var(--surface-main);
-  border:1px solid var(--surface-border);
-  border-radius:var(--radius-xl);
-  box-shadow:var(--shadow-card);
-  padding:16px;
-  display:flex;
-  flex-wrap:wrap;
-  gap:16px;
-  justify-content:space-between;
-  align-items:stretch;
-}
-.team-card{
-  flex:1 1 260px;
-  min-width:240px;
-  background:var(--surface-alt);
-  border:2px solid var(--surface-border);
-  border-radius:var(--radius-lg);
-  box-shadow:var(--shadow-card);
-  padding:16px;
-  color:var(--text-strong);
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-  gap:12px;
-}
-.team-header-line{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  flex-wrap:wrap;
-  gap:8px;
-}
-.team-name-display{
-  font-size:1rem;
-  font-weight:700;
-  color:var(--text-strong);
-  line-height:1.2;
-}
-.team-score-display{
-  font-size:1.5rem;
-  font-weight:800;
-  line-height:1;
-  color:var(--accent-orange);
-  min-width:60px;
-  text-align:left;
-}
-.team-assist-row{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-}
-.assist-btn{
-  background:var(--teal-main);
-  border:1px solid rgba(0,0,0,0.2);
-  color:#fff;
-  border-radius:var(--radius-md);
-  padding:8px 10px;
-  font-size:.8rem;
-  font-weight:600;
-  line-height:1.2;
-  cursor:pointer;
-  white-space:nowrap;
-  box-shadow:0 10px 24px rgba(0,0,0,0.15);
-  transition:var(--transition-fast);
-}
-.assist-btn.used{
-  background:#555 !important;
-  cursor:not-allowed !important;
-  opacity:0.5;
-}
-.assist-btn:hover:not(.used){
-  background:var(--accent-orange);
-  color:#000;
-  border-color:rgba(0,0,0,0.2);
-}
+        .category-card:hover {
+            background-color: var(--accent-color);
+            transform: scale(1.05);
+        }
 
-/* QUESTION SCREEN */
-.question-layout{
-  display:grid;
-  grid-template-columns:1fr 300px;
-  gap:16px;
-}
+        .category-card.selected {
+            background-color: var(--highlight-color);
+            border-color: var(--highlight-color);
+            color: var(--primary-color);
+            box-shadow: 0 0 15px rgba(100, 255, 218, 0.5);
+        }
 
-.question-card{
-  background:var(--surface-main);
-  border:1px solid var(--surface-border);
-  border-radius:var(--radius-xl);
-  box-shadow:var(--shadow-card);
-  padding:16px 16px 20px;
-  color:var(--text-strong);
-  min-height:300px;
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-  position:relative;
-}
+        .teams-input {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 0;
+        }
 
-/* mini timer overlay block */
-.timer-mini-wrapper{
-  position:absolute;
-  top:12px;
-  left:12px;
-  display:flex;
-  align-items:center;
-  gap:6px;
-  background:var(--accent-purple);
-  color:#fff;
-  border-radius:var(--radius-md);
-  border:2px solid rgba(0,0,0,0.15);
-  box-shadow:0 12px 28px rgba(0,0,0,0.18);
-  padding:6px 8px;
-  min-width:100px;
-  justify-content:center;
-  font-size:1rem;
-  font-weight:700;
-}
-.timer-number{
-  min-width:32px;
-  text-align:center;
-  font-variant-numeric:tabular-nums;
-}
+        .team-input {
+            display: flex;
+            flex-direction: column;
+        }
 
-.timer-icon-btn{
-  background:#fff0;
-  border:0;
-  padding:4px;
-  cursor:pointer;
-  line-height:0;
-  border-radius:var(--radius-sm);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-.timer-icon-btn svg{
-  width:18px;
-  height:18px;
-  stroke:#fff;
-  stroke-width:2;
-  fill:none;
-}
-.timer-icon-btn:hover{
-  background:rgba(255,255,255,0.15);
-}
+        .team-input label {
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--highlight-color);
+        }
 
-.current-question-wrap{
-  text-align:center;
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-  margin-top:32px;
-}
-.current-question-text{
-  font-size:1.6rem;
-  font-weight:700;
-  line-height:1.4;
-  text-align:center;
-  color:var(--text-strong);
-  min-height:2.5em;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-wrap:balance;
-  white-space:pre-wrap;
-  margin:0;
-}
-.current-question-points{
-  font-size:1rem;
-  font-weight:600;
-  color:var(--accent-orange);
-  text-align:center;
-  margin:0;
-}
+        .team-input input {
+            padding: 12px;
+            border-radius: 4px;
+            border: 1px solid var(--accent-color);
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            height: 45px;
+        }
 
-.answer-box{
-  background:var(--surface-alt);
-  border:2px solid var(--surface-border);
-  border-radius:var(--radius-md);
-  padding:10px;
-  font-size:1rem;
-  font-weight:600;
-  color:var(--text-strong);
-  min-height:2.5em;
-  text-align:center;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  white-space:pre-wrap;
-}
+        .start-playing-btn {
+            background-color: var(--highlight-color);
+            color: var(--primary-color);
+            border: none;
+            padding: 15px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            height: 60px;
+        }
 
-.q-control-row{
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  gap:10px;
-  margin-top:8px;
-}
-.q-btn{
-  background:var(--accent-purple);
-  border:0;
-  border-radius:var(--radius-md);
-  padding:10px 14px;
-  font-size:.9rem;
-  font-weight:600;
-  line-height:1.2;
-  cursor:pointer;
-  color:#fff;
-  min-width:120px;
-  text-align:center;
-  box-shadow:0 12px 28px rgba(0,0,0,0.18);
-  transition:var(--transition-fast);
-}
-.q-btn:hover{
-  background:var(--accent-purple-dark);
-  color:#fff;
-}
+        .start-playing-btn:disabled {
+            background-color: var(--disabled-color);
+            cursor: not-allowed;
+            color: var(--text-color);
+        }
 
-/* SIDE TEAMS in question */
-.question-side-teams{
-  background:var(--surface-main);
-  border:1px solid var(--surface-border);
-  border-radius:var(--radius-xl);
-  box-shadow:var(--shadow-card);
-  padding:16px;
-  color:var(--text-strong);
-  display:flex;
-  flex-direction:column;
-  gap:16px;
-  min-height:300px;
-}
-.q-team-card{
-  background:var(--surface-alt);
-  border:2px solid var(--surface-border);
-  border-radius:var(--radius-lg);
-  box-shadow:var(--shadow-card);
-  padding:16px;
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-}
-.q-team-headline{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  flex-wrap:wrap;
-  gap:8px;
-  font-size:1rem;
-  font-weight:700;
-  color:var(--text-strong);
-}
-.q-team-score{
-  font-size:1.3rem;
-  font-weight:800;
-  color:var(--accent-orange);
-  line-height:1;
-}
+        .start-playing-btn:not(:disabled):hover {
+            background-color: #4fd3b5;
+            transform: translateY(-2px);
+        }
 
-.q-team-assists{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-}
-.assist-icon-btn{
-  background:var(--teal-main);
-  border:1px solid rgba(0,0,0,0.2);
-  border-radius:var(--radius-md);
-  width:36px;
-  height:36px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
-  box-shadow:0 10px 24px rgba(0,0,0,0.15);
-  transition:var(--transition-fast);
-}
-.assist-icon-btn.used{
-  background:#555 !important;
-  cursor:not-allowed !important;
-  opacity:0.5;
-}
-.assist-icon-btn svg{
-  width:20px;
-  height:20px;
-  stroke:#fff;
-  stroke-width:2;
-  fill:none;
-}
-.assist-icon-btn:hover:not(.used){
-  background:var(--accent-orange);
-  border-color:rgba(0,0,0,0.2);
-}
-.assist-icon-btn:hover:not(.used) svg{
-  stroke:#000;
-}
+        /* Game Board Screen */
+        #game-board {
+            padding-top: 0;
+        }
 
-.correct-btn{
-  background:var(--accent-orange);
-  border:0;
-  border-radius:var(--radius-md);
-  padding:10px 12px;
-  font-size:.9rem;
-  font-weight:700;
-  line-height:1.2;
-  cursor:pointer;
-  text-align:center;
-  box-shadow:0 12px 28px rgba(0,0,0,0.18);
-  color:#000;
-  transition:var(--transition-fast);
-}
-.correct-btn:hover{
-  filter:brightness(1.05);
-}
+        .board-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            gap: 15px;
+        }
 
-/* assist notification area */
-#assistNoticeWrapper{
-  grid-column:1 / -1;
-  font-size:.8rem;
-  font-weight:600;
-  color:#000;
-}
-.assist-notice-bubble{
-  background:var(--accent-orange);
-  border:2px solid rgba(0,0,0,0.15);
-  border-radius:var(--radius-md);
-  box-shadow:0 16px 36px rgba(0,0,0,0.2);
-  padding:10px 12px;
-  color:#000;
-  margin-top:4px;
-  display:inline-block;
-}
+        .categories-row {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 10px;
+            height: 70px;
+        }
 
-/* CONTROL PANEL MODAL */
-#adminModalOverlay{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.4);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  z-index:2000;
-}
-#adminModal{
-  width:90%;
-  max-width:1000px;
-  max-height:90vh;
-  overflow-y:auto;
-  background:#ffffff;
-  color:var(--text-strong);
-  border-radius:var(--radius-xl);
-  box-shadow:var(--shadow-pop);
-  border:2px solid var(--surface-border-strong);
-  padding:24px;
-  position:relative;
-  font-size:.9rem;
-  line-height:1.5;
-}
-#adminCloseBtn{
-  position:absolute;
-  top:16px;
-  left:16px;
-  background:#ddd;
-  border:0;
-  color:#000;
-  border-radius:var(--radius-md);
-  padding:6px 10px;
-  cursor:pointer;
-  font-size:.8rem;
-  font-weight:600;
-}
-#adminCloseBtn:hover{
-  background:#ccc;
-}
+        .category-header {
+            background-color: var(--accent-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-weight: bold;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            padding: 10px 5px;
+        }
 
-.admin-section-title{
-  font-size:1rem;
-  font-weight:700;
-  color:var(--text-strong);
-  margin-top:24px;
-  margin-bottom:8px;
-  display:flex;
-  justify-content:space-between;
-  flex-wrap:wrap;
-}
-.admin-block{
-  background:var(--surface-alt);
-  border:1px solid var(--surface-border-strong);
-  border-radius:var(--radius-lg);
-  box-shadow:var(--shadow-card);
-  padding:16px;
-  margin-bottom:16px;
-}
+        .questions-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 10px;
+            flex: 1;
+        }
 
-/* login block */
-#adminLoginBlock{
-  text-align:center;
-}
-#adminLoginBlock h2{
-  font-size:1.05rem;
-  font-weight:700;
-  margin:0 0 12px 0;
-  color:var(--text-strong);
-}
-.admin-pass-input{
-  width:100%;
-  max-width:260px;
-  margin:0 auto 12px auto;
-  display:block;
-  border-radius:var(--radius-md);
-  border:1px solid var(--surface-border-strong);
-  background:#fff;
-  color:#000;
-  font-size:1rem;
-  font-weight:600;
-  padding:10px 12px;
-  text-align:center;
-  box-shadow:inset 0 1px 2px rgba(0,0,0,0.08);
-}
-.admin-pass-btn{
-  background:var(--accent-purple);
-  border:0;
-  border-radius:var(--radius-md);
-  padding:10px 14px;
-  font-size:1rem;
-  font-weight:700;
-  color:#fff;
-  cursor:pointer;
-  min-width:120px;
-  box-shadow:0 16px 36px rgba(0,0,0,0.2);
-}
-.admin-pass-btn:hover{
-  background:var(--accent-purple-dark);
-}
-.admin-error{
-  font-size:.8rem;
-  color:#d00000;
-  font-weight:600;
-  min-height:1.2em;
-  margin-top:8px;
-  text-align:center;
-}
+        .question-tile {
+            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--accent-color) 100%);
+            border: 2px solid var(--highlight-color);
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-weight: bold;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            font-size: 20px;
+        }
 
-/* admin forms */
-.admin-row{
-  display:flex;
-  flex-wrap:wrap;
-  gap:12px;
-  margin-bottom:12px;
-}
-.admin-col{
-  flex:1 1 200px;
-  min-width:200px;
-  display:flex;
-  flex-direction:column;
-}
-.admin-col label{
-  color:var(--text-strong);
-  font-size:.8rem;
-  font-weight:600;
-  margin-bottom:4px;
-}
-.admin-col input,
-.admin-col textarea,
-.admin-col select{
-  background:#fff;
-  color:#000;
-  border-radius:var(--radius-md);
-  border:1px solid var(--surface-border-strong);
-  font-size:.9rem;
-  font-weight:500;
-  padding:8px 10px;
-  box-shadow:inset 0 1px 2px rgba(0,0,0,0.07);
-}
+        .question-tile:hover {
+            background: linear-gradient(135deg, var(--accent-color) 0%, var(--highlight-color) 100%);
+            transform: scale(1.05);
+            color: var(--primary-color);
+        }
 
-.small-btn{
-  background:var(--accent-purple);
-  border:0;
-  border-radius:var(--radius-md);
-  color:#fff;
-  padding:8px 10px;
-  cursor:pointer;
-  font-size:.8rem;
-  font-weight:600;
-  line-height:1.2;
-  box-shadow:0 12px 30px rgba(0,0,0,0.15);
-  transition:var(--transition-fast);
-  white-space:nowrap;
-}
-.small-btn:hover{
-  background:var(--accent-purple-dark);
-  color:#fff;
-}
+        .question-tile.used {
+            background-color: var(--disabled-color);
+            cursor: not-allowed;
+            opacity: 0.5;
+            transform: none;
+            color: var(--text-color);
+        }
 
-.nav-row{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  margin-top:12px;
-}
-.nav-btn{
-  background:#ddd;
-  border:0;
-  border-radius:var(--radius-md);
-  color:#000;
-  padding:8px 10px;
-  cursor:pointer;
-  font-size:.8rem;
-  font-weight:600;
-  line-height:1.2;
-}
-.nav-btn:hover{
-  background:#ccc;
-}
+        .game-footer {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            height: 180px;
+        }
 
-/* WINNER SCREEN */
-#winnerOverlay{
-  position:fixed;
-  inset:0;
-  z-index:3000;
-  background:linear-gradient(160deg, var(--accent-purple) 0%, #6c62c4 50%, #8e93ff 100%);
-  color:#fff;
-  display:none;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding:24px;
-}
-.winner-box{
-  background:rgba(255,255,255,0.1);
-  border:2px solid rgba(255,255,255,0.4);
-  border-radius:var(--radius-xl);
-  box-shadow:0 30px 70px rgba(0,0,0,0.4);
-  padding:24px 32px;
-  max-width:90%;
-  width:400px;
-}
-#winnerTitle{
-  font-size:1.2rem;
-  font-weight:600;
-  margin-bottom:8px;
-  color:#fff;
-}
-#winnerName{
-  font-size:1.6rem;
-  font-weight:800;
-  margin-bottom:4px;
-  color:#fff;
-}
-#winnerScore{
-  font-size:1rem;
-  font-weight:600;
-  color:rgba(255,255,255,.8);
-  margin-bottom:16px;
-}
-#winnerCloseBtn{
-  background:#fff;
-  color:#000;
-  border:0;
-  border-radius:var(--radius-md);
-  padding:10px 16px;
-  font-weight:600;
-  font-size:.9rem;
-  cursor:pointer;
-  box-shadow:0 16px 36px rgba(0,0,0,0.4);
-}
-#winnerCloseBtn:hover{
-  background:#f0f0f0;
-}
+        .teams-display {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
 
-/* responsive */
-@media(max-width:768px){
-  .team-setup-row{grid-template-columns:1fr;}
-  .question-layout{grid-template-columns:1fr;}
-}
-</style>
+        .team-display {
+            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--accent-color) 100%);
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--highlight-color);
+            justify-content: space-between;
+        }
+
+        .team1-display {
+            border-color: var(--team1-color);
+        }
+
+        .team2-display {
+            border-color: var(--team2-color);
+        }
+
+        .team-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--highlight-color);
+        }
+
+        .team1-name {
+            color: var(--team1-color);
+        }
+
+        .team2-name {
+            color: var(--team2-color);
+        }
+
+        .team-score {
+            font-size: 24px;
+        }
+
+        .score-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .score-btn {
+            background-color: var(--accent-color);
+            color: var(--text-color);
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .score-btn:hover {
+            background-color: var(--highlight-color);
+            color: var(--primary-color);
+        }
+
+        .powerups {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .powerups-title {
+            font-weight: bold;
+            color: var(--highlight-color);
+            text-align: center;
+        }
+
+        .team-powerups {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            height: 100%;
+        }
+
+        .team-powerup-section {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            flex: 1;
+        }
+
+        .team-powerup-label {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        .team1-powerup-label {
+            color: var(--team1-color);
+        }
+
+        .team2-powerup-label {
+            color: var(--team2-color);
+        }
+
+        .powerups-container {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex: 1;
+            align-items: center;
+        }
+
+        .powerup {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .powerup-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent-color) 0%, var(--highlight-color) 100%);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 5px;
+            font-size: 16px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .powerup.used .powerup-icon {
+            background: var(--disabled-color);
+            cursor: not-allowed;
+        }
+
+        .powerup-label {
+            font-size: 10px;
+            text-align: center;
+        }
+
+        /* Question Screen */
+        #question-screen {
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(10, 25, 47, 0.9);
+        }
+
+        .question-container {
+            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--accent-color) 100%);
+            border-radius: 12px;
+            padding: 30px;
+            width: 80%;
+            max-width: 800px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--highlight-color);
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .question-meta {
+            font-size: 14px;
+            color: var(--highlight-color);
+        }
+
+        .timer-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .timer {
+            background-color: var(--primary-color);
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            border: 2px solid var(--highlight-color);
+        }
+
+        .timer-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .timer-btn {
+            background-color: var(--accent-color);
+            color: var(--text-color);
+            border: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .question-text {
+            font-size: 28px;
+            text-align: center;
+            margin: 40px 0;
+            line-height: 1.4;
+            color: var(--text-color);
+        }
+
+        .question-actions {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .action-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .show-answer-btn {
+            background-color: var(--accent-color);
+            color: var(--text-color);
+        }
+
+        .show-answer-btn:hover {
+            background-color: var(--highlight-color);
+            color: var(--primary-color);
+        }
+
+        .result-btn {
+            background-color: var(--highlight-color);
+            color: var(--primary-color);
+        }
+
+        .result-btn:hover {
+            background-color: #4fd3b5;
+        }
+
+        .answer-section {
+            margin-top: 30px;
+            text-align: center;
+            display: none;
+        }
+
+        .answer-text {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--highlight-color);
+        }
+
+        .result-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .result-container {
+            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--accent-color) 100%);
+            border-radius: 12px;
+            padding: 30px;
+            width: 80%;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--highlight-color);
+        }
+
+        .result-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--highlight-color);
+        }
+
+        .team-selection {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .team-option {
+            padding: 15px 25px;
+            background-color: var(--accent-color);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .team-option:hover {
+            transform: scale(1.05);
+        }
+
+        .team1-option {
+            background-color: var(--team1-color);
+            color: var(--primary-color);
+        }
+
+        .team2-option {
+            background-color: var(--team2-color);
+            color: var(--primary-color);
+        }
+
+        /* Winner Screen */
+        #winner-screen {
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        }
+
+        .winner-container {
+            text-align: center;
+            max-width: 600px;
+        }
+
+        .winner-title {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: var(--highlight-color);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .winner-team {
+            font-size: 36px;
+            margin-bottom: 30px;
+            color: var(--text-color);
+        }
+
+        .play-again-btn {
+            background-color: var(--highlight-color);
+            color: var(--primary-color);
+            border: none;
+            padding: 15px 40px;
+            font-size: 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 30px;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .play-again-btn:hover {
+            background-color: #4fd3b5;
+            transform: translateY(-2px);
+        }
+
+        /* Admin Panel */
+        .admin-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .admin-panel {
+            background-color: white;
+            color: #333;
+            width: 90%;
+            max-width: 800px;
+            border-radius: 12px;
+            padding: 30px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 15px;
+        }
+
+        .admin-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .close-admin {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .admin-section {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--accent-color);
+        }
+
+        .admin-login {
+            text-align: center;
+        }
+
+        .password-input {
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        .login-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .admin-controls {
+            display: none;
+        }
+
+        .team-admin {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+
+        .team-admin-input {
+            flex: 1;
+        }
+
+        .team-admin-input label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .team-admin-input input {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        .category-admin {
+            margin-bottom: 20px;
+        }
+
+        .category-name-input {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .question-admin {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .question-value {
+            width: 60px;
+            padding: 5px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        .question-text-input {
+            flex: 1;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        .add-question-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .game-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .control-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--highlight-color);
+            color: var(--primary-color);
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            z-index: 3000;
+            display: none;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-
-<header class="header-bar">
-  <div class="header-left">
-    <div class="game-logo" id="gameLogo">
-      <img id="logoImg" src="pti-logo.png" alt="PTI Logo"/>
-    </div>
-    <div class="game-info">
-      <div class="game-title">سين جيم - PTI</div>
-      <div class="game-sub">PTI Competition</div>
-    </div>
-  </div>
-
-  <div class="header-actions">
-    <button class="top-btn" onclick="showStage('setup')">الإعداد</button>
-    <button class="top-btn" onclick="showStage('board')">لوحة اللعبة</button>
-    <button class="top-btn" onclick="showStage('question')">وضع السؤال</button>
-    <button class="top-btn" onclick="openAdmin()">لوحة التحكم</button>
-  </div>
-
-  <div class="header-actions">
-    <button class="top-btn" onclick="resetGame()">إعادة ضبط</button>
-  </div>
-</header>
-
-<!-- SETUP STAGE -->
-<section id="stage-setup" class="stage active">
-  <div class="big-card">
-    <div class="section-title">
-      <span>إعداد اللعبة</span>
-      <span class="section-note">اختيار حتى ٦ فئات تقنية</span>
+    <!-- Start Screen -->
+    <div id="start-screen" class="screen active">
+        <div class="header">
+            <div class="header-content">
+                <div class="logo">PTI</div>
+                <div class="game-title">سين جيم - PTI</div>
+            </div>
+            <button class="admin-btn">لوحة التحكم</button>
+        </div>
+        <div class="start-container">
+            <div class="game-logo">سين جيم</div>
+            <button class="start-btn">ابدأ اللعبة</button>
+        </div>
     </div>
 
-    <div class="team-setup-row">
-      <div class="team-block-input">
-        <label>اسم الفريق 1</label>
-        <input id="setupTeam1Name" type="text" placeholder="الفريق الأول"/>
-      </div>
-      <div class="team-block-input">
-        <label>اسم الفريق 2</label>
-        <input id="setupTeam2Name" type="text" placeholder="الفريق الثاني"/>
-      </div>
+    <!-- Category Selection Screen -->
+    <div id="category-screen" class="screen">
+        <div class="header">
+            <div class="header-content">
+                <div class="logo">PTI</div>
+                <div class="game-title">سين جيم - PTI</div>
+            </div>
+            <button class="admin-btn">لوحة التحكم</button>
+        </div>
+        <div class="selection-container">
+            <div class="categories-grid" id="categories-container">
+                <!-- Categories will be populated by JavaScript -->
+            </div>
+            <div class="teams-input">
+                <div class="team-input">
+                    <label for="team1-name">اسم الفريق الأول</label>
+                    <input type="text" id="team1-name" value="الفريق الأول">
+                </div>
+                <div class="team-input">
+                    <label for="team2-name">اسم الفريق الثاني</label>
+                    <input type="text" id="team2-name" value="الفريق الثاني">
+                </div>
+            </div>
+            <button class="start-playing-btn" id="start-playing-btn" disabled>ابدأ اللعب</button>
+        </div>
     </div>
 
-    <div class="category-select-grid" id="setupCategoryGrid"></div>
-
-    <button class="start-game-btn" onclick="startGame()">بدء اللعبة</button>
-  </div>
-</section>
-
-<!-- BOARD STAGE -->
-<section id="stage-board" class="stage">
-  <div class="board-area">
-    <div class="board-columns" id="boardColumns"></div>
-  </div>
-
-  <div class="team-bar" id="teamBarBoard">
-    <div class="team-card" data-team="0">
-      <div class="team-header-line">
-        <div class="team-name-display" id="boardTeamName0">فريق 1</div>
-        <div class="team-score-display" id="boardTeamScore0">0</div>
-      </div>
-      <div class="team-assist-row">
-        <button class="assist-btn" id="assistDouble-0" onclick="useAssist('double',0)">دبل بوينت</button>
-        <button class="assist-btn" id="assistMute-0" onclick="useAssist('mute',0)">ميوت</button>
-        <button class="assist-btn" id="assistCall-0" onclick="useAssist('call',0)">اتصال صديق</button>
-      </div>
+    <!-- Game Board Screen -->
+    <div id="game-board" class="screen">
+        <div class="header">
+            <div class="header-content">
+                <div class="logo">PTI</div>
+                <div class="game-title">سين جيم - PTI</div>
+            </div>
+            <button class="admin-btn">لوحة التحكم</button>
+        </div>
+        <div class="board-container">
+            <div class="categories-row" id="categories-headers">
+                <!-- Category headers will be populated by JavaScript -->
+            </div>
+            <div class="questions-grid" id="questions-container">
+                <!-- Questions will be populated by JavaScript -->
+            </div>
+            <div class="game-footer">
+                <div class="teams-display">
+                    <div class="team-display team1-display" id="team1-display">
+                        <div class="team-name team1-name" id="team1-name-display">الفريق الأول</div>
+                        <div class="team-score" id="team1-score">0</div>
+                        <div class="score-controls">
+                            <button class="score-btn minus" data-team="1">-</button>
+                            <button class="score-btn plus" data-team="1">+</button>
+                        </div>
+                    </div>
+                    <div class="team-display team2-display" id="team2-display">
+                        <div class="team-name team2-name" id="team2-name-display">الفريق الثاني</div>
+                        <div class="team-score" id="team2-score">0</div>
+                        <div class="score-controls">
+                            <button class="score-btn minus" data-team="2">-</button>
+                            <button class="score-btn plus" data-team="2">+</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="powerups">
+                    <div class="powerups-title">المساعدات</div>
+                    <div class="team-powerups">
+                        <div class="team-powerup-section">
+                            <div class="team-powerup-label team1-powerup-label" id="team1-powerup-label">الفريق الأول</div>
+                            <div class="powerups-container">
+                                <div class="powerup" id="team1-mute-powerup">
+                                    <div class="powerup-icon">🔇</div>
+                                    <div class="powerup-label">كتم</div>
+                                </div>
+                                <div class="powerup" id="team1-double-powerup">
+                                    <div class="powerup-icon">2x</div>
+                                    <div class="powerup-label">ضعف النقاط</div>
+                                </div>
+                                <div class="powerup" id="team1-friend-powerup">
+                                    <div class="powerup-icon">📞</div>
+                                    <div class="powerup-label">اتصال بصديق</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="team-powerup-section">
+                            <div class="team-powerup-label team2-powerup-label" id="team2-powerup-label">الفريق الثاني</div>
+                            <div class="powerups-container">
+                                <div class="powerup" id="team2-mute-powerup">
+                                    <div class="powerup-icon">🔇</div>
+                                    <div class="powerup-label">كتم</div>
+                                </div>
+                                <div class="powerup" id="team2-double-powerup">
+                                    <div class="powerup-icon">2x</div>
+                                    <div class="powerup-label">ضعف النقاط</div>
+                                </div>
+                                <div class="powerup" id="team2-friend-powerup">
+                                    <div class="powerup-icon">📞</div>
+                                    <div class="powerup-label">اتصال بصديق</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="team-card" data-team="1">
-      <div class="team-header-line">
-        <div class="team-name-display" id="boardTeamName1">فريق 2</div>
-        <div class="team-score-display" id="boardTeamScore1">0</div>
-      </div>
-      <div class="team-assist-row">
-        <button class="assist-btn" id="assistDouble-1" onclick="useAssist('double',1)">دبل بوينت</button>
-        <button class="assist-btn" id="assistMute-1" onclick="useAssist('mute',1)">ميوت</button>
-        <button class="assist-btn" id="assistCall-1" onclick="useAssist('call',1)">اتصال صديق</button>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- QUESTION STAGE -->
-<section id="stage-question" class="stage">
-  <div class="question-layout">
-
-    <div class="question-card">
-
-      <div class="timer-mini-wrapper">
-        <div class="timer-number" id="timerDisplay">30</div>
-        <button class="timer-icon-btn" title="إيقاف" onclick="stopTimer()">
-          <svg viewBox="0 0 24 24"><line x1="9" y1="5" x2="9" y2="19"></line><line x1="15" y1="5" x2="15" y2="19"></line></svg>
-        </button>
-        <button class="timer-icon-btn" title="إعادة" onclick="resetTimer()">
-          <svg viewBox="0 0 24 24"><polyline points="3 3 3 10 10 10"></polyline><path d="M3 3a9 9 0 1 1-2 5"></path></svg>
-        </button>
-      </div>
-
-      <div class="current-question-wrap">
-        <div class="current-question-text" id="currentQuestionText">
-          اختر سؤال من لوحة اللعبة ليظهر هنا
+    <!-- Question Screen -->
+    <div id="question-screen" class="screen">
+        <div class="question-container">
+            <div class="question-header">
+                <div class="question-meta" id="question-meta">التصنيف: مثال | القيمة: 200</div>
+                <div class="timer-container">
+                    <div class="timer" id="question-timer">30</div>
+                    <div class="timer-controls">
+                        <button class="timer-btn" id="pause-timer">⏸️</button>
+                        <button class="timer-btn" id="resume-timer">▶️</button>
+                    </div>
+                </div>
+            </div>
+            <div class="question-text" id="question-text">هذا نص سؤال مثال سيتم استبداله بالسؤال الفعلي.</div>
+            <div class="question-actions">
+                <button class="action-btn show-answer-btn" id="show-answer-btn">عرض الإجابة</button>
+                <button class="action-btn result-btn" id="result-btn" style="display: none;">تحديد النتيجة</button>
+            </div>
+            <div class="answer-section" id="answer-section">
+                <div class="answer-text" id="answer-text">هذه هي الإجابة على السؤال.</div>
+            </div>
         </div>
-
-        <div class="current-question-points" id="currentQuestionPoints">
-          قيمة السؤال: -
-        </div>
-
-        <div class="answer-box" id="answerBox"></div>
-      </div>
-
-      <div class="q-control-row">
-        <button class="q-btn" onclick="revealAnswer()">إظهار الإجابة</button>
-        <button class="q-btn" onclick="showStage('board')">رجوع للوحة</button>
-      </div>
     </div>
 
-    <div class="question-side-teams">
-      <div class="q-team-card">
-        <div class="q-team-headline">
-          <span id="qTeamName0">فريق 1</span>
-          <span class="q-team-score" id="qTeamScore0">0</span>
+    <!-- Result Popup -->
+    <div class="result-popup" id="result-popup">
+        <div class="result-container">
+            <div class="result-title">من أجاب بشكل صحيح؟</div>
+            <div class="team-selection">
+                <div class="team-option team1-option" data-team="1" id="team1-correct">الفريق الأول</div>
+                <div class="team-option team2-option" data-team="2" id="team2-correct">الفريق الثاني</div>
+            </div>
         </div>
-
-        <div class="q-team-assists">
-          <button class="assist-icon-btn" id="assistDoubleQ-0" title="دبل بوينت" onclick="useAssist('double',0)">
-            <svg viewBox="0 0 24 24">
-              <polygon points="12 3 15 10 22 10 16.5 14 18.5 21 12 17 5.5 21 7.5 14 2 10 9 10 12 3"/>
-            </svg>
-          </button>
-          <button class="assist-icon-btn" id="assistMuteQ-0" title="ميوت" onclick="useAssist('mute',0)">
-            <svg viewBox="0 0 24 24">
-              <polygon points="11 5 6 9 3 9 3 15 6 15 11 19 11 5"/>
-              <line x1="14" y1="10" x2="20" y2="16"/>
-              <line x1="20" y1="10" x2="14" y2="16"/>
-            </svg>
-          </button>
-          <button class="assist-icon-btn" id="assistCallQ-0" title="اتصال صديق" onclick="useAssist('call',0)">
-            <svg viewBox="0 0 24 24">
-              <path d="M22 16.92v3a2 2 0 0 1-2.18 2
-                       19.86 19.86 0 0 1-8.63-3.07
-                       19.5 19.5 0 0 1-6-6
-                       19.86 19.86 0 0 1-3.07-8.67
-                       A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72
-                       c.12.81.37 1.6.72 2.34a2 2 0 0 1-.45 2.11L8.09 9.91
-                       a16 16 0 0 0 6 6l1.74-1.31
-                       a2 2 0 0 1 2.11-.45
-                       c.74.35 1.53.6 2.34.72A2 2 0 0 1 22 16.92z"/>
-            </svg>
-          </button>
-        </div>
-
-        <button class="correct-btn" onclick="markCorrect(0)">هذا الفريق جاوب صح</button>
-      </div>
-
-      <div class="q-team-card">
-        <div class="q-team-headline">
-          <span id="qTeamName1">فريق 2</span>
-          <span class="q-team-score" id="qTeamScore1">0</span>
-        </div>
-
-        <div class="q-team-assists">
-          <button class="assist-icon-btn" id="assistDoubleQ-1" title="دبل بوينت" onclick="useAssist('double',1)">
-            <svg viewBox="0 0 24 24">
-              <polygon points="12 3 15 10 22 10 16.5 14 18.5 21 12 17 5.5 21 7.5 14 2 10 9 10 12 3"/>
-            </svg>
-          </button>
-          <button class="assist-icon-btn" id="assistMuteQ-1" title="ميوت" onclick="useAssist('mute',1)">
-            <svg viewBox="0 0 24 24">
-              <polygon points="11 5 6 9 3 9 3 15 6 15 11 19 11 5"/>
-              <line x1="14" y1="10" x2="20" y2="16"/>
-              <line x1="20" y1="10" x2="14" y2="16"/>
-            </svg>
-          </button>
-          <button class="assist-icon-btn" id="assistCallQ-1" title="اتصال صديق" onclick="useAssist('call',1)">
-            <svg viewBox="0 0 24 24">
-              <path d="M22 16.92v3a2 2 0 0 1-2.18 2
-                       19.86 19.86 0 0 1-8.63-3.07
-                       19.5 19.5 0 0 1-6-6
-                       19.86 19.86 0 0 1-3.07-8.67
-                       A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72
-                       c.12.81.37 1.6.72 2.34a2 2 0 0 1-.45 2.11L8.09 9.91
-                       a16 16 0 0 0 6 6l1.74-1.31
-                       a2 2 0 0 1 2.11-.45
-                       c.74.35 1.53.6 2.34.72A2 2 0 0 1 22 16.92z"/>
-            </svg>
-          </button>
-        </div>
-
-        <button class="correct-btn" onclick="markCorrect(1)">هذا الفريق جاوب صح</button>
-      </div>
     </div>
 
-    <!-- assist notification area -->
-    <div id="assistNoticeWrapper"></div>
-
-  </div>
-</section>
-
-<!-- ADMIN MODAL -->
-<div id="adminModalOverlay">
-  <div id="adminModal">
-    <button id="adminCloseBtn" onclick="closeAdmin()">إغلاق</button>
-
-    <div id="adminLoginBlock">
-      <h2>لوحة التحكم</h2>
-      <p>أدخل كلمة المرور للدخول إلى التحكم.</p>
-      <input id="adminPasswordInput" type="password" class="admin-pass-input" placeholder="••••••••"/>
-      <button class="admin-pass-btn" onclick="tryAdminLogin()">دخول</button>
-      <div class="admin-error" id="adminLoginError"></div>
+    <!-- Winner Screen -->
+    <div id="winner-screen" class="screen">
+        <div class="header">
+            <div class="header-content">
+                <div class="logo">PTI</div>
+                <div class="game-title">سين جيم - PTI</div>
+            </div>
+            <button class="admin-btn">لوحة التحكم</button>
+        </div>
+        <div class="winner-container">
+            <div class="winner-title">انتهت اللعبة!</div>
+            <div class="winner-team" id="winner-team-name">الفريق الأول فاز!</div>
+            <button class="play-again-btn">العب مرة أخرى</button>
+        </div>
     </div>
 
-    <div id="adminContent" style="display:none;">
-      <!-- TEAMS -->
-      <div class="admin-section-title">
-        <span>الفرق</span>
-        <span style="color:var(--accent-purple);font-size:.8rem;">تعديل الأسماء والنقاط</span>
-      </div>
-      <div class="admin-block" id="adminTeamsBlock">
-        <div class="admin-row">
-          <div class="admin-col">
-            <label>اسم الفريق 1</label>
-            <input id="adminTeamName0" type="text"/>
-          </div>
-          <div class="admin-col">
-            <label>نقاط الفريق 1</label>
-            <input id="adminTeamScore0" type="number"/>
-          </div>
-          <div class="admin-col" style="align-self:flex-end;">
-            <button class="small-btn" onclick="saveTeamEdits(0)">حفظ الفريق 1</button>
-          </div>
+    <!-- Admin Panel -->
+    <div class="admin-overlay" id="admin-overlay">
+        <div class="admin-panel">
+            <div class="admin-header">
+                <div class="admin-title">لوحة التحكم</div>
+                <button class="close-admin" id="close-admin">×</button>
+            </div>
+            <div class="admin-login" id="admin-login">
+                <div class="section-title">تسجيل الدخول للإدارة</div>
+                <input type="password" class="password-input" id="admin-password" placeholder="أدخل كلمة المرور">
+                <button class="login-btn" id="admin-login-btn">تسجيل الدخول</button>
+            </div>
+            <div class="admin-controls" id="admin-controls">
+                <div class="admin-section">
+                    <div class="section-title">إدارة الفرق</div>
+                    <div class="team-admin">
+                        <div class="team-admin-input">
+                            <label for="admin-team1-name">اسم الفريق الأول</label>
+                            <input type="text" id="admin-team1-name" value="الفريق الأول">
+                        </div>
+                        <div class="team-admin-input">
+                            <label for="admin-team1-score">نقاط الفريق الأول</label>
+                            <input type="number" id="admin-team1-score" value="0">
+                        </div>
+                    </div>
+                    <div class="team-admin">
+                        <div class="team-admin-input">
+                            <label for="admin-team2-name">اسم الفريق الثاني</label>
+                            <input type="text" id="admin-team2-name" value="الفريق الثاني">
+                        </div>
+                        <div class="team-admin-input">
+                            <label for="admin-team2-score">نقاط الفريق الثاني</label>
+                            <input type="number" id="admin-team2-score" value="0">
+                        </div>
+                    </div>
+                    <button class="save-teams-btn control-btn">حفظ الفرق</button>
+                </div>
+                <div class="admin-section">
+                    <div class="section-title">التصنيفات والأسئلة</div>
+                    <div id="admin-categories">
+                        <!-- Categories admin will be populated by JavaScript -->
+                    </div>
+                </div>
+                <div class="admin-section">
+                    <div class="section-title">تحكم في اللعبة</div>
+                    <div class="game-controls">
+                        <button class="control-btn" id="reset-helps-btn">إعادة تعيين المساعدات</button>
+                        <button class="control-btn" id="reset-questions-btn">إعادة تعيين الأسئلة</button>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <div class="admin-row">
-          <div class="admin-col">
-            <label>اسم الفريق 2</label>
-            <input id="adminTeamName1" type="text"/>
-          </div>
-          <div class="admin-col">
-            <label>نقاط الفريق 2</label>
-            <input id="adminTeamScore1" type="number"/>
-          </div>
-          <div class="admin-col" style="align-self:flex-end;">
-            <button class="small-btn" onclick="saveTeamEdits(1)">حفظ الفريق 2</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- CATEGORIES -->
-      <div class="admin-section-title">
-        <span>الفئات</span>
-        <span style="color:var(--accent-purple);font-size:.8rem;">الاسم / الوصف / رابط الصورة</span>
-      </div>
-      <div class="admin-block" id="adminCategoriesBlock">
-        <div id="adminCategoryList"></div>
-
-        <div class="admin-row" style="border-top:1px solid var(--surface-border-strong);padding-top:12px;margin-top:12px;">
-          <div class="admin-col">
-            <label>اسم فئة جديدة</label>
-            <input id="newCategoryTitle" type="text" placeholder="مثال: برمجة الويب"/>
-          </div>
-          <div class="admin-col">
-            <label>وصف مختصر</label>
-            <input id="newCategoryDesc" type="text" placeholder="مثال: HTML/CSS/JS"/>
-          </div>
-          <div class="admin-col">
-            <label>رابط صورة</label>
-            <input id="newCategoryImg" type="text" placeholder="https://example.com/image.png"/>
-          </div>
-          <div class="admin-col" style="align-self:flex-end;">
-            <button class="small-btn" onclick="addNewCategory()">إضافة فئة</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- QUESTIONS -->
-      <div class="admin-section-title">
-        <span>الأسئلة</span>
-        <span style="color:var(--accent-purple);font-size:.8rem;">اختيار فئة وتحرير أسئلتها</span>
-      </div>
-      <div class="admin-block" id="adminQuestionsBlock">
-        <div class="admin-row">
-          <div class="admin-col">
-            <label>اختر الفئة</label>
-            <select id="questionCategorySelect" onchange="renderQuestionEditor()"></select>
-          </div>
-        </div>
-
-        <div id="questionEditorArea"></div>
-
-        <div class="admin-row" style="border-top:1px solid var(--surface-border-strong);padding-top:12px;margin-top:12px;">
-          <div class="admin-col">
-            <label>نص سؤال جديد</label>
-            <textarea id="newQuestionText" rows="2" placeholder="اكتب السؤال هنا..."></textarea>
-          </div>
-          <div class="admin-col">
-            <label>قيمة النقاط</label>
-            <input id="newQuestionPoints" type="number" placeholder="200"/>
-          </div>
-          <div class="admin-col">
-            <label>الإجابة الصحيحة</label>
-            <input id="newQuestionAnswer" type="text" placeholder="الإجابة"/>
-          </div>
-          <div class="admin-col" style="align-self:flex-end;">
-            <button class="small-btn" onclick="addNewQuestion()">إضافة سؤال</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- TIMER -->
-      <div class="admin-section-title">
-        <span>الإعدادات العامة</span>
-        <span style="color:var(--accent-purple);font-size:.8rem;">الوقت الافتراضي للمؤقت</span>
-      </div>
-      <div class="admin-block">
-        <div class="admin-row">
-          <div class="admin-col">
-            <label>الوقت الافتراضي (بالثواني)</label>
-            <input id="defaultTimerInput" type="number" min="5" step="5"/>
-          </div>
-          <div class="admin-col" style="align-self:flex-end;">
-            <button class="small-btn" onclick="saveDefaultTimer()">حفظ الوقت</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- NAV -->
-      <div class="admin-section-title"><span>تنقّل سريع</span></div>
-      <div class="admin-block">
-        <div class="nav-row">
-          <button class="nav-btn" onclick="showStage('setup')">شاشة الإعداد</button>
-          <button class="nav-btn" onclick="showStage('board')">لوحة اللعبة</button>
-          <button class="nav-btn" onclick="showStage('question')">شاشة السؤال</button>
-        </div>
-      </div>
-
     </div>
-  </div>
-</div>
-
-<!-- WINNER OVERLAY -->
-<div id="winnerOverlay">
-  <div class="winner-box">
-    <div id="winnerTitle">الفريق الفائز</div>
-    <div id="winnerName">-</div>
-    <div id="winnerScore">- نقطة</div>
-    <button id="winnerCloseBtn" onclick="closeWinner()">رجوع للرئيسية</button>
-  </div>
-</div>
-
-<script>
-const ADMIN_PASSWORD = "PTI on top";
-
-let defaultTimerSeconds = 30;
-let timerInterval = null;
-let timerValue = defaultTimerSeconds;
-
-// الفرق + النقاط + المساعدات المستخدمة
-let teams = [
-  { name: "فريق 1", score: 0, used: {double:false, mute:false, call:false} },
-  { name: "فريق 2", score: 0, used: {double:false, mute:false, call:false} },
-];
-
-// الأسئلة (answered = تم أخذ السؤال)
-let categories = [
-  {
-    id: "prog",
-    title: "برمجة",
-    desc: "مفاهيم لغة البرمجة والمنطق البرمجي.",
-    img: "",
-    questions: [
-      { points: 200, text: "ما هو المتغير (variable)؟", answer: "مكان نخزن فيه قيمة يمكن تغييرها", answered:false },
-      { points: 400, text: "ما الفرق بين if و switch؟", answer: "if شروط/مرونة، switch اختيار حالة من قيم ثابتة", answered:false },
-      { points: 600, text: "اشرح مفهوم البرمجة الكائنية (OOP).", answer: "تنظيم الكود في كائنات لها بيانات ودوال", answered:false },
-    ],
-  },
-  {
-    id: "net",
-    title: "الشبكات",
-    desc: "العناوين والبروتوكولات والاتصال.",
-    img: "",
-    questions: [
-      { points: 200, text: "ما هو عنوان IP؟", answer: "رقم يعرّف جهازك على الشبكة", answered:false },
-      { points: 400, text: "ما الفرق بين TCP و UDP؟", answer: "TCP موثوق/أبطأ، UDP أسرع/بدون تأكيد", answered:false },
-      { points: 600, text: "ما هو نظام أسماء النطاقات (DNS)؟", answer: "خدمة تحويل اسم النطاق إلى IP", answered:false },
-    ],
-  },
-  {
-    id: "sec",
-    title: "أمن المعلومات",
-    desc: "الحماية والاختراق والتهديدات.",
-    img: "",
-    questions: [
-      { points: 200, text: "ما معنى هجوم التصيّد (phishing)؟", answer: "محاولة خداعك لتسليم بياناتك", answered:false },
-      { points: 400, text: "لماذا كلمة المرور القوية مهمة؟", answer: "تصعّب عملية التخمين أو الكسر", answered:false },
-      { points: 600, text: "اشرح مفهوم الهندسة الاجتماعية.", answer: "استغلال البشر بدل مهاجمة التقنية نفسها", answered:false },
-    ],
-  },
-  {
-    id: "ai",
-    title: "الذكاء الاصطناعي",
-    desc: "النماذج والتعلم من البيانات.",
-    img: "",
-    questions: [
-      { points: 200, text: "ما المقصود بنموذج ذكاء اصطناعي؟", answer: "نظام يتنبأ أو يقرر بناءً على بيانات", answered:false },
-      { points: 400, text: "ماذا يعني تدريب نموذج؟", answer: "تعديل بارامترات على بيانات حتى يتعلم النمط", answered:false },
-      { points: 600, text: "ما الفرق بين تعلم الآلة والتعلم العميق؟", answer: "العميق = شبكات عصبية بطبقات كثيرة", answered:false },
-    ],
-  },
-  {
-    id: "hw",
-    title: "الهاردوير",
-    desc: "المعالج والذاكرة والبطاقات.",
-    img: "",
-    questions: [
-      { points: 200, text: "ما هو RAM؟", answer: "ذاكرة مؤقتة وسريعة للحالة الحالية", answered:false },
-      { points: 400, text: "ما وظيفة CPU؟", answer: "تنفيذ الأوامر والتعليمات", answered:false },
-      { points: 600, text: "لماذا مهم وجود GPU قوي؟", answer: "لعمليات معالجة متوازية كثيفة", answered:false },
-    ],
-  },
-  {
-    id: "os",
-    title: "أنظمة التشغيل",
-    desc: "المهام والعمليات وإدارة الموارد.",
-    img: "",
-    questions: [
-      { points: 200, text: "ما هو نظام التشغيل؟", answer: "البرنامج الأساسي الذي يدير العتاد والبرامج", answered:false },
-      { points: 400, text: "ما المقصود بعملية (Process)؟", answer: "برنامج شغّال وله موارده", answered:false },
-      { points: 600, text: "لماذا يُستخدم Linux في الخوادم؟", answer: "ثابت، آمن، قابل للتخصيص، أداء عالي", answered:false },
-    ],
-  },
-];
-
-// الفئات المختارة
-let activeCategoryIds = [];
-
-// السؤال الحالي
-let currentQuestion = {
-  catIndex: null,
-  qIndex: null,
-  text: "",
-  basePoints: 0,
-  effectivePoints: 0,
-  answer: ""
-};
-
-/* ---------------- مراحل العرض ---------------- */
-
-function showStage(which){
-  document.querySelectorAll(".stage").forEach(st => st.classList.remove("active"));
-  document.getElementById(`stage-${which}`).classList.add("active");
-  document.documentElement.scrollLeft = 0;
-  document.body.scrollLeft = 0;
-}
-
-/* ---------------- شاشة الفائز ---------------- */
-
-function checkWinnerIfDone(){
-  // تأكدنا أن كل الأسئلة في الفئات النشطة تمت الإجابة عليها
-  for (let cid of activeCategoryIds){
-    const catObj = categories.find(c=>c.id===cid);
-    if(!catObj) continue;
-    for (let q of catObj.questions){
-      if (!q.answered){
-        return; // باقي أسئلة
-      }
-    }
-  }
-
-  // ما بقى ولا سؤال
-  let winnerIdx = 0;
-  if (teams[1].score > teams[0].score) {
-    winnerIdx = 1;
-  }
-
-  document.getElementById("winnerName").textContent = teams[winnerIdx].name;
-  document.getElementById("winnerScore").textContent = teams[winnerIdx].score + " نقطة";
-  document.getElementById("winnerOverlay").style.display = "flex";
-}
-
-function closeWinner(){
-  // نرجع للإعداد كبداية جديدة
-  document.getElementById("winnerOverlay").style.display = "none";
-  showStage('setup');
-}
-
-/* ---------------- الإعداد ---------------- */
-
-function renderSetupCategories(){
-  const grid = document.getElementById("setupCategoryGrid");
-  grid.innerHTML = "";
-  categories.forEach(cat=>{
-    const isActive = activeCategoryIds.includes(cat.id);
-    const card = document.createElement("div");
-    card.className = "category-card" + (isActive ? " active":"");
-    card.onclick = ()=>toggleCategorySelect(cat.id);
-
-    const imgHtml = cat.img && cat.img.trim() !== ""
-      ? `<img class="category-image" src="${cat.img}" alt="${cat.title}"/>`
-      : "";
-
-    card.innerHTML = `
-      ${imgHtml}
-      <div class="category-name">${cat.title}</div>
-      <div class="category-desc">${cat.desc}</div>
-    `;
-    grid.appendChild(card);
-  });
-}
-
-function toggleCategorySelect(catId){
-  const idx = activeCategoryIds.indexOf(catId);
-  if(idx !== -1){
-    activeCategoryIds.splice(idx,1);
-  } else {
-    if(activeCategoryIds.length >= 6){
-      alert("الحد الأقصى ٦ فئات.");
-      return;
-    }
-    activeCategoryIds.push(catId);
-  }
-  renderSetupCategories();
-}
-
-function startGame(){
-  // أسماء الفرق من الإعداد
-  const t1 = document.getElementById("setupTeam1Name").value.trim() || "فريق 1";
-  const t2 = document.getElementById("setupTeam2Name").value.trim() || "فريق 2";
-  teams[0].name = t1;
-  teams[1].name = t2;
-
-  syncTeamsUI();
-  renderBoard();
-  showStage("board");
-}
-
-/* ---------------- لوحة اللعبة ---------------- */
-
-function renderBoard(){
-  const board = document.getElementById("boardColumns");
-  board.innerHTML = "";
-
-  activeCategoryIds.forEach(catId=>{
-    const cat = categories.find(c=>c.id===catId);
-    if(!cat) return;
-    const catIndex = categories.indexOf(cat);
-
-    const col = document.createElement("div");
-    col.className = "board-col";
-
-    const header = document.createElement("div");
-    header.className = "board-col-header";
-    header.textContent = cat.title;
-    col.appendChild(header);
-
-    cat.questions.forEach((q, qIndex)=>{
-      const btn = document.createElement("button");
-      btn.className = "point-btn";
-      btn.textContent = q.points; // الرقم دايم ظاهر
-
-      if(q.answered){
-        btn.classList.add("answered");
-        btn.disabled = true;
-      } else {
-        btn.onclick = ()=>openQuestion(catIndex,qIndex);
-      }
-
-      col.appendChild(btn);
-    });
-
-    board.appendChild(col);
-  });
-
-  syncTeamsUI(); // تحديث الأسماء والنقاط
-}
-
-/* ---------------- مزامنة الفرق ---------------- */
-
-function syncTeamsUI(){
-  // لوحة اللعبة
-  for(let i=0;i<teams.length;i++){
-    const nameEl = document.getElementById(`boardTeamName${i}`);
-    const scoreEl = document.getElementById(`boardTeamScore${i}`);
-    if(nameEl) nameEl.textContent = teams[i].name;
-    if(scoreEl) scoreEl.textContent = teams[i].score;
-  }
-  // شاشة السؤال
-  for(let i=0;i<teams.length;i++){
-    const nameEl = document.getElementById(`qTeamName${i}`);
-    const scoreEl = document.getElementById(`qTeamScore${i}`);
-    if(nameEl) nameEl.textContent = teams[i].name;
-    if(scoreEl) scoreEl.textContent = teams[i].score;
-  }
-  // لوحة التحكم
-  const t0n = document.getElementById("adminTeamName0");
-  const t1n = document.getElementById("adminTeamName1");
-  const t0s = document.getElementById("adminTeamScore0");
-  const t1s = document.getElementById("adminTeamScore1");
-  if(t0n){t0n.value = teams[0].name;}
-  if(t1n){t1n.value = teams[1].name;}
-  if(t0s){t0s.value = teams[0].score;}
-  if(t1s){t1s.value = teams[1].score;}
-
-  // حالة الأزرار للمساعدات
-  updateAssistButtons();
-}
-
-/* ---------------- عرض السؤال ---------------- */
-
-function openQuestion(catIndex,qIndex){
-  const qData = categories[catIndex].questions[qIndex];
-  if(qData.answered){
-    return; // خلاص تم أخذه
-  }
-
-  currentQuestion.catIndex = catIndex;
-  currentQuestion.qIndex = qIndex;
-  currentQuestion.text = qData.text;
-  currentQuestion.basePoints = qData.points;
-  currentQuestion.effectivePoints = qData.points;
-  currentQuestion.answer = qData.answer || "";
-
-  // عرض السؤال
-  document.getElementById("currentQuestionText").textContent = qData.text;
-  document.getElementById("currentQuestionPoints").textContent =
-    "قيمة السؤال: " + currentQuestion.effectivePoints + " نقطة";
-  document.getElementById("answerBox").textContent = "";
-
-  // المؤقت
-  resetTimer();
-  startTimer();
-
-  // نصفي أي إشعار قديم للمساعدة
-  clearAssistNotice();
-
-  // نعرض شاشة السؤال
-  showStage("question");
-}
-
-function revealAnswer(){
-  const ans = currentQuestion.answer && currentQuestion.answer.trim()
-    ? currentQuestion.answer
-    : "لا توجد إجابة مسجلة";
-  document.getElementById("answerBox").textContent = ans;
-}
-
-function markCorrect(teamIndex){
-  // اضف النقاط للفريق
-  if(currentQuestion.effectivePoints>0){
-    teams[teamIndex].score += currentQuestion.effectivePoints;
-  }
-  if(teams[teamIndex].score<0) teams[teamIndex].score=0;
-
-  // علّم السؤال أنه استُخدم
-  if(currentQuestion.catIndex !== null && currentQuestion.qIndex !== null){
-    categories[currentQuestion.catIndex].questions[currentQuestion.qIndex].answered = true;
-  }
-
-  // صافي
-  clearCurrentQuestion();
-
-  // حدث الواجهات
-  syncTeamsUI();
-  renderBoard();
-
-  // رجوع للوحة السؤال
-  showStage("board");
-
-  // لو خلصت كل الأسئلة -> شاشة الفائز
-  checkWinnerIfDone();
-}
-
-function clearCurrentQuestion(){
-  currentQuestion = {
-    catIndex: null,
-    qIndex: null,
-    text: "",
-    basePoints: 0,
-    effectivePoints: 0,
-    answer: ""
-  };
-}
-
-/* ---------------- المؤقت ---------------- */
-
-function updateTimerDisplay(){
-  document.getElementById("timerDisplay").textContent = timerValue;
-}
-function startTimer(){
-  if(timerInterval) return;
-  timerInterval = setInterval(()=>{
-    timerValue--;
-    if(timerValue<=0){
-      timerValue=0;
-      stopTimer();
-    }
-    updateTimerDisplay();
-  },1000);
-}
-function stopTimer(){
-  clearInterval(timerInterval);
-  timerInterval=null;
-}
-function resetTimer(){
-  stopTimer();
-  timerValue = defaultTimerSeconds;
-  updateTimerDisplay();
-}
-
-/* ---------------- المساعدات ----------------
-
-- double: دبل بوينت (يضاعف النقاط الحالية للسؤال) مرة وحدة لكل فريق
-- mute: ميوت (تسجّل وتتعطل، ما توقف التايمر)
-- call: اتصال صديق (تسجّل وتتعطل، ما تعطي تلميح)
-
-كل وحدة:
-- تعطّل زرها للفريق
-- تظهر إشعار تحت شاشة السؤال
------------------------------------------------- */
-
-function useAssist(type, teamIndex){
-  const team = teams[teamIndex];
-  if(!team) return;
-
-  // لو مستخدمة قبل خلاص ما نعيد
-  if(team.used[type]) return;
-
-  // فعل المساعدة
-  team.used[type] = true;
-
-  // منطق خاص لكل مساعدة
-  if(type === "double"){
-    if(currentQuestion && currentQuestion.basePoints>0){
-      currentQuestion.effectivePoints = currentQuestion.basePoints * 2;
-      document.getElementById("currentQuestionPoints").textContent =
-        "قيمة السؤال: " + currentQuestion.effectivePoints + " نقطة";
-    }
-  }
-
-  // mute و call: بس نعلّم إنها استخدمت وخلاص
-  // (ما نوقف التايمر, ما نطلع تلميح)
-
-  // نحدّث الأزرار في الواجهة (تعطيلها وتغيير شكلها)
-  updateAssistButtons();
-
-  // نعرض الإشعار أسفل شاشة السؤال
-  showAssistNotice(teams[teamIndex].name, assistReadableName(type));
-}
-
-// ترجمة اسم المساعدة لعرضه في التنبيه
-function assistReadableName(type){
-  if(type === "double") return "دبل بوينت";
-  if(type === "mute") return "ميوت";
-  if(type === "call") return "اتصال صديق";
-  return "";
-}
-
-// تعطيل الأزرار بعد الاستخدام (لوحة اللعبة + شاشة السؤال)
-function updateAssistButtons(){
-  for(let i=0;i<teams.length;i++){
-    const t = teams[i];
-
-    // أزرار في لوحة اللعبة
-    const dBoard = document.getElementById(`assistDouble-${i}`);
-    const mBoard = document.getElementById(`assistMute-${i}`);
-    const cBoard = document.getElementById(`assistCall-${i}`);
-
-    if(dBoard){
-      dBoard.classList.toggle("used", t.used.double);
-      dBoard.disabled = t.used.double;
-    }
-    if(mBoard){
-      mBoard.classList.toggle("used", t.used.mute);
-      mBoard.disabled = t.used.mute;
-    }
-    if(cBoard){
-      cBoard.classList.toggle("used", t.used.call);
-      cBoard.disabled = t.used.call;
-    }
-
-    // أزرار في شاشة السؤال (الأيقونات)
-    const dQ = document.getElementById(`assistDoubleQ-${i}`);
-    const mQ = document.getElementById(`assistMuteQ-${i}`);
-    const cQ = document.getElementById(`assistCallQ-${i}`);
-
-    if(dQ){
-      dQ.classList.toggle("used", t.used.double);
-    }
-    if(mQ){
-      mQ.classList.toggle("used", t.used.mute);
-    }
-    if(cQ){
-      cQ.classList.toggle("used", t.used.call);
-    }
-  }
-}
-
-/* ---------------- إشعار المساعدة ---------------- */
-
-let assistTimeout = null;
-
-function showAssistNotice(teamName, assistName){
-  clearAssistNotice();
-
-  const wrap = document.getElementById("assistNoticeWrapper");
-  const div = document.createElement("div");
-  div.className = "assist-notice-bubble";
-  div.textContent = 'الفريق "' + teamName + '" استخدم مساعدة "' + assistName + '"';
-
-  wrap.appendChild(div);
-
-  assistTimeout = setTimeout(()=>{
-    clearAssistNotice();
-  },3000);
-}
-
-function clearAssistNotice(){
-  const wrap = document.getElementById("assistNoticeWrapper");
-  wrap.innerHTML = "";
-  if(assistTimeout){
-    clearTimeout(assistTimeout);
-    assistTimeout = null;
-  }
-}
-
-/* ---------------- إعادة ضبط اللعبة كاملة ---------------- */
-
-function resetGame(){
-  // نصفر كل شيء
-  teams = [
-    { name: teams[0].name || "فريق 1", score: 0, used: {double:false, mute:false, call:false} },
-    { name: teams[1].name || "فريق 2", score: 0, used: {double:false, mute:false, call:false} },
-  ];
-
-  categories.forEach(cat=>{
-    cat.questions.forEach(q=>{ q.answered=false; });
-  });
-
-  activeCategoryIds = [];
-  clearCurrentQuestion();
-  resetTimer();
-  clearAssistNotice();
-
-  renderSetupCategories();
-  renderBoard();
-  syncTeamsUI();
-
-  showStage("setup");
-}
-
-/* ---------------- لوحة التحكم ---------------- */
-
-function openAdmin(){
-  document.getElementById("adminModalOverlay").style.display="flex";
-  document.getElementById("adminLoginBlock").style.display="block";
-  document.getElementById("adminContent").style.display="none";
-  document.getElementById("adminLoginError").textContent="";
-  const defTimer = document.getElementById("defaultTimerInput");
-  if(defTimer) defTimer.value = defaultTimerSeconds;
-}
-function closeAdmin(){
-  document.getElementById("adminModalOverlay").style.display="none";
-}
-
-function tryAdminLogin(){
-  const input = document.getElementById("adminPasswordInput").value;
-  const err = document.getElementById("adminLoginError");
-  if(input === ADMIN_PASSWORD){
-    err.textContent="";
-    document.getElementById("adminLoginBlock").style.display="none";
-    document.getElementById("adminContent").style.display="block";
-
-    syncTeamsUI();
-    renderAdminCategories();
-    renderQuestionCategorySelect();
-    renderQuestionEditor();
-    const defTimer = document.getElementById("defaultTimerInput");
-    if(defTimer) defTimer.value = defaultTimerSeconds;
-  }else{
-    err.textContent="كلمة المرور غير صحيحة";
-  }
-}
-
-function saveTeamEdits(i){
-  const nameEl = document.getElementById(`adminTeamName${i}`);
-  const scoreEl = document.getElementById(`adminTeamScore${i}`);
-  if(nameEl) teams[i].name = nameEl.value.trim()||teams[i].name;
-  if(scoreEl){
-    const v = parseInt(scoreEl.value,10);
-    if(!isNaN(v) && v>=0){
-      teams[i].score = v;
-    }
-  }
-  syncTeamsUI();
-}
-
-/* ---------------- إدارة الفئات في لوحة التحكم ---------------- */
-
-function renderAdminCategories(){
-  const list = document.getElementById("adminCategoryList");
-  list.innerHTML = "";
-  categories.forEach((cat,idx)=>{
-    const row = document.createElement("div");
-    row.className="admin-row";
-    row.style.border = "1px solid var(--surface-border-strong)";
-    row.style.borderRadius = "10px";
-    row.style.padding = "12px";
-
-    row.innerHTML = `
-      <div class="admin-col">
-        <label>اسم الفئة</label>
-        <input id="catTitle-${idx}" type="text" value="${cat.title}"/>
-      </div>
-      <div class="admin-col">
-        <label>وصف مختصر</label>
-        <input id="catDesc-${idx}" type="text" value="${cat.desc}"/>
-      </div>
-      <div class="admin-col">
-        <label>رابط الصورة</label>
-        <input id="catImg-${idx}" type="text" value="${cat.img || ''}" placeholder="https://..."/>
-      </div>
-      <div class="admin-col" style="align-self:flex-end;">
-        <button class="small-btn" onclick="saveCategory(${idx})">حفظ</button>
-        <button class="small-btn" onclick="deleteCategory(${idx})">حذف</button>
-      </div>
-    `;
-    list.appendChild(row);
-  });
-}
-
-function saveCategory(idx){
-  const t = document.getElementById(`catTitle-${idx}`);
-  const d = document.getElementById(`catDesc-${idx}`);
-  const i = document.getElementById(`catImg-${idx}`);
-
-  if(t) categories[idx].title = t.value.trim()||categories[idx].title;
-  if(d) categories[idx].desc  = d.value.trim()||categories[idx].desc;
-  if(i) categories[idx].img   = i.value.trim()||"";
-
-  renderSetupCategories();
-  renderBoard();
-  renderQuestionCategorySelect();
-}
-
-function deleteCategory(idx){
-  const removedId = categories[idx].id;
-  categories.splice(idx,1);
-
-  const idPos = activeCategoryIds.indexOf(removedId);
-  if(idPos !== -1){
-    activeCategoryIds.splice(idPos,1);
-  }
-
-  renderSetupCategories();
-  renderBoard();
-  renderAdminCategories();
-  renderQuestionCategorySelect();
-  renderQuestionEditor();
-}
-
-function addNewCategory(){
-  const titleEl = document.getElementById("newCategoryTitle");
-  const descEl  = document.getElementById("newCategoryDesc");
-  const imgEl   = document.getElementById("newCategoryImg");
-
-  const newTitle = (titleEl.value||"").trim();
-  const newDesc  = (descEl.value||"").trim();
-  const newImg   = (imgEl.value||"").trim();
-
-  if(!newTitle){
-    alert("اكتب اسم الفئة");
-    return;
-  }
-
-  const newId = "cat_"+Date.now();
-  categories.push({
-    id:newId,
-    title:newTitle,
-    desc:newDesc||"",
-    img:newImg||"",
-    questions:[]
-  });
-
-  titleEl.value="";
-  descEl.value="";
-  imgEl.value="";
-
-  renderSetupCategories();
-  renderBoard();
-  renderAdminCategories();
-  renderQuestionCategorySelect();
-  renderQuestionEditor();
-}
-
-/* ---------------- إدارة الأسئلة في لوحة التحكم ---------------- */
-
-function renderQuestionCategorySelect(){
-  const sel = document.getElementById("questionCategorySelect");
-  if(!sel) return;
-  sel.innerHTML="";
-  categories.forEach((cat)=>{
-    const opt = document.createElement("option");
-    opt.value = cat.id;
-    opt.textContent = cat.title;
-    sel.appendChild(opt);
-  });
-}
-
-function getSelectedQuestionCategory(){
-  const sel = document.getElementById("questionCategorySelect");
-  if(!sel) return null;
-  const catId = sel.value;
-  return categories.find(c=>c.id===catId) || null;
-}
-
-function renderQuestionEditor(){
-  const area = document.getElementById("questionEditorArea");
-  if(!area) return;
-  const catObj = getSelectedQuestionCategory();
-  if(!catObj){
-    area.innerHTML = "<div class='admin-row'><div>لا توجد فئة محددة.</div></div>";
-    return;
-  }
-  if(!catObj.questions) catObj.questions=[];
-
-  let html = "";
-  catObj.questions.forEach((q,qIdx)=>{
-    html += `
-      <div class="admin-row" style="border:1px solid var(--surface-border-strong);border-radius:10px;padding:12px;">
-        <div class="admin-col">
-          <label>نص السؤال (#${qIdx+1})</label>
-          <textarea id="qText-${catObj.id}-${qIdx}" rows="2">${q.text}</textarea>
-        </div>
-        <div class="admin-col">
-          <label>قيمة النقاط</label>
-          <input id="qPoints-${catObj.id}-${qIdx}" type="number" value="${q.points}"/>
-        </div>
-        <div class="admin-col">
-          <label>الإجابة الصحيحة</label>
-          <input id="qAnswer-${catObj.id}-${qIdx}" type="text" value="${q.answer||""}"/>
-        </div>
-        <div class="admin-col" style="align-self:flex-end;">
-          <button class="small-btn" onclick="saveQuestion('${catObj.id}',${qIdx})">حفظ</button>
-          <button class="small-btn" onclick="deleteQuestion('${catObj.id}',${qIdx})">حذف</button>
-        </div>
-      </div>
-    `;
-  });
-
-  area.innerHTML = html || "<div class='admin-row'><div>لا توجد أسئلة.</div></div>";
-}
-
-function saveQuestion(catId,qIdx){
-  const catObj = categories.find(c=>c.id===catId);
-  if(!catObj) return;
-  const tEl = document.getElementById(`qText-${catId}-${qIdx}`);
-  const pEl = document.getElementById(`qPoints-${catId}-${qIdx}`);
-  const aEl = document.getElementById(`qAnswer-${catId}-${qIdx}`);
-  if(!catObj.questions[qIdx]) return;
-
-  if(tEl) catObj.questions[qIdx].text = tEl.value.trim()||catObj.questions[qIdx].text;
-  if(pEl){
-    const v = parseInt(pEl.value,10);
-    if(!isNaN(v)&&v>0){
-      catObj.questions[qIdx].points=v;
-      if(currentQuestion.catIndex !== null &&
-         currentQuestion.qIndex !== null &&
-         categories[currentQuestion.catIndex] === catObj &&
-         currentQuestion.qIndex === qIdx){
-        currentQuestion.basePoints = v;
-        currentQuestion.effectivePoints = v;
-        document.getElementById("currentQuestionPoints").textContent =
-          "قيمة السؤال: " + currentQuestion.effectivePoints + " نقطة";
-      }
-    }
-  }
-  if(aEl){
-    catObj.questions[qIdx].answer = aEl.value.trim()||"";
-    if(currentQuestion.catIndex !== null &&
-       currentQuestion.qIndex !== null &&
-       categories[currentQuestion.catIndex] === catObj &&
-       currentQuestion.qIndex === qIdx){
-      currentQuestion.answer = aEl.value.trim()||"";
-    }
-  }
-
-  renderSetupCategories();
-  renderBoard();
-  renderQuestionEditor();
-}
-
-function deleteQuestion(catId,qIdx){
-  const catObj = categories.find(c=>c.id===catId);
-  if(!catObj) return;
-  catObj.questions.splice(qIdx,1);
-
-  renderSetupCategories();
-  renderBoard();
-  renderQuestionEditor();
-}
-
-function addNewQuestion(){
-  const catObj = getSelectedQuestionCategory();
-  if(!catObj){
-    alert("اختر الفئة أول.");
-    return;
-  }
-  const txt = (document.getElementById("newQuestionText").value||"").trim();
-  const ptsVal = parseInt(document.getElementById("newQuestionPoints").value,10);
-  const ansVal = (document.getElementById("newQuestionAnswer").value||"").trim();
-
-  if(!txt){
-    alert("اكتب نص السؤال.");
-    return;
-  }
-  if(isNaN(ptsVal) || ptsVal<=0){
-    alert("ضع قيمة نقاط صحيحة.");
-    return;
-  }
-
-  catObj.questions.push({
-    points: ptsVal,
-    text: txt,
-    answer: ansVal,
-    answered:false
-  });
-
-  document.getElementById("newQuestionText").value="";
-  document.getElementById("newQuestionPoints").value="";
-  document.getElementById("newQuestionAnswer").value="";
-
-  renderSetupCategories();
-  renderBoard();
-  renderQuestionEditor();
-}
-
-/* ---------------- الوقت الافتراضي ---------------- */
-
-function saveDefaultTimer(){
-  const inp = document.getElementById("defaultTimerInput");
-  if(!inp) return;
-  const v = parseInt(inp.value,10);
-  if(!isNaN(v) && v>0){
-    defaultTimerSeconds = v;
-    resetTimer();
-  }
-}
-
-/* ---------------- init ---------------- */
-
-function init(){
-  renderSetupCategories();
-  syncTeamsUI();
-  resetTimer();
-
-  const logoBox = document.getElementById("gameLogo");
-  const img = document.getElementById("logoImg");
-  if(img){
-    img.addEventListener("error", ()=>{
-      logoBox.innerHTML = "PTI";
-      logoBox.style.display = "flex";
-      logoBox.style.alignItems = "center";
-      logoBox.style.justifyContent = "center";
-      logoBox.style.fontWeight = "600";
-      logoBox.style.fontSize = "14px";
-      logoBox.style.color = "var(--accent-purple)";
-      logoBox.style.background = "#fff";
-    });
-  }
-}
-init();
-</script>
+
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
+
+    <script>
+        // Game State
+        const gameState = {
+            currentScreen: 'start',
+            selectedCategories: [],
+            teams: [
+                { 
+                    name: 'الفريق الأول', 
+                    score: 0, 
+                    helps: { 
+                        mute: { available: true, active: false }, 
+                        double: { available: true, active: false }, 
+                        friend: { available: true, active: false } 
+                    } 
+                },
+                { 
+                    name: 'الفريق الثاني', 
+                    score: 0, 
+                    helps: { 
+                        mute: { available: true, active: false }, 
+                        double: { available: true, active: false }, 
+                        friend: { available: true, active: false } 
+                    } 
+                }
+            ],
+            categories: [
+                { 
+                    id: 1, 
+                    name: 'البرمجة', 
+                    questions: [
+                        { id: 1, value: 200, text: 'ما هي لغة البرمجة المستخدمة في تطوير تطبيقات iOS؟', answer: 'Swift', used: false },
+                        { id: 2, value: 200, text: 'ما هي لغة البرمجة المستخدمة في تطوير تطبيقات Android؟', answer: 'Kotlin', used: false },
+                        { id: 3, value: 400, text: 'ما هي أداة إدارة الحزم في JavaScript؟', answer: 'NPM', used: false },
+                        { id: 4, value: 400, text: 'ما هي مكتبة JavaScript الأكثر استخدامًا لواجهة المستخدم؟', answer: 'React', used: false },
+                        { id: 5, value: 600, text: 'ما هو نظام إدارة قواعد البيانات الأكثر شيوعًا؟', answer: 'MySQL', used: false },
+                        { id: 6, value: 600, text: 'ما هي لغة البرمجة المستخدمة لتحليل البيانات والتعلم الآلي؟', answer: 'Python', used: false }
+                    ]
+                },
+                { 
+                    id: 2, 
+                    name: 'الشبكات', 
+                    questions: [
+                        { id: 1, value: 200, text: 'ما هو البروتوكول المستخدم لنقل صفحات الويب؟', answer: 'HTTP', used: false },
+                        { id: 2, value: 200, text: 'ما هو البروتوكول الآمن لنقل صفحات الويب؟', answer: 'HTTPS', used: false },
+                        { id: 3, value: 400, text: 'ما هو عنوان IP الخاص بالحلقة المحلية؟', answer: '127.0.0.1', used: false },
+                        { id: 4, value: 400, text: 'ما هي منافذ HTTP و HTTPS الافتراضية؟', answer: '80 و 443', used: false },
+                        { id: 5, value: 600, text: 'ما هو بروتوكول إرسال البريد الإلكتروني؟', answer: 'SMTP', used: false },
+                        { id: 6, value: 600, text: 'ما هو بروتوكول استقبال البريد الإلكتروني؟', answer: 'POP3/IMAP', used: false }
+                    ]
+                },
+                { 
+                    id: 3, 
+                    name: 'قواعد البيانات', 
+                    questions: [
+                        { id: 1, value: 200, text: 'ما هي لغة الاستعلام المستخدمة في قواعد البيانات العلائقية؟', answer: 'SQL', used: false },
+                        { id: 2, value: 200, text: 'ما هو نظام إدارة قواعد البيانات مفتوح المصدر الشهير؟', answer: 'MySQL', used: false },
+                        { id: 3, value: 400, text: 'ما هي قاعدة البيانات NoSQL الأكثر شيوعًا؟', answer: 'MongoDB', used: false },
+                        { id: 4, value: 400, text: 'ما هي لغة البرمجة المستخدمة في Oracle Database؟', answer: 'PL/SQL', used: false },
+                        { id: 5, value: 600, text: 'ما هو نظام إدارة قواعد البيانات من مايكروسوفت؟', answer: 'SQL Server', used: false },
+                        { id: 6, value: 600, text: 'ما هي قاعدة البيانات المضمنة في Android؟', answer: 'SQLite', used: false }
+                    ]
+                },
+                { 
+                    id: 4, 
+                    name: 'أنظمة التشغيل', 
+                    questions: [
+                        { id: 1, value: 200, text: 'ما هو نظام التشغيل مفتوح المصدر الأكثر شيوعًا؟', answer: 'Linux', used: false },
+                        { id: 2, value: 200, text: 'ما هو نظام التشغيل من Apple لأجهزة Mac؟', answer: 'macOS', used: false },
+                        { id: 3, value: 400, text: 'ما هو نواة نظام Android؟', answer: 'Linux', used: false },
+                        { id: 4, value: 400, text: 'ما هو نظام التشغيل من Microsoft؟', answer: 'Windows', used: false },
+                        { id: 5, value: 600, text: 'ما هو نظام إدارة الحزم في توزيعات Linux مثل Ubuntu؟', answer: 'APT', used: false },
+                        { id: 6, value: 600, text: 'ما هو نظام التشغيل المستخدم في خوادم الويب بشكل كبير؟', answer: 'Linux', used: false }
+                    ]
+                },
+                { 
+                    id: 5, 
+                    name: 'الأمن السيبراني', 
+                    questions: [
+                        { id: 1, value: 200, text: 'ما هو البرنامج الضار الذي ينتشر عبر الشبكات؟', answer: 'فيروس', used: false },
+                        { id: 2, value: 200, text: 'ما هو الهجوم الذي يغمر الخادم بطلبات زائفة؟', answer: 'هجوم DDoS', used: false },
+                        { id: 3, value: 400, text: 'ما هو البرنامج الذي يحمي من البرامج الضارة؟', answer: 'مضاد الفيروسات', used: false },
+                        { id: 4, value: 400, text: 'ما هو نظام الحماية بين الشبكات؟', answer: 'جدار الحماية', used: false },
+                        { id: 5, value: 600, text: 'ما هو نوع التشفير الذي يستخدم مفتاحين؟', answer: 'التشفير غير المتماثل', used: false },
+                        { id: 6, value: 600, text: 'ما هي الممارسة لحماية المعلومات السرية؟', answer: 'التشفير', used: false }
+                    ]
+                },
+                { 
+                    id: 6, 
+                    name: 'الذكاء الاصطناعي', 
+                    questions: [
+                        { id: 1, value: 200, text: 'ما هي التقنية التي تمكن الآلات من التعلم من البيانات؟', answer: 'التعلم الآلي', used: false },
+                        { id: 2, value: 200, text: 'ما هي الشبكات المستخدمة في التعلم العميق؟', answer: 'الشبكات العصبية', used: false },
+                        { id: 3, value: 400, text: 'ما هي مكتبة Python الشهيرة للتعلم الآلي؟', answer: 'TensorFlow', used: false },
+                        { id: 4, value: 400, text: 'ما هي مكتبة Python الأخرى للتعلم الآلي؟', answer: 'PyTorch', used: false },
+                        { id: 5, value: 600, text: 'ما هي التقنية التي تمكن الآلات من فهم اللغة البشرية؟', answer: 'معالجة اللغة الطبيعية', used: false },
+                        { id: 6, value: 600, text: 'ما هي التقنية التي تمكن الآلات من رؤية العالم؟', answer: 'الرؤية الحاسوبية', used: false }
+                    ]
+                },
+                { 
+                    id: 7, 
+                    name: 'تطوير الويب', 
+                    questions: [
+                        { id: 1, value: 200, text: 'ما هي لغة ترميز صفحات الويب؟', answer: 'HTML', used: false },
+                        { id: 2, value: 200, text: 'ما هي لغة تنسيق صفحات الويب؟', answer: 'CSS', used: false },
+                        { id: 3, value: 400, text: 'ما هي لغة البرمجة المستخدمة في متصفحات الويب؟', answer: 'JavaScript', used: false },
+                        { id: 4, value: 400, text: 'ما هو إطار العمل JavaScript من Google؟', answer: 'Angular', used: false },
+                        { id: 5, value: 600, text: 'ما هو إطار العمل JavaScript مفتوح المصدر؟', answer: 'React', used: false },
+                        { id: 6, value: 600, text: 'ما هو إطار العمل JavaScript للمخدم؟', answer: 'Node.js', used: false }
+                    ]
+                },
+                { 
+                    id: 8, 
+                    name: 'الحوسبة السحابية', 
+                    questions: [
+                        { id: 1, value: 200, text: 'ما هي خدمة الحوسبة السحابية من Amazon؟', answer: 'AWS', used: false },
+                        { id: 2, value: 200, text: 'ما هي خدمة الحوسبة السحابية من Microsoft؟', answer: 'Azure', used: false },
+                        { id: 3, value: 400, text: 'ما هي خدمة الحوسبة السحابية من Google؟', answer: 'Google Cloud', used: false },
+                        { id: 4, value: 400, text: 'ما هو نموذج الخدمة لتشغيل التطبيقات؟', answer: 'PaaS', used: false },
+                        { id: 5, value: 600, text: 'ما هو نموذج الخدمة للبنية التحتية؟', answer: 'IaaS', used: false },
+                        { id: 6, value: 600, text: 'ما هو نموذج الخدمة للبرامج؟', answer: 'SaaS', used: false }
+                    ]
+                }
+            ],
+            currentQuestion: null,
+            timer: null,
+            timerValue: 30,
+            timerRunning: false,
+            adminLoggedIn: false,
+            doublePointsActive: false
+        };
+
+        // DOM Elements
+        const screens = {
+            start: document.getElementById('start-screen'),
+            category: document.getElementById('category-screen'),
+            game: document.getElementById('game-board'),
+            question: document.getElementById('question-screen'),
+            winner: document.getElementById('winner-screen')
+        };
+
+        // Initialize the game
+        function initGame() {
+            // Set up event listeners
+            document.querySelector('.start-btn').addEventListener('click', showCategoryScreen);
+            document.querySelector('#start-playing-btn').addEventListener('click', showGameBoard);
+            document.querySelectorAll('.admin-btn').forEach(btn => {
+                btn.addEventListener('click', showAdminPanel);
+            });
+            document.querySelector('#close-admin').addEventListener('click', hideAdminPanel);
+            document.querySelector('#admin-login-btn').addEventListener('click', adminLogin);
+            document.querySelector('.play-again-btn').addEventListener('click', resetGame);
+            
+            // Set up category selection
+            renderCategories();
+            
+            // Set up team name inputs
+            document.getElementById('team1-name').addEventListener('input', updateTeamNames);
+            document.getElementById('team2-name').addEventListener('input', updateTeamNames);
+            
+            // Set up score controls
+            document.querySelectorAll('.score-btn').forEach(btn => {
+                btn.addEventListener('click', handleScoreChange);
+            });
+            
+            // Set up powerups
+            document.querySelectorAll('.powerup').forEach(powerup => {
+                powerup.addEventListener('click', handlePowerup);
+            });
+            
+            // Set up question actions
+            document.getElementById('show-answer-btn').addEventListener('click', showAnswer);
+            document.getElementById('result-btn').addEventListener('click', showResultPopup);
+            document.getElementById('team1-correct').addEventListener('click', handleCorrectAnswer);
+            document.getElementById('team2-correct').addEventListener('click', handleCorrectAnswer);
+            
+            // Set up timer controls
+            document.getElementById('pause-timer').addEventListener('click', pauseTimer);
+            document.getElementById('resume-timer').addEventListener('click', resumeTimer);
+            
+            // Set up admin controls
+            document.querySelector('.save-teams-btn').addEventListener('click', saveTeamsFromAdmin);
+            document.getElementById('reset-helps-btn').addEventListener('click', resetHelps);
+            document.getElementById('reset-questions-btn').addEventListener('click', resetQuestions);
+        }
+
+        // Screen navigation
+        function showScreen(screenName) {
+            // Hide all screens
+            Object.values(screens).forEach(screen => {
+                screen.classList.remove('active');
+            });
+            
+            // Show the requested screen
+            screens[screenName].classList.add('active');
+            gameState.currentScreen = screenName;
+        }
+
+        function showCategoryScreen() {
+            showScreen('category');
+        }
+
+        function showGameBoard() {
+            // Update team names
+            gameState.teams[0].name = document.getElementById('team1-name').value;
+            gameState.teams[1].name = document.getElementById('team2-name').value;
+            
+            // Render the game board
+            renderGameBoard();
+            
+            showScreen('game');
+        }
+
+        function showQuestionScreen(categoryIndex, questionIndex) {
+            const category = gameState.selectedCategories[categoryIndex];
+            const question = category.questions[questionIndex];
+            
+            // Mark question as used
+            question.used = true;
+            
+            // Update the game state
+            gameState.currentQuestion = {
+                categoryIndex,
+                questionIndex,
+                category: category.name,
+                value: question.value,
+                text: question.text,
+                answer: question.answer
+            };
+            
+            // Update the UI
+            document.getElementById('question-meta').textContent = `التصنيف: ${category.name} | القيمة: ${question.value}`;
+            document.getElementById('question-text').textContent = question.text;
+            document.getElementById('answer-text').textContent = question.answer;
+            
+            // Reset answer section
+            document.getElementById('answer-section').style.display = 'none';
+            document.getElementById('show-answer-btn').style.display = 'block';
+            document.getElementById('result-btn').style.display = 'none';
+            
+            // Start the timer
+            startTimer();
+            
+            showScreen('question');
+        }
+
+        function showWinnerScreen() {
+            // Determine winner
+            let winner = gameState.teams[0];
+            if (gameState.teams[1].score > winner.score) {
+                winner = gameState.teams[1];
+            } else if (gameState.teams[1].score === winner.score) {
+                document.getElementById('winner-team-name').textContent = "تعادل!";
+            } else {
+                document.getElementById('winner-team-name').textContent = `${winner.name} فاز!`;
+            }
+            
+            showScreen('winner');
+        }
+
+        // Category selection
+        function renderCategories() {
+            const container = document.getElementById('categories-container');
+            container.innerHTML = '';
+            
+            gameState.categories.forEach(category => {
+                const categoryElement = document.createElement('div');
+                categoryElement.className = 'category-card';
+                if (gameState.selectedCategories.includes(category)) {
+                    categoryElement.classList.add('selected');
+                }
+                categoryElement.textContent = category.name;
+                categoryElement.addEventListener('click', () => toggleCategory(category));
+                container.appendChild(categoryElement);
+            });
+            
+            updateStartButton();
+        }
+
+        function toggleCategory(category) {
+            const index = gameState.selectedCategories.indexOf(category);
+            
+            if (index === -1) {
+                if (gameState.selectedCategories.length < 6) {
+                    gameState.selectedCategories.push(category);
+                }
+            } else {
+                gameState.selectedCategories.splice(index, 1);
+            }
+            
+            renderCategories();
+        }
+
+        function updateStartButton() {
+            const button = document.getElementById('start-playing-btn');
+            button.disabled = gameState.selectedCategories.length !== 6;
+        }
+
+        // Game board rendering
+        function renderGameBoard() {
+            // Update team displays
+            document.getElementById('team1-name-display').textContent = gameState.teams[0].name;
+            document.getElementById('team2-name-display').textContent = gameState.teams[1].name;
+            document.getElementById('team1-powerup-label').textContent = gameState.teams[0].name;
+            document.getElementById('team2-powerup-label').textContent = gameState.teams[1].name;
+            document.getElementById('team1-score').textContent = gameState.teams[0].score;
+            document.getElementById('team2-score').textContent = gameState.teams[1].score;
+            
+            // Render category headers
+            const headersContainer = document.getElementById('categories-headers');
+            headersContainer.innerHTML = '';
+            
+            gameState.selectedCategories.forEach(category => {
+                const headerElement = document.createElement('div');
+                headerElement.className = 'category-header';
+                headerElement.textContent = category.name;
+                headersContainer.appendChild(headerElement);
+            });
+            
+            // Render questions
+            const questionsContainer = document.getElementById('questions-container');
+            questionsContainer.innerHTML = '';
+            
+            for (let i = 0; i < 6; i++) {
+                gameState.selectedCategories.forEach((category, categoryIndex) => {
+                    const question = category.questions[i];
+                    const questionElement = document.createElement('div');
+                    questionElement.className = 'question-tile';
+                    if (question.used) {
+                        questionElement.classList.add('used');
+                    } else {
+                        questionElement.textContent = question.value;
+                        questionElement.addEventListener('click', () => showQuestionScreen(categoryIndex, i));
+                    }
+                    questionsContainer.appendChild(questionElement);
+                });
+            }
+            
+            // Update powerups
+            updatePowerups();
+        }
+
+        // Team management
+        function updateTeamNames() {
+            gameState.teams[0].name = document.getElementById('team1-name').value;
+            gameState.teams[1].name = document.getElementById('team2-name').value;
+            
+            if (gameState.currentScreen === 'game') {
+                document.getElementById('team1-name-display').textContent = gameState.teams[0].name;
+                document.getElementById('team2-name-display').textContent = gameState.teams[1].name;
+                document.getElementById('team1-powerup-label').textContent = gameState.teams[0].name;
+                document.getElementById('team2-powerup-label').textContent = gameState.teams[1].name;
+            }
+        }
+
+        function handleScoreChange(e) {
+            const teamIndex = parseInt(e.target.getAttribute('data-team')) - 1;
+            const isPlus = e.target.classList.contains('plus');
+            
+            if (isPlus) {
+                gameState.teams[teamIndex].score += 100;
+            } else {
+                gameState.teams[teamIndex].score = Math.max(0, gameState.teams[teamIndex].score - 100);
+            }
+            
+            document.getElementById(`team${teamIndex + 1}-score`).textContent = gameState.teams[teamIndex].score;
+            
+            // Check for winner
+            if (gameState.teams[0].score >= 3000 || gameState.teams[1].score >= 3000) {
+                showWinnerScreen();
+            }
+        }
+
+        // Powerups
+        function handlePowerup(e) {
+            const powerup = e.currentTarget;
+            const powerupId = powerup.id;
+            const teamIndex = powerupId.includes('team1') ? 0 : 1;
+            const team = gameState.teams[teamIndex];
+            const helpType = powerupId.includes('mute') ? 'mute' : 
+                            powerupId.includes('double') ? 'double' : 'friend';
+            
+            if (team.helps[helpType].available) {
+                team.helps[helpType].available = false;
+                team.helps[helpType].active = true;
+                powerup.classList.add('used');
+                
+                if (helpType === 'double') {
+                    gameState.doublePointsActive = true;
+                    showNotification(`${team.name} استخدم ضعف النقاط!`);
+                } else if (helpType === 'mute') {
+                    showNotification(`${team.name} استخدم خاصية الكتم!`);
+                } else if (helpType === 'friend') {
+                    showNotification(`${team.name} استخدم اتصال بصديق!`);
+                }
+            }
+        }
+
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        function updatePowerups() {
+            // Reset all powerups
+            document.querySelectorAll('.powerup').forEach(powerup => {
+                powerup.classList.remove('used');
+            });
+            
+            // Apply used state based on game state
+            gameState.teams.forEach((team, teamIndex) => {
+                const prefix = `team${teamIndex + 1}`;
+                
+                if (!team.helps.mute.available) {
+                    document.getElementById(`${prefix}-mute-powerup`).classList.add('used');
+                }
+                
+                if (!team.helps.double.available) {
+                    document.getElementById(`${prefix}-double-powerup`).classList.add('used');
+                }
+                
+                if (!team.helps.friend.available) {
+                    document.getElementById(`${prefix}-friend-powerup`).classList.add('used');
+                }
+            });
+        }
+
+        // Question handling
+        function startTimer() {
+            gameState.timerValue = 30;
+            gameState.timerRunning = true;
+            document.getElementById('question-timer').textContent = gameState.timerValue;
+            
+            gameState.timer = setInterval(() => {
+                if (gameState.timerRunning) {
+                    gameState.timerValue--;
+                    document.getElementById('question-timer').textContent = gameState.timerValue;
+                    
+                    if (gameState.timerValue <= 0) {
+                        clearInterval(gameState.timer);
+                        showAnswer();
+                    }
+                }
+            }, 1000);
+        }
+
+        function pauseTimer() {
+            gameState.timerRunning = false;
+        }
+
+        function resumeTimer() {
+            gameState.timerRunning = true;
+        }
+
+        function showAnswer() {
+            document.getElementById('answer-section').style.display = 'block';
+            document.getElementById('show-answer-btn').style.display = 'none';
+            document.getElementById('result-btn').style.display = 'block';
+            
+            // Stop the timer
+            clearInterval(gameState.timer);
+            gameState.timerRunning = false;
+        }
+
+        function showResultPopup() {
+            document.getElementById('result-popup').style.display = 'flex';
+        }
+
+        function handleCorrectAnswer(e) {
+            const teamIndex = parseInt(e.target.getAttribute('data-team')) - 1;
+            let points = gameState.currentQuestion.value;
+            
+            // Apply double points if active
+            if (gameState.doublePointsActive) {
+                points *= 2;
+                gameState.doublePointsActive = false;
+                
+                // Find which team has double points active and deactivate it
+                gameState.teams.forEach(team => {
+                    if (team.helps.double.active) {
+                        team.helps.double.active = false;
+                    }
+                });
+            }
+            
+            gameState.teams[teamIndex].score += points;
+            
+            // Update the game board
+            renderGameBoard();
+            
+            // Hide result popup
+            document.getElementById('result-popup').style.display = 'none';
+            
+            // Return to the game board
+            showScreen('game');
+            
+            // Check for winner
+            if (gameState.teams[0].score >= 3000 || gameState.teams[1].score >= 3000) {
+                showWinnerScreen();
+            }
+        }
+
+        // Admin panel
+        function showAdminPanel() {
+            document.getElementById('admin-overlay').style.display = 'flex';
+            
+            // If not logged in, show login form
+            if (!gameState.adminLoggedIn) {
+                document.getElementById('admin-login').style.display = 'block';
+                document.getElementById('admin-controls').style.display = 'none';
+            } else {
+                document.getElementById('admin-login').style.display = 'none';
+                document.getElementById('admin-controls').style.display = 'block';
+                renderAdminCategories();
+            }
+        }
+
+        function hideAdminPanel() {
+            document.getElementById('admin-overlay').style.display = 'none';
+        }
+
+        function adminLogin() {
+            const password = document.getElementById('admin-password').value;
+            
+            if (password === 'PTI on top') {
+                gameState.adminLoggedIn = true;
+                document.getElementById('admin-login').style.display = 'none';
+                document.getElementById('admin-controls').style.display = 'block';
+                renderAdminCategories();
+            } else {
+                alert('كلمة المرور غير صحيحة!');
+            }
+        }
+
+        function renderAdminCategories() {
+            const container = document.getElementById('admin-categories');
+            container.innerHTML = '';
+            
+            gameState.categories.forEach(category => {
+                const categoryElement = document.createElement('div');
+                categoryElement.className = 'category-admin';
+                
+                const nameInput = document.createElement('input');
+                nameInput.type = 'text';
+                nameInput.className = 'category-name-input';
+                nameInput.value = category.name;
+                nameInput.addEventListener('change', (e) => {
+                    category.name = e.target.value;
+                });
+                
+                categoryElement.appendChild(nameInput);
+                
+                category.questions.forEach((question, index) => {
+                    const questionElement = document.createElement('div');
+                    questionElement.className = 'question-admin';
+                    
+                    const valueInput = document.createElement('input');
+                    valueInput.type = 'number';
+                    valueInput.className = 'question-value';
+                    valueInput.value = question.value;
+                    valueInput.addEventListener('change', (e) => {
+                        question.value = parseInt(e.target.value);
+                    });
+                    
+                    const textInput = document.createElement('input');
+                    textInput.type = 'text';
+                    textInput.className = 'question-text-input';
+                    textInput.value = question.text;
+                    textInput.addEventListener('change', (e) => {
+                        question.text = e.target.value;
+                    });
+                    
+                    questionElement.appendChild(valueInput);
+                    questionElement.appendChild(textInput);
+                    categoryElement.appendChild(questionElement);
+                });
+                
+                const addQuestionBtn = document.createElement('button');
+                addQuestionBtn.className = 'add-question-btn';
+                addQuestionBtn.textContent = 'إضافة سؤال';
+                addQuestionBtn.addEventListener('click', () => {
+                    category.questions.push({
+                        id: category.questions.length + 1,
+                        value: 200,
+                        text: 'سؤال جديد',
+                        answer: 'إجابة',
+                        used: false
+                    });
+                    renderAdminCategories();
+                });
+                
+                categoryElement.appendChild(addQuestionBtn);
+                container.appendChild(categoryElement);
+            });
+        }
+
+        function saveTeamsFromAdmin() {
+            gameState.teams[0].name = document.getElementById('admin-team1-name').value;
+            gameState.teams[0].score = parseInt(document.getElementById('admin-team1-score').value);
+            gameState.teams[1].name = document.getElementById('admin-team2-name').value;
+            gameState.teams[1].score = parseInt(document.getElementById('admin-team2-score').value);
+            
+            // Update the game board if we're on it
+            if (gameState.currentScreen === 'game') {
+                renderGameBoard();
+            }
+            
+            alert('تم حفظ الفرق بنجاح!');
+        }
+
+        function resetHelps() {
+            gameState.teams[0].helps = { 
+                mute: { available: true, active: false }, 
+                double: { available: true, active: false }, 
+                friend: { available: true, active: false } 
+            };
+            gameState.teams[1].helps = { 
+                mute: { available: true, active: false }, 
+                double: { available: true, active: false }, 
+                friend: { available: true, active: false } 
+            };
+            
+            gameState.doublePointsActive = false;
+            
+            if (gameState.currentScreen === 'game') {
+                updatePowerups();
+            }
+            
+            alert('تم إعادة تعيين المساعدات بنجاح!');
+        }
+
+        function resetQuestions() {
+            gameState.categories.forEach(category => {
+                category.questions.forEach(question => {
+                    question.used = false;
+                });
+            });
+            
+            if (gameState.currentScreen === 'game') {
+                renderGameBoard();
+            }
+            
+            alert('تم إعادة تعيين الأسئلة بنجاح!');
+        }
+
+        // Game reset
+        function resetGame() {
+            // Reset game state
+            gameState.selectedCategories = [];
+            gameState.teams = [
+                { 
+                    name: 'الفريق الأول', 
+                    score: 0, 
+                    helps: { 
+                        mute: { available: true, active: false }, 
+                        double: { available: true, active: false }, 
+                        friend: { available: true, active: false } 
+                    } 
+                },
+                { 
+                    name: 'الفريق الثاني', 
+                    score: 0, 
+                    helps: { 
+                        mute: { available: true, active: false }, 
+                        double: { available: true, active: false }, 
+                        friend: { available: true, active: false } 
+                    } 
+                }
+            ];
+            
+            gameState.categories.forEach(category => {
+                category.questions.forEach(question => {
+                    question.used = false;
+                });
+            });
+            
+            gameState.doublePointsActive = false;
+            
+            // Reset UI
+            document.getElementById('team1-name').value = 'الفريق الأول';
+            document.getElementById('team2-name').value = 'الفريق الثاني';
+            
+            // Go to category selection
+            showCategoryScreen();
+            renderCategories();
+        }
+
+        // Initialize the game when the page loads
+        window.addEventListener('DOMContentLoaded', initGame);
+    </script>
 </body>
 </html>
